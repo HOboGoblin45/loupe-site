@@ -3,275 +3,54 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Loupe — Discover independent fashion, one swipe at a time</title>
-<meta name="description" content="Loupe is a swipe-based discovery app for independent and niche fashion brands. Find labels you'll actually wear, save them to your Dresser, and shop them directly." />
-<meta property="og:title" content="Loupe — Discover independent fashion" />
-<meta property="og:description" content="A swipe-based discovery app for independent and niche fashion brands." />
-<meta property="og:type" content="website" />
-<style>
-  :root{
-    --pink:#F3CBF0;
-    --pink-soft:#FBEEFA;
-    --ink:#1A1A1A;
-    --muted:#6B6B6B;
-    --line:#ECE8EC;
-    --coral:#FE6F6F;
-    --white:#FFFFFF;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    color:var(--ink);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;
-  }
-  a{color:inherit;text-decoration:none;}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
-  .serif{font-family:Georgia,"Times New Roman",serif;}
+<title>Loupe — Get the app</title>
+<meta name="description" content="Loupe — swipe to discover independent fashion. Get it free on the App Store." />
+<meta name="robots" content="noindex" />
 
-  /* Header */
-  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--line);}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:64px;}
-  .logo{font-weight:800;font-size:24px;letter-spacing:-1px;}
-  .nav-links{display:flex;gap:28px;align-items:center;font-size:14px;color:var(--muted);}
-  .nav-links a:hover{color:var(--ink);}
-  .btn{display:inline-block;background:var(--ink);color:var(--white);padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:transform .12s ease,background .12s ease;}
-  .btn:hover{transform:translateY(-1px);background:#000;}
-  .btn-pink{background:var(--pink);color:var(--ink);}
-  .btn-pink:hover{background:#eeb9ea;}
-  @media(max-width:680px){.nav-links a.hide-sm{display:none;}}
-
-  /* Hero */
-  .hero{padding:84px 0 64px;text-align:center;background:var(--pink-soft);}
-  .hero h1{font-size:clamp(34px,6vw,58px);line-height:1.08;letter-spacing:-1.5px;max-width:14ch;margin:0 auto 20px;}
-  .hero p{font-size:clamp(16px,2.4vw,20px);color:var(--muted);max-width:48ch;margin:0 auto 32px;}
-  .hero .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
-  .pill{display:inline-block;background:var(--pink);color:var(--ink);font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:22px;letter-spacing:.2px;}
-
-  /* Value props */
-  .props{padding:72px 0;}
-  .props-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
-  .prop h3{font-size:20px;margin-bottom:8px;letter-spacing:-.3px;}
-  .prop p{color:var(--muted);font-size:15px;}
-  .prop .num{font-family:Georgia,serif;font-size:15px;color:var(--coral);font-weight:700;margin-bottom:10px;display:block;letter-spacing:1px;}
-  @media(max-width:760px){.props-grid{grid-template-columns:1fr;gap:28px;}}
-
-  /* Section heading */
-  .sec-head{text-align:center;margin-bottom:40px;}
-  .sec-head h2{font-size:clamp(26px,4vw,38px);letter-spacing:-1px;margin-bottom:8px;}
-  .sec-head p{color:var(--muted);max-width:44ch;margin:0 auto;}
-
-  /* Edit grid */
-  .edit{padding:24px 0 80px;}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
-  .card{display:block;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--white);transition:transform .14s ease,box-shadow .14s ease;}
-  .card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.07);}
-  .card .imgwrap{aspect-ratio:3/4;background:#F6F4F6;overflow:hidden;}
-  .card img{width:100%;height:100%;object-fit:cover;display:block;}
-  .card .meta{padding:14px 14px 16px;}
-  .card .brand{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px;}
-  .card .name{font-size:14px;line-height:1.3;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px;}
-  .card .row{display:flex;align-items:center;justify-content:space-between;}
-  .card .price{font-size:14px;font-weight:600;}
-  .card .shop{font-size:12px;font-weight:700;color:var(--coral);}
-  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:420px){.grid{grid-template-columns:1fr;}}
-
-  /* Brands marquee */
-  .brands{padding:64px 0;background:var(--pink-soft);text-align:center;}
-  .brands h2{font-size:clamp(22px,3.4vw,30px);letter-spacing:-.6px;margin-bottom:24px;}
-  .brand-list{display:flex;flex-wrap:wrap;gap:10px 14px;justify-content:center;max-width:920px;margin:0 auto;}
-  .brand-list span{font-size:15px;color:var(--ink);background:var(--white);border:1px solid var(--line);padding:7px 14px;border-radius:999px;}
-
-  /* Disclosure */
-  .disclosure{padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .disclosure p{text-align:center;font-size:13px;color:var(--muted);max-width:70ch;margin:0 auto;}
-
-  /* Footer */
-  footer{padding:48px 0 64px;}
-  .foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
-  .foot .logo{font-size:20px;}
-  .foot-links{display:flex;gap:22px;font-size:14px;color:var(--muted);flex-wrap:wrap;}
-  .foot-links a:hover{color:var(--ink);}
-  .copyright{font-size:13px;color:var(--muted);margin-top:24px;}
-</style>
-</head>
-<body>
-
-<header>
-  <div class="wrap nav">
-    <a href="#top" class="logo">Loupe</a>
-    <nav class="nav-links">
-      <a href="#edit" class="hide-sm">Shop the edit</a>
-      <a href="#about" class="hide-sm">About</a>
-      <a href="#get" class="btn btn-pink">Get the app</a>
-    </nav>
-  </div>
-</header>
-
-<main id="top">
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="wrap">
-      <span class="pill">Independent fashion, curated</span>
-      <h1 class="serif">Discover fashion you'll actually wear.</h1>
-      <p>Loupe is a swipe-based discovery app for independent and niche fashion brands. Swipe to find labels you love, save them to your Dresser, and shop them directly.</p>
-      <div class="ctas">
-        <a href="https://apps.apple.com/app/id6781137336" class="btn" target="_blank" rel="noopener">Get Loupe on the App Store</a>
-        <a href="#edit" class="btn btn-pink">Browse the edit</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Value props -->
-  <section class="props" id="about">
-    <div class="wrap props-grid">
-      <div class="prop">
-        <span class="num">01</span>
-        <h3>Swipe to discover</h3>
-        <p>A clean, distraction-free feed of independent labels — no algorithmic noise, no fast fashion. Just brands worth knowing.</p>
-      </div>
-      <div class="prop">
-        <span class="num">02</span>
-        <h3>Save to your Dresser</h3>
-        <p>Like a piece and it lands in your Dresser. Organize favorites into folders and get a heads-up when something you saved drops in price.</p>
-      </div>
-      <div class="prop">
-        <span class="num">03</span>
-        <h3>Shop the source</h3>
-        <p>Found something? Tap through and buy it straight from the brand's own site. Loupe sends you to the source — no middleman cart.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- The edit -->
-  <section class="edit" id="edit">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 class="serif">Shop the edit</h2>
-        <p>A small taste of the labels on Loupe. Tap any piece to shop it at the source.</p>
-      </div>
-      <div class="grid">
-
-        <a class="card" href="https://gumi.us/products/style-8" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/0833/1329/5678/files/StudioSession-165_0023_Layer2copy.jpg?v=1705979416" alt="Gumi Olesya Bow Jacket"></div>
-          <div class="meta"><div class="brand">Gumi</div><div class="name">Olesya Bow Jacket</div><div class="row"><span class="price">$175</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://palomawool.com/products/naro-long-strappy-cupro-dress-with-ruffle-detailing-aubergine" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/0401/8048/2198/files/vestido_NARO_MARRON48895.jpg?v=1781165420" alt="Paloma Wool Naro Cupro Dress"></div>
-          <div class="meta"><div class="brand">Paloma Wool</div><div class="name">Naro Cupro Dress</div><div class="row"><span class="price">$238</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://thefrankieshop.com/products/colhame-adjustable-hem-short-sleeve-shirt-powder-blue" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/1527/0993/files/COLHAME-ADJUSTABLE-HEM-SHORT-SLEEVE-SHIRT-POWDER-BLUE-RUBEN-1526-M.jpg?v=1781532369" alt="The Frankie Shop Colhame Shirt in Powder Blue"></div>
-          <div class="meta"><div class="brand">The Frankie Shop</div><div class="name">Colhame Short-Sleeve Shirt — Powder Blue</div><div class="row"><span class="price">$115</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://st-agni.com/products/classic-mid-rise-jeans-dark_indigo" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/1139/4362/files/20251201_StAgni_W26_Ecom_SH_66_R24-201WHT-W26-29398DIN_2680.jpg?v=1780036786" alt="St. Agni Classic Mid Rise Jeans"></div>
-          <div class="meta"><div class="brand">St. Agni</div><div class="name">Classic Mid-Rise Jeans — Dark Indigo</div><div class="row"><span class="price">$257</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://aeyde.com/products/norah-calf-leather-black" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/0683/8135/files/AEYDE-NORAH-CALF-LEATHER-MOKA-1_1_9510c03e-5be1-4a4e-ab89-1110438ebc2c.jpg?v=1776768598" alt="Aeyde Norah Leather Sandals"></div>
-          <div class="meta"><div class="brand">Aeyde</div><div class="name">Norah Leather Sandals</div><div class="row"><span class="price">$297</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://agmesnyc.com/products/inti-earrings" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/1035/0599/files/Inti-Earrings-Seb.jpg?v=1776261666" alt="Agmes Inti Earrings"></div>
-          <div class="meta"><div class="brand">Agmes</div><div class="name">Inti Earrings</div><div class="row"><span class="price">$550</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://audette-shop.com/products/baguette-citron-napalack" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/0308/7056/9019/files/Baguette_Citron_Web_1_b8a856d7-bd01-46d0-aba5-f54e6ef04346.jpg?v=1760998205" alt="Audette Baguette Bag in Citron"></div>
-          <div class="meta"><div class="brand">Audette</div><div class="name">Baguette Bag — Citron</div><div class="row"><span class="price">$530</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://baserange.com/products/iso-top-in-dark-denim" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/0500/2235/1014/files/baserange-polos-iso-top-iso-top-1202841967.jpg?v=1762275439" alt="Baserange Iso Top"></div>
-          <div class="meta"><div class="brand">Baserange</div><div class="name">Iso Top</div><div class="row"><span class="price">$78</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://chanluu.com/products/gwen-tiered-earrings-abalone" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/2524/6732/files/EG-5968_ABALONE_01.png?v=1762150244" alt="Chan Luu Gwen Tiered Earrings in Abalone"></div>
-          <div class="meta"><div class="brand">Chan Luu</div><div class="name">Gwen Tiered Earrings — Abalone</div><div class="row"><span class="price">$175</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-        <a class="card" href="https://bonnieclyde.la/products/blondie-brown-clear" target="_blank" rel="noopener nofollow sponsored">
-          <div class="imgwrap"><img loading="lazy" src="https://cdn.shopify.com/s/files/1/1047/4654/files/Blondie.LayeredBrown.Clear.jpg?v=1773274677" alt="Bonnie Clyde Blondie Sunglasses"></div>
-          <div class="meta"><div class="brand">Bonnie Clyde</div><div class="name">Blondie Sunglasses</div><div class="row"><span class="price">$208</span><span class="shop">Shop →</span></div></div>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Brands -->
-  <section class="brands">
-    <div class="wrap">
-      <h2 class="serif">A few of the labels you'll find</h2>
-      <div class="brand-list">
-        <span>Paloma Wool</span><span>Deiji Studios</span><span>St. Agni</span><span>The Frankie Shop</span>
-        <span>Baserange</span><span>Aeyde</span><span>Chan Luu</span><span>Agmes</span><span>Cou Cou Intimates</span>
-        <span>Cult Gaia</span><span>Mirror Palais</span><span>Stine Goya</span><span>Sir the Label</span><span>With Jéan</span>
-        <span>Damson Madder</span><span>Lisa Says Gah</span><span>Frankies Bikinis</span><span>Sophie Buhai</span>
-        <span>Anni Lu</span><span>Rat and Boa</span><span>Gimaguas</span><span>Ciao Lucia</span><span>Martine Rose</span>
-        <span>Bec + Bridge</span><span>Conner Ives</span><span>Audette</span><span>Bonnie Clyde</span><span>Lexxola</span>
-        <span>Alighieri</span><span>Miaou</span><span>Jeanerica</span><span>Anna October</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Get the app -->
-  <section class="hero" id="get" style="padding:72px 0;">
-    <div class="wrap">
-      <h2 class="serif" style="font-size:clamp(28px,4.5vw,42px);letter-spacing:-1px;margin-bottom:14px;">Get Loupe on your iPhone</h2>
-      <p>Swipe, save, and shop independent fashion. Free on the App Store.</p>
-      <div class="ctas">
-        <a href="https://apps.apple.com/app/id6781137336" class="btn" target="_blank" rel="noopener">Download on the App Store</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Affiliate disclosure -->
-  <section class="disclosure">
-    <div class="wrap">
-      <p><strong>Affiliate disclosure:</strong> Loupe may earn a commission when you buy through links on this site or in the app, at no additional cost to you. We only feature brands we genuinely love, and commissions never influence what we show you.</p>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <a href="#top" class="logo">Loupe</a>
-      <nav class="foot-links">
-        <a href="#edit">Shop the edit</a>
-        <a href="#about">About</a>
-        <a href="https://apps.apple.com/app/id6781137336" target="_blank" rel="noopener">iPhone app</a>
-        <a href="/privacy.html">Privacy</a>
-        <a href="mailto:hello@loupe.app">Contact</a>
-      </nav>
-    </div>
-    <p class="copyright">© 2026 Loupe. Independent fashion discovery. Made with care.</p>
-  </div>
-</footer>
-
-
-<div id="iab-hint" style="display:none;position:fixed;left:12px;right:12px;bottom:14px;background:#1A1A1A;color:#fff;padding:14px 16px;border-radius:14px;font-size:14px;line-height:1.4;text-align:center;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,.25);">
-  Tapping “Get Loupe” opens the App Store. If it’s blocked here, tap <strong>•••</strong> (top-right) → <strong>Open in browser</strong>.
-</div>
+<!--
+  SMART REDIRECT: normal browsers (Safari/Chrome/desktop) jump straight to the
+  App Store. In-app browsers (TikTok / Instagram / Facebook / etc.) do NOT
+  redirect — they block app-store auto-redirects — so they get the clean
+  one-tap download page below instead. This runs before the body paints, so
+  redirected users never see a flash.
+-->
 <script>
 (function(){
+  var APP = "https://apps.apple.com/app/id6781137336";
   var ua = navigator.userAgent || "";
-  if(/TikTok|musical_ly|Bytedance|Instagram|FBAN|FBAV|FB_IAB|Line\//i.test(ua)){
-    var el = document.getElementById('iab-hint');
-    if(el) el.style.display = 'block';
-  }
+  var inApp = /TikTok|musical_ly|Bytedance|Instagram|FBAN|FBAV|FB_IAB|Snapchat|Pinterest|Line\/|Twitter|LinkedInApp|GSA|YaBrowser/i.test(ua);
+  if(!inApp){ try{ location.replace(APP); }catch(e){ location.href = APP; } }
 })();
 </script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet">
+<style>
+  :root{--pink:#F3CBF0;--pink-soft:#FCEFF8;--ink:#141414;--muted:#6E6A6E;--white:#fff;--line:#ECE7EC;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--pink-soft);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+  a{text-decoration:none;}
+  .wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 22px 28px;}
+  .logo{font-family:"Allura",cursive;font-size:64px;line-height:1;color:var(--ink);margin-bottom:6px;}
+  .tag{font-size:16px;color:var(--muted);margin-bottom:26px;}
+  .phone{width:208px;border:8px solid #0E0E12;border-radius:38px;overflow:hidden;background:#0E0E12;box-shadow:0 24px 56px -22px rgba(20,10,30,.5);margin-bottom:30px;position:relative;}
+  .phone::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:40%;height:18px;background:#0E0E12;border-radius:0 0 13px 13px;z-index:2;}
+  .phone img{display:block;width:100%;height:auto;border-radius:30px;}
+  .btn{display:inline-block;background:var(--ink);color:var(--white);padding:16px 34px;border-radius:999px;font-size:17px;font-weight:600;}
+  .hint{margin-top:20px;font-size:13.5px;color:var(--muted);max-width:30ch;line-height:1.5;}
+  .hint b{color:var(--ink);}
+  footer{padding:18px;text-align:center;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="logo">Loupe</div>
+    <div class="tag">Niche fashion, curated for you.</div>
+    <div class="phone"><img src="/screens/discover.jpg" alt="Loupe app" /></div>
+    <a class="btn" href="https://apps.apple.com/app/id6781137336">Download on the App Store</a>
+    <p class="hint">Opened from TikTok or Instagram? For the smoothest install, tap <b>•••</b> (top-right) → <b>Open in browser</b>.</p>
+  </main>
+  <footer>© 2026 Loupe · <a href="/v2/" style="color:inherit;text-decoration:underline;">About the app</a></footer>
 </body>
 </html>
