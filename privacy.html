@@ -63,7 +63,7 @@
       <li><strong>Items you save to your Dresser</strong> — the products you bookmark and any Drawer folders you create.</li>
       <li><strong>Your onboarding quiz responses</strong> — style preferences like silhouette, palette, price range, and vibes.</li>
       <li><strong>Profile details, only if you create a profile</strong> — your @username, display name, bio, profile photo, and any Instagram/TikTok handles you choose to add (see Section 6).</li>
-      <li><strong>Technical diagnostics</strong> — crash reports (device model, iOS version, anonymized stack traces), not linked to your identity.</li>
+      <li><strong>Technical diagnostics</strong> — crash reports and error events (device model, iOS version, stack traces). If you are signed in, these are associated with your account identifier so we can investigate a problem you report.</li>
     </ul>
     <p>We do <strong>not</strong> collect: your precise location, contacts, photos (other than a profile photo you choose to upload), camera, browsing history outside Loupe, social network connections, or your birthdate.</p>
 
@@ -98,9 +98,19 @@
 
     <h2>9. Data Storage and Security</h2>
     <p>Your data is stored on secure servers, encrypted in transit (TLS 1.3) and at rest. Swipe events and account data are retained for the duration of your account plus 30 days after deletion. Crash reports are retained for 30 days.</p>
+    <p>We use a small number of service providers to run Loupe. They process data only to provide their service to us:</p>
+    <ul>
+      <li><strong>Supabase</strong> — database, authentication and file storage (your account, saved items, looks and messages).</li>
+      <li><strong>PostHog</strong> — product analytics (how features are used, so we can improve them).</li>
+      <li><strong>Sentry</strong> — crash and error reporting.</li>
+      <li><strong>Expo</strong> — app delivery, updates and push notification dispatch.</li>
+      <li><strong>Apple</strong> — Sign in with Apple, and delivery of push notifications to your device.</li>
+    </ul>
+    <p>Product images and catalogue data are served from public content delivery networks (jsDelivr, GitHub) and from each brand's own website when you tap through to shop. Once you leave Loupe for a brand's site, that brand's privacy policy applies.</p>
 
     <h2>10. Your Rights — Delete, Export, Opt Out</h2>
-    <p>Delete your account (Settings → Privacy → Delete Account — all personal data permanently deleted within 30 days), export your data (Settings → Privacy → Export Your Data), or opt out of anonymous trend reports (Settings → Privacy). For anything else, email us — we aim to respond within 30 days.</p>
+    <p>You can delete your account at any time in the app: <strong>Account → Delete Account</strong>. This removes your profile, saved items, looks, messages and swipe history from our systems.</p>
+    <p>To request a copy of your data, or to opt out of your anonymised activity being included in aggregate trend reporting, email us at the address below and we will action it — we aim to respond within 30 days. These are handled by request today rather than by a self-serve toggle in the app.</p>
 
     <h2>11. Changes and Contact</h2>
     <p>If we make material changes to this policy, we'll notify you in-app before they take effect. Questions or requests: <a href="mailto:crescicharles@gmail.com">crescicharles@gmail.com</a>.</p>
