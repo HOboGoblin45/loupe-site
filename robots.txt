@@ -1,0 +1,5 @@
+# https://useloupe.shop/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://useloupe.shop/sitemap.xml
