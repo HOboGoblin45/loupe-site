@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="/icon.png" />
+<link rel="apple-touch-icon" href="/icon.png" />
 <meta name='impact-site-verification' value='1429909f-f623-41d9-812a-ca29b52d095e'>
 <title>Loupe — Discover independent fashion, one swipe at a time</title>
 <meta name="description" content="Loupe is a swipe-based discovery app for independent fashion. Swipe 180+ niche brands, save to your Dresser, see your Style DNA, let AI style full looks, and get price-drop alerts — then shop straight from the brand." />
@@ -20,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.shopify.com">
-<link href="https://fonts.googleapis.com/css2?family=Allura&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -46,7 +48,7 @@
   img{max-width:100%;}
   .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
   .serif{font-family:"Fraunces",Georgia,serif;font-weight:500;letter-spacing:-.5px;}
-  .script{font-family:"Allura",cursive;font-weight:400;}
+  .script{font-family:"Beth Ellen",cursive;font-weight:400;}
   .eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--coral);font-weight:700;}
   .muted{color:var(--muted);}
 
@@ -58,7 +60,7 @@
   /* Header */
   header{position:sticky;top:0;z-index:60;background:rgba(250,248,246,.85);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);}
   .nav{display:flex;align-items:center;justify-content:space-between;height:66px;}
-  .logo{font-size:34px;line-height:1;}
+  .logo{font-size:23px;line-height:1.4;}
   .nav-links{display:flex;gap:30px;align-items:center;font-size:14px;color:var(--muted);}
   .nav-links a.hide-sm:hover{color:var(--ink);}
   .nav .btn{padding:10px 20px;font-size:14px;}
@@ -94,7 +96,7 @@
   .demo-phone::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:38%;height:22px;background:#0E0E12;border-radius:0 0 16px 16px;z-index:12;}
   .demo-screen{position:relative;width:100%;height:520px;border-radius:37px;overflow:hidden;background:var(--paper);touch-action:pan-y;}
   .demo-top{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:38px 16px 8px;pointer-events:none;}
-  .demo-top .wordmark{font-size:24px;color:var(--ink);}
+  .demo-top .wordmark{font-size:15px;color:var(--ink);}
   .demo-top .count{font-size:11.5px;font-weight:700;color:var(--muted);background:var(--white);border:1px solid var(--line);padding:3px 10px;border-radius:999px;}
   .dcard{position:absolute;left:12px;right:12px;top:72px;bottom:78px;border-radius:22px;background:var(--white);border:1px solid var(--line);overflow:hidden;box-shadow:0 14px 34px -18px rgba(20,10,30,.35);will-change:transform;user-select:none;-webkit-user-drag:none;}
   .dcard img{width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;}
@@ -203,7 +205,7 @@
   .disclosure p{text-align:center;font-size:12.5px;color:var(--muted);max-width:74ch;margin:0 auto;}
   footer{padding:46px 0 64px;background:var(--paper);}
   .foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
-  .foot .logo{font-size:30px;}
+  .foot .logo{font-size:21px;}
   .foot-links{display:flex;gap:22px;font-size:14px;color:var(--muted);flex-wrap:wrap;}
   .foot-links a:hover{color:var(--ink);}
   .copyright{font-size:13px;color:var(--muted);margin-top:22px;}
@@ -215,7 +217,7 @@
 
 <header>
   <div class="wrap nav">
-    <a href="#top" class="logo script">loupe</a>
+    <a href="#top" class="logo script">Loupe</a>
     <nav class="nav-links">
       <a href="#try" class="hide-sm">Try it</a>
       <a href="#how" class="hide-sm">How it works</a>
@@ -244,7 +246,7 @@
       <span class="try-hint"><span class="pulse"></span>Try it — drag the card</span>
       <div class="demo-phone">
         <div class="demo-screen" id="demoScreen" tabindex="0" role="group" aria-label="Interactive demo: swipe the most-loved pieces on Loupe. Right arrow to like, left arrow to pass.">
-          <div class="demo-top"><span class="wordmark script">loupe</span><span class="count" id="demoCount" aria-live="polite"></span></div>
+          <div class="demo-top"><span class="wordmark script">Loupe</span><span class="count" id="demoCount" aria-live="polite"></span></div>
           <div id="demoStack"></div>
           <div class="demo-actions">
             <button class="dbtn" id="btnPass" aria-label="Pass">✕</button>
@@ -612,7 +614,7 @@
 <footer>
   <div class="wrap">
     <div class="foot">
-      <a href="#top" class="logo script">loupe</a>
+      <a href="#top" class="logo script">Loupe</a>
       <nav class="foot-links">
         <a href="#try">Try it</a>
         <a href="#how">How it works</a>
