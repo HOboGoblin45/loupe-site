@@ -5,13 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name='impact-site-verification' value='1429909f-f623-41d9-812a-ca29b52d095e'>
 <title>Loupe — Discover independent fashion, one swipe at a time</title>
-<meta name="description" content="Loupe is a swipe-based discovery app for independent and niche fashion brands. Find labels you'll actually wear, save them to your Dresser, see your Style DNA, and share with friends." />
+<meta name="description" content="Loupe is a swipe-based discovery app for independent fashion. Swipe 180+ niche brands, save to your Dresser, see your Style DNA, let AI style full looks, and get price-drop alerts — then shop straight from the brand." />
+<link rel="canonical" href="https://useloupe.shop/" />
+<meta name="apple-itunes-app" content="app-id=6781137336" />
 <meta property="og:title" content="Loupe — Discover independent fashion" />
-<meta property="og:description" content="Swipe to discover 180+ independent labels. Save to your Dresser, see your Style DNA, share with friends." />
+<meta property="og:description" content="Swipe to discover 180+ independent labels. Save to your Dresser, see your Style DNA, build looks with AI, shop straight from the brand." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://useloupe.shop/" />
+<meta property="og:image" content="https://useloupe.shop/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://useloupe.shop/og.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.shopify.com">
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Loupe",
+  "operatingSystem": "iOS",
+  "applicationCategory": "LifestyleApplication",
+  "description": "Swipe-based discovery app for independent fashion brands.",
+  "url": "https://useloupe.shop/",
+  "installUrl": "https://apps.apple.com/app/id6781137336",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
 <style>
   :root{
     --pink:#F3CBF0; --pink-soft:#FCEFF8; --ink:#141414; --navy:#15152A;
@@ -21,6 +43,7 @@
   html{scroll-behavior:smooth;}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;}
   a{color:inherit;text-decoration:none;}
+  img{max-width:100%;}
   .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
   .serif{font-family:"Fraunces",Georgia,serif;font-weight:500;letter-spacing:-.5px;}
   .script{font-family:"Allura",cursive;font-weight:400;}
@@ -31,7 +54,6 @@
   .btn:hover{transform:translateY(-2px);}
   .btn-pink{background:var(--pink);color:var(--ink);}
   .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);}
-  .btn-light{background:var(--white);color:var(--ink);}
 
   /* Header */
   header{position:sticky;top:0;z-index:60;background:rgba(250,248,246,.85);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);}
@@ -48,15 +70,17 @@
   .phone::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:38%;height:22px;background:#0E0E12;border-radius:0 0 16px 16px;z-index:2;}
 
   /* Hero */
-  .hero{background:var(--pink-soft);padding:72px 0 80px;overflow:hidden;}
+  .hero{background:var(--pink-soft);padding:64px 0 80px;overflow:hidden;}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
   .hero h1{font-size:clamp(40px,6.4vw,68px);line-height:1.02;letter-spacing:-2px;margin:18px 0 20px;max-width:13ch;}
   .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:42ch;margin-bottom:30px;}
   .hero .cta-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
   .hero .trust{margin-top:22px;font-size:13px;color:var(--muted);letter-spacing:.2px;}
-  .hero-art{position:relative;display:flex;justify-content:center;align-items:flex-end;min-height:520px;}
-  .hero-art .phone.front{max-width:288px;position:relative;z-index:3;}
-  .hero-art .phone.back{position:absolute;max-width:230px;right:2%;bottom:38px;transform:rotate(7deg);z-index:1;opacity:.97;}
+  .hero-art{position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-height:560px;}
+  .hero-art .phone.back{position:absolute;max-width:230px;right:0;bottom:60px;transform:rotate(7deg);z-index:1;opacity:.97;}
+  .try-hint{position:relative;z-index:4;display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--line);color:var(--ink);font-size:13px;font-weight:600;padding:8px 16px;border-radius:999px;margin-bottom:14px;box-shadow:0 6px 20px -10px rgba(20,10,30,.25);}
+  .try-hint .pulse{width:9px;height:9px;border-radius:50%;background:var(--coral);animation:pu 1.6s ease-in-out infinite;}
+  @keyframes pu{0%,100%{opacity:.35}50%{opacity:1}}
   @media(max-width:860px){
     .hero-grid{grid-template-columns:1fr;text-align:center;gap:36px;}
     .hero h1,.hero p.lead{max-width:none;margin-left:auto;margin-right:auto;}
@@ -65,11 +89,49 @@
     .hero-art .phone.back{display:none;}
   }
 
+  /* ── The live swipe demo ─────────────────────────────────────────── */
+  .demo-phone{position:relative;z-index:3;width:300px;border:9px solid #0E0E12;border-radius:46px;background:#0E0E12;box-shadow:0 30px 70px -24px rgba(20,10,30,.5);}
+  .demo-phone::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:38%;height:22px;background:#0E0E12;border-radius:0 0 16px 16px;z-index:12;}
+  .demo-screen{position:relative;width:100%;height:520px;border-radius:37px;overflow:hidden;background:var(--paper);touch-action:pan-y;}
+  .demo-top{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:38px 16px 8px;pointer-events:none;}
+  .demo-top .wordmark{font-size:24px;color:var(--ink);}
+  .demo-top .count{font-size:11.5px;font-weight:700;color:var(--muted);background:var(--white);border:1px solid var(--line);padding:3px 10px;border-radius:999px;}
+  .dcard{position:absolute;left:12px;right:12px;top:72px;bottom:78px;border-radius:22px;background:var(--white);border:1px solid var(--line);overflow:hidden;box-shadow:0 14px 34px -18px rgba(20,10,30,.35);will-change:transform;user-select:none;-webkit-user-drag:none;}
+  .dcard img{width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none;}
+  .dcard .info{position:absolute;left:0;right:0;bottom:0;background:var(--white);padding:10px 14px 12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .dcard .info .t{min-width:0;}
+  .dcard .info .b{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+  .dcard .info .n{font-size:13.5px;font-weight:600;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+  .dcard .info .p{font-size:13px;font-weight:700;}
+  .dcard .shop{flex-shrink:0;font-size:11.5px;font-weight:700;background:var(--paper);border:1px solid var(--line);padding:6px 11px;border-radius:999px;}
+  .stamp{position:absolute;top:16px;font-size:15px;font-weight:800;letter-spacing:2px;padding:7px 16px;border-radius:999px;opacity:0;z-index:5;}
+  .stamp.like{left:14px;background:var(--pink);color:var(--navy);transform:rotate(-9deg);}
+  .stamp.pass{right:14px;background:var(--white);color:var(--muted);border:1.5px solid var(--line);transform:rotate(9deg);}
+  .demo-actions{position:absolute;left:0;right:0;bottom:14px;z-index:10;display:flex;justify-content:center;gap:26px;}
+  .dbtn{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:var(--white);font-size:21px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 22px -12px rgba(20,10,30,.4);transition:transform .12s ease;}
+  .dbtn:hover{transform:scale(1.08);}
+  .dbtn.like{background:var(--pink);border-color:var(--pink);}
+  .demo-end{position:absolute;inset:0;z-index:11;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px 22px;background:var(--pink-soft);}
+  .demo-end.show{display:flex;}
+  .demo-end .big{font-family:"Fraunces",Georgia,serif;font-size:26px;letter-spacing:-.8px;line-height:1.15;margin-bottom:10px;}
+  .demo-end p{font-size:13.5px;color:var(--muted);margin-bottom:8px;}
+  .demo-end .liked-brands{font-size:12px;color:var(--ink);font-weight:600;margin-bottom:18px;max-width:220px;}
+  .demo-end .btn{font-size:13.5px;padding:12px 20px;}
+  .demo-end .replay{margin-top:14px;font-size:12.5px;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:none;}
+  @media(prefers-reduced-motion:reduce){.dcard{transition:none !important;}.try-hint .pulse{animation:none;}}
+  @media(max-width:380px){.demo-phone{width:270px;}.demo-screen{height:480px;}}
+
+  /* Stat bar */
+  .statbar{background:var(--navy);color:var(--white);}
+  .statbar .row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:26px 0;text-align:center;}
+  .statbar b{display:block;font-family:"Fraunces",Georgia,serif;font-size:clamp(20px,2.6vw,28px);letter-spacing:-.6px;}
+  .statbar span{font-size:12.5px;color:rgba(255,255,255,.62);letter-spacing:.4px;}
+  @media(max-width:640px){.statbar .row{grid-template-columns:repeat(2,1fr);gap:20px 10px;}}
+
   /* Sections */
   section.block{padding:84px 0;}
   .pill{display:inline-block;background:var(--pink);color:var(--ink);font-size:12px;font-weight:700;letter-spacing:.4px;padding:6px 14px;border-radius:999px;}
 
-  /* How it works */
   .how{text-align:center;}
   .how h2{font-size:clamp(28px,4.4vw,44px);letter-spacing:-1.2px;margin:14px auto 8px;}
   .how > .wrap > p.sub{color:var(--muted);max-width:46ch;margin:0 auto 52px;}
@@ -80,12 +142,11 @@
   .step p{color:var(--muted);font-size:15px;}
   @media(max-width:760px){.steps{grid-template-columns:1fr;}}
 
-  /* Feature rows */
   .feature{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
   .feature.rev .copy{order:2;}
   .feature.rev .art{order:1;}
   .feature .art{display:flex;justify-content:center;}
-  .feature h2{font-size:clamp(27px,3.6vw,40px);letter-spacing:-1px;margin:14px 0 16px;max-width:14ch;}
+  .feature h2{font-size:clamp(27px,3.6vw,40px);letter-spacing:-1px;margin:14px 0 16px;max-width:15ch;}
   .feature p.body{color:var(--muted);font-size:17px;max-width:42ch;margin-bottom:20px;}
   .feature ul{list-style:none;display:flex;flex-direction:column;gap:11px;}
   .feature li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;}
@@ -99,25 +160,45 @@
     .feature li{text-align:left;}
   }
 
-  /* Dark Style DNA section */
   .dark{background:var(--navy);color:var(--white);}
   .dark .muted,.dark p.body{color:rgba(255,255,255,.66);}
   .dark .eyebrow{color:var(--pink);}
   .dark .phone{box-shadow:0 30px 80px -20px rgba(0,0,0,.6);}
 
-  /* Brands */
+  /* Look Builder collage art (flat, no screenshots exist for this yet) */
+  .lookart{position:relative;width:100%;max-width:300px;border:9px solid #0E0E12;border-radius:46px;overflow:hidden;background:var(--paper);box-shadow:0 30px 70px -24px rgba(20,10,30,.45);}
+  .lookart::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:38%;height:22px;background:#0E0E12;border-radius:0 0 16px 16px;z-index:3;}
+  .look-canvas{position:relative;height:430px;margin:40px 12px 12px;background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .look-canvas .lk{position:absolute;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--paper);box-shadow:0 10px 24px -14px rgba(20,10,30,.35);}
+  .look-canvas .lk img{width:100%;height:100%;object-fit:cover;display:block;border-radius:0;}
+  .look-canvas .lk1{width:150px;height:190px;top:18px;left:16px;transform:rotate(-3deg);}
+  .look-canvas .lk2{width:118px;height:150px;top:64px;right:14px;transform:rotate(4deg);z-index:2;}
+  .look-canvas .lk3{width:132px;height:164px;bottom:64px;left:34px;transform:rotate(2deg);}
+  .look-canvas .lk4{width:104px;height:130px;bottom:44px;right:26px;transform:rotate(-5deg);}
+  .look-canvas .styleme{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);background:var(--navy);color:var(--white);font-size:12.5px;font-weight:700;padding:9px 18px;border-radius:999px;z-index:4;white-space:nowrap;}
+  .lookbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px 16px;}
+  .lookbar .t{font-family:"Fraunces",Georgia,serif;font-size:15px;}
+  .lookbar .c{font-size:11px;color:var(--muted);}
+
+  /* Gemini band */
+  .partner{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .partner .row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:26px 0;text-align:center;}
+  .partner .tag{background:#FFF0F9;border:1.5px solid #C75FB6;color:var(--navy);font-size:11px;font-weight:800;letter-spacing:1.4px;padding:5px 13px;border-radius:999px;}
+  .partner p{font-size:14.5px;color:var(--muted);}
+  .partner a{font-weight:600;color:var(--ink);border-bottom:1px solid var(--pink);}
+
+  /* Brands cloud (static links) */
   .brands{background:var(--white);text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
   .brands h2{font-size:clamp(26px,4vw,40px);letter-spacing:-1px;margin:14px auto 10px;max-width:18ch;}
   .brands .sub{color:var(--muted);max-width:48ch;margin:0 auto 36px;}
   .brand-cloud{display:flex;flex-wrap:wrap;gap:9px 10px;justify-content:center;max-width:980px;margin:0 auto;}
-  .brand-cloud span{font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:7px 14px;border-radius:999px;white-space:nowrap;}
+  .brand-cloud a{font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:7px 14px;border-radius:999px;white-space:nowrap;transition:background .12s ease,border-color .12s ease;}
+  .brand-cloud a:hover{background:var(--pink-soft);border-color:var(--pink);}
 
-  /* Final CTA */
   .final{background:var(--pink-soft);text-align:center;}
   .final h2{font-size:clamp(32px,5.4vw,56px);letter-spacing:-1.6px;margin:16px auto 14px;max-width:16ch;}
   .final p{color:var(--muted);font-size:18px;margin-bottom:30px;}
 
-  /* Disclosure + footer */
   .disclosure{padding:28px 0;border-top:1px solid var(--line);}
   .disclosure p{text-align:center;font-size:12.5px;color:var(--muted);max-width:74ch;margin:0 auto;}
   footer{padding:46px 0 64px;background:var(--paper);}
@@ -136,6 +217,7 @@
   <div class="wrap nav">
     <a href="#top" class="logo script">loupe</a>
     <nav class="nav-links">
+      <a href="#try" class="hide-sm">Try it</a>
       <a href="#how" class="hide-sm">How it works</a>
       <a href="#dna" class="hide-sm">Style DNA</a>
       <a href="/brands/" class="hide-sm">Brands</a>
@@ -144,23 +226,51 @@
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
+<!-- HERO with a LIVE swipe demo -->
+<section class="hero" id="try">
   <div class="wrap hero-grid">
     <div class="copy">
-      <span class="eyebrow">Now on iPhone</span>
-      <h1 class="serif">Discover fashion you'll actually wear.</h1>
-      <p class="lead">Loupe is a swipe-to-discover app for independent and niche labels. Find pieces you love, save them to your Dresser, and shop them straight from the brand.</p>
+      <span class="eyebrow">Free on iPhone</span>
+      <h1 class="serif">Discover fashion you&rsquo;ll actually wear.</h1>
+      <p class="lead">Swipe through 180+ independent labels. Every swipe teaches Loupe your taste — then it finds pieces you&rsquo;d never have found, styles them into looks, and watches the prices for you.</p>
       <div class="cta-row">
         <a href="https://apps.apple.com/app/id6781137336" target="_blank" rel="noopener" class="btn">Get Loupe on the App Store</a>
         <a href="#how" class="btn btn-ghost">See how it works</a>
       </div>
-      <p class="trust">Free · 180+ independent brands · No ads, no fast fashion</p>
+      <p class="trust">Free · No ads, ever · No fast fashion · Shop straight from the brand</p>
     </div>
     <div class="hero-art">
-      <div class="phone back"><img src="/screens/styledna.jpg" alt="Loupe Style DNA card" loading="eager"></div>
-      <div class="phone front"><img src="/screens/discover.jpg" alt="Loupe swipe-to-discover feed" loading="eager"></div>
+      <div class="phone back"><img src="/screens/styledna.jpg" alt="Loupe Style DNA card" loading="eager" width="230" height="467"></div>
+      <span class="try-hint"><span class="pulse"></span>Try it — drag the card</span>
+      <div class="demo-phone">
+        <div class="demo-screen" id="demoScreen" tabindex="0" role="group" aria-label="Interactive demo: swipe the most-loved pieces on Loupe. Right arrow to like, left arrow to pass.">
+          <div class="demo-top"><span class="wordmark script">loupe</span><span class="count" id="demoCount" aria-live="polite"></span></div>
+          <div id="demoStack"></div>
+          <div class="demo-actions">
+            <button class="dbtn" id="btnPass" aria-label="Pass">✕</button>
+            <button class="dbtn like" id="btnLike" aria-label="Like">♥</button>
+          </div>
+          <div class="demo-end" id="demoEnd">
+            <div class="big serif" id="endHead">That&rsquo;s the idea.</div>
+            <p id="endSub">These were the 12 most-loved pieces on Loupe right now.</p>
+            <p class="liked-brands" id="endBrands"></p>
+            <a href="https://apps.apple.com/app/id6781137336" target="_blank" rel="noopener" class="btn">Keep swiping in the app</a>
+            <button class="replay" id="demoReplay">Deal 12 more swipes</button>
+          </div>
+          <noscript><img src="/screens/discover.jpg" alt="Loupe swipe-to-discover feed" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></noscript>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- STAT BAR -->
+<section class="statbar">
+  <div class="wrap row">
+    <div><b>180+</b><span>independent brands</span></div>
+    <div><b>8,000+</b><span>pieces in the feed</span></div>
+    <div><b>Daily</b><span>new drops</span></div>
+    <div><b>100%</b><span>shop direct — no markup</span></div>
   </div>
 </section>
 
@@ -168,53 +278,77 @@
 <section class="block how" id="how">
   <div class="wrap">
     <span class="pill">How it works</span>
-    <h2 class="serif">Three taps to a wardrobe that's yours.</h2>
+    <h2 class="serif">Three taps to a wardrobe that&rsquo;s yours.</h2>
     <p class="sub">No endless scroll, no algorithmic noise — just a clean feed of brands worth knowing.</p>
     <div class="steps">
       <div class="step">
         <div class="ic">↔</div>
         <h3>Swipe to discover</h3>
-        <p>Swipe right to like, left to pass, up to save. Your feed learns your taste with every swipe.</p>
+        <p>Right to like, left to pass, up to save — like you just did above. Your feed learns your taste with every card.</p>
       </div>
       <div class="step">
         <div class="ic">▲</div>
         <h3>Save to your Dresser</h3>
-        <p>Keep everything you love in one place — organized, revisitable, and backed up to your account.</p>
+        <p>Everything you love in one place — organized into drawers, synced to your account, watched for price drops.</p>
       </div>
       <div class="step">
         <div class="ic">◎</div>
         <h3>Shop the source</h3>
-        <p>Tap through and buy straight from the brand's own site. Loupe sends you to the source.</p>
+        <p>Tap through and buy on the brand&rsquo;s own site, at the brand&rsquo;s own price. Loupe never marks up.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURE: DRESSER -->
+<!-- FEATURE: DRESSER + ALERTS -->
 <section class="block" style="background:var(--white);border-top:1px solid var(--line);">
   <div class="wrap feature">
     <div class="copy">
       <span class="eyebrow">Your Dresser</span>
       <h2 class="serif">A wardrobe you curate, not a cart you forget.</h2>
-      <p class="body">Every piece you save lands in your Dresser — sorted, searchable, and synced across devices. Build Looks, revisit favorites, and get a heads-up when something you saved drops in price.</p>
+      <p class="body">Every piece you save lands in your Dresser — sorted, searchable, and synced. Loupe keeps watching after you save: when a piece goes on sale or your size comes back, you&rsquo;ll know.</p>
       <ul>
         <li><span class="dot">—</span><span><b>Save with a swipe.</b> Anything you love, one gesture away.</span></li>
-        <li><span class="dot">—</span><span><b>Build Looks.</b> Style saved pieces into outfits.</span></li>
-        <li><span class="dot">—</span><span><b>Price-drop alerts.</b> We watch the items you love.</span></li>
+        <li><span class="dot">—</span><span><b>Price-drop &amp; restock alerts.</b> One gentle daily digest — never spam.</span></li>
+        <li><span class="dot">—</span><span><b>Your sizes, up front.</b> Available sizes right on every tile.</span></li>
       </ul>
     </div>
-    <div class="art"><div class="phone"><img src="/screens/dresser.jpg" alt="Loupe Dresser of saved pieces" loading="lazy"></div></div>
+    <div class="art"><div class="phone"><img src="/screens/dresser.jpg" alt="Loupe Dresser of saved pieces" loading="lazy" width="300" height="609"></div></div>
+  </div>
+</section>
+
+<!-- FEATURE: LOOK BUILDER + STYLE ME (new) -->
+<section class="block" style="background:var(--pink-soft);">
+  <div class="wrap feature rev">
+    <div class="art">
+      <div class="lookart" aria-label="Illustration of the Loupe Look Builder: saved pieces styled into an outfit collage">
+        <div class="look-canvas" id="lookCanvas">
+          <span class="styleme">✨ Style Me</span>
+        </div>
+        <div class="lookbar"><span class="t">Saturday, styled</span><span class="c">4 pieces · tap to reshuffle</span></div>
+      </div>
+    </div>
+    <div class="copy">
+      <span class="eyebrow">Look Builder</span>
+      <h2 class="serif">Style whole looks — or let AI do it.</h2>
+      <p class="body">Drag your saved pieces onto a canvas and build the outfit before you buy it. Or tap <b>Style Me</b> and Loupe&rsquo;s AI composes a full look from your taste — head to toe, from the whole catalog.</p>
+      <ul>
+        <li><span class="dot">—</span><span><b>Build it yourself.</b> Drag, resize, layer — like a moodboard that shops.</span></li>
+        <li><span class="dot">—</span><span><b>Style Me.</b> AI assembles looks from pieces you love. Tap to reshuffle.</span></li>
+        <li><span class="dot">—</span><span><b>Share it.</b> Send a look to a friend — every piece stays shoppable.</span></li>
+      </ul>
+    </div>
   </div>
 </section>
 
 <!-- FEATURE: STYLE DNA (dark) -->
 <section class="block dark" id="dna">
   <div class="wrap feature rev">
-    <div class="art"><div class="phone"><img src="/screens/styledna.jpg" alt="Loupe Style DNA card" loading="lazy"></div></div>
+    <div class="art"><div class="phone"><img src="/screens/styledna.jpg" alt="Loupe Style DNA card" loading="lazy" width="300" height="609"></div></div>
     <div class="copy">
       <span class="eyebrow">Style DNA</span>
       <h2 class="serif">See your taste, distilled.</h2>
-      <p class="body">The more you swipe, the more Loupe understands you. Your Style DNA reveals your signature — your top brands, palette, silhouettes, and price sweet spot — in one shareable card.</p>
+      <p class="body">The more you swipe, the more Loupe understands you. Your Style DNA reveals your signature — top brands, palette, silhouettes, price sweet spot — in one shareable card. Some tastes are rarer than others; find out how rare yours is.</p>
       <ul>
         <li><span class="dot">—</span><span>Your aesthetic, named and visualized.</span></li>
         <li><span class="dot">—</span><span>Top brands &amp; colors at a glance.</span></li>
@@ -224,37 +358,45 @@
   </div>
 </section>
 
-<!-- FEATURE: PROFILES / FRIENDS -->
+<!-- FEATURE: FRIENDS + DMs -->
 <section class="block" style="background:var(--white);border-top:1px solid var(--line);">
   <div class="wrap feature">
     <div class="copy">
       <span class="eyebrow">Make it yours</span>
       <h2 class="serif">Style is better with friends.</h2>
-      <p class="body">Claim a @username, share your Dresser and Looks, and follow the people whose taste you love — all from one Loupe profile. You decide exactly what's public.</p>
+      <p class="body">Claim a @username, share your Dresser and Looks, and send pieces straight to friends in chat — with reactions, so you actually know what they think. You decide exactly what&rsquo;s public.</p>
       <ul>
-        <li><span class="dot">—</span><span><b>Share your style.</b> Show off your Dresser, Looks and Likes.</span></li>
-        <li><span class="dot">—</span><span><b>Get discovered.</b> Friends find you in the Loupe directory.</span></li>
-        <li><span class="dot">—</span><span><b>Private by default.</b> Nothing's shared until you choose.</span></li>
+        <li><span class="dot">—</span><span><b>Send the piece, not a screenshot.</b> Chat about it right in Loupe.</span></li>
+        <li><span class="dot">—</span><span><b>Share your style.</b> Your Dresser, Looks and Likes — if you choose.</span></li>
+        <li><span class="dot">—</span><span><b>Private by default.</b> Nothing&rsquo;s shared until you turn it on.</span></li>
       </ul>
     </div>
-    <div class="art"><div class="phone"><img src="/screens/profile.jpg" alt="Loupe profile and friends" loading="lazy"></div></div>
+    <div class="art"><div class="phone"><img src="/screens/profile.jpg" alt="Loupe profile and friends" loading="lazy" width="300" height="609"></div></div>
   </div>
 </section>
 
-<!-- FEATURE: FILTERS -->
+<!-- FEATURE: FILTERS + YOUR BRANDS -->
 <section class="block" style="background:var(--pink-soft);">
   <div class="wrap feature rev">
-    <div class="art"><div class="phone"><img src="/screens/filters.jpg" alt="Loupe filters: category, budget, size, color" loading="lazy"></div></div>
+    <div class="art"><div class="phone"><img src="/screens/filters.jpg" alt="Loupe filters: category, budget, size, color" loading="lazy" width="300" height="609"></div></div>
     <div class="copy">
       <span class="eyebrow">Made to fit you</span>
       <h2 class="serif">Dial your feed to your taste — and your size.</h2>
-      <p class="body">Set your budget, your sizes, your colors and silhouettes. Loupe shows you pieces that actually fit your life, and only the brands you want to see.</p>
+      <p class="body">Set your budget, sizes, colors and silhouettes. Loupe shows pieces that fit your life — and if we&rsquo;re missing a label you love, add it yourself and it joins your feed.</p>
       <ul>
         <li><span class="dot">—</span><span><b>Shop your size.</b> Only see pieces available in it.</span></li>
         <li><span class="dot">—</span><span><b>Your budget.</b> Set a range and stick to it.</span></li>
-        <li><span class="dot">—</span><span><b>Your brands.</b> Mute anything that isn't for you.</span></li>
+        <li><span class="dot">—</span><span><b>Add your own brand.</b> Bring any label you love into your feed.</span></li>
       </ul>
     </div>
+  </div>
+</section>
+
+<!-- PARTNER BAND -->
+<section class="partner">
+  <div class="wrap row">
+    <span class="tag">IN THE WILD</span>
+    <p>Loupe also partners with independent boutiques — starting with <a href="https://geminishop.com/?utm_source=loupe&amp;utm_medium=referral&amp;utm_campaign=site" target="_blank" rel="noopener nofollow sponsored">Gemini in Chicago</a>. Partner pieces get their own pink tiles in the feed, and point you to the shop&rsquo;s door as well as its site.</p>
   </div>
 </section>
 
@@ -263,10 +405,191 @@
   <div class="wrap">
     <span class="pill">The roster</span>
     <h2 class="serif">180+ independent labels, in one place.</h2>
-    <p class="sub">From cult favorites to brands you haven't met yet — the kind you won't find on every other app.</p>
-    <div class="brand-cloud" id="brandCloud"></div>
+    <p class="sub">From cult favorites to brands you haven&rsquo;t met yet — every one hand-picked, every one linked below.</p>
+    <div class="brand-cloud">
+      <a href="/brands/1xblue.html">1XBLUE</a>
+      <a href="/brands/28natelier.html">28natelier</a>
+      <a href="/brands/6397.html">6397</a>
+      <a href="/brands/a-bronze-age.html">A Bronze Age</a>
+      <a href="/brands/aeyde.html">Aeyde</a>
+      <a href="/brands/agmes.html">Agmes</a>
+      <a href="/brands/agus-chueizer.html">Agus Chueizer</a>
+      <a href="/brands/aknvas.html">Aknvas</a>
+      <a href="/brands/alas-silk.html">Alas Silk</a>
+      <a href="/brands/alexis.html">ALEXIS</a>
+      <a href="/brands/alighieri.html">Alighieri</a>
+      <a href="/brands/allina-liu.html">Allina Liu</a>
+      <a href="/brands/alohas.html">ALOHAS</a>
+      <a href="/brands/ancegria.html">Ancegria</a>
+      <a href="/brands/andrea-kader.html">Andrea Kader</a>
+      <a href="/brands/anna-october.html">Anna October</a>
+      <a href="/brands/anni-lu.html">Anni Lu</a>
+      <a href="/brands/anonie.html">Anonie</a>
+      <a href="/brands/apres-studio.html">Apres Studio</a>
+      <a href="/brands/at-first-sight-studio.html">At First Sight Studio</a>
+      <a href="/brands/attega.html">Attega</a>
+      <a href="/brands/audette.html">Audette</a>
+      <a href="/brands/baserange.html">Baserange</a>
+      <a href="/brands/battlo.html">Battlo</a>
+      <a href="/brands/bec-plus-bridge.html">Bec + Bridge</a>
+      <a href="/brands/belle-anna.html">Belle Anna</a>
+      <a href="/brands/blanch-wear.html">Blanch Wear</a>
+      <a href="/brands/bonnie-clyde.html">Bonnie Clyde</a>
+      <a href="/brands/brooke-callahan.html">Brooke Callahan</a>
+      <a href="/brands/buci-nyc.html">Buci NYC</a>
+      <a href="/brands/by-gianna.html">By Gianna</a>
+      <a href="/brands/bywolfgang.html">byWolfgang</a>
+      <a href="/brands/cest-nous.html">C&amp;#x27;est Nous</a>
+      <a href="/brands/cafe-forgot.html">Cafe Forgot</a>
+      <a href="/brands/campbell-and-kramer.html">Campbell and Kramer</a>
+      <a href="/brands/carmen-says.html">Carmen Says</a>
+      <a href="/brands/chan-luu.html">Chan Luu</a>
+      <a href="/brands/charlie-beads.html">Charlie Beads</a>
+      <a href="/brands/chini.html">CHINI</a>
+      <a href="/brands/chnita.html">CHNITA</a>
+      <a href="/brands/christopher-esber.html">Christopher Esber</a>
+      <a href="/brands/ciao-lucia.html">Ciao Lucia</a>
+      <a href="/brands/collina-strada.html">Collina Strada</a>
+      <a href="/brands/conner-ives.html">Conner Ives</a>
+      <a href="/brands/coperni.html">Coperni</a>
+      <a href="/brands/cou-cou-intimates.html">Cou Cou Intimates</a>
+      <a href="/brands/cowboys-of-habit.html">Cowboys of Habit</a>
+      <a href="/brands/cult-gaia.html">Cult Gaia</a>
+      <a href="/brands/damson-madder.html">Damson Madder</a>
+      <a href="/brands/darbary-paris.html">Darbary Paris</a>
+      <a href="/brands/deiji-studios.html">Deiji Studios</a>
+      <a href="/brands/designation.html">Designation</a>
+      <a href="/brands/dmy-studios.html">DMY Studios</a>
+      <a href="/brands/donde-esteban.html">Donde Esteban</a>
+      <a href="/brands/dries-van-noten.html">Dries Van Noten</a>
+      <a href="/brands/d-mod-mod.html">DémodéMODÉ</a>
+      <a href="/brands/easton-marley.html">Easton Marley</a>
+      <a href="/brands/eb-denim.html">EB Denim</a>
+      <a href="/brands/eckhaus-latta.html">Eckhaus Latta</a>
+      <a href="/brands/eliou.html">Eliou</a>
+      <a href="/brands/ella-mae.html">Ella Mae</a>
+      <a href="/brands/entremains.html">Entremains</a>
+      <a href="/brands/erea.html">EREA</a>
+      <a href="/brands/eshim.html">Eshim</a>
+      <a href="/brands/esio.html">ESIO</a>
+      <a href="/brands/esquina.html">Esquina</a>
+      <a href="/brands/fait-par-foutch.html">Fait Par Foutch</a>
+      <a href="/brands/faris.html">Faris</a>
+      <a href="/brands/fashion-brand-company.html">Fashion Brand Company</a>
+      <a href="/brands/feners.html">Feners</a>
+      <a href="/brands/find-me-now-the-label.html">Find Me Now the Label</a>
+      <a href="/brands/flattered.html">Flattered</a>
+      <a href="/brands/flore-flore.html">Flore Flore</a>
+      <a href="/brands/frankies-bikinis.html">Frankies Bikinis</a>
+      <a href="/brands/fruity-booty.html">Fruity Booty</a>
+      <a href="/brands/ganni.html">Ganni</a>
+      <a href="/brands/gaudir-swim.html">Gaudir Swim</a>
+      <a href="/brands/geel.html">Geel</a>
+      <a href="/brands/ghostboy.html">Ghostboy</a>
+      <a href="/brands/gimaguas.html">Gimaguas</a>
+      <a href="/brands/gintonic.html">Gintonic</a>
+      <a href="/brands/guizio.html">Guizio</a>
+      <a href="/brands/gumi.html">Gumi</a>
+      <a href="/brands/hand-over.html">Hand Over</a>
+      <a href="/brands/heaven-mayhem.html">Heaven Mayhem</a>
+      <a href="/brands/helena-magdalena.html">Helena Magdalena</a>
+      <a href="/brands/hernan-herdez.html">Hernan Herdez</a>
+      <a href="/brands/insis.html">INSIS</a>
+      <a href="/brands/jeanerica.html">Jeanerica</a>
+      <a href="/brands/kernemilk.html">Kernemilk</a>
+      <a href="/brands/khaite.html">Khaite</a>
+      <a href="/brands/kinkifish.html">Kinkifish</a>
+      <a href="/brands/lauren-manoogian.html">Lauren Manoogian</a>
+      <a href="/brands/le-febour.html">Le Febour</a>
+      <a href="/brands/lexxola.html">Lexxola</a>
+      <a href="/brands/liebestod.html">Liebestod</a>
+      <a href="/brands/lisa-says-gah.html">Lisa Says Gah</a>
+      <a href="/brands/little-yarn.html">Little Yarn</a>
+      <a href="/brands/los-angeles-apparel.html">Los Angeles Apparel</a>
+      <a href="/brands/maem-disko.html">Maem Disko</a>
+      <a href="/brands/maguire.html">Maguire</a>
+      <a href="/brands/mais-x-frida.html">Mais x Frida</a>
+      <a href="/brands/maketh-thou.html">Maketh Thou</a>
+      <a href="/brands/mali-marea.html">Mali Marea</a>
+      <a href="/brands/marge-sherwood.html">Marge Sherwood</a>
+      <a href="/brands/marland-backus.html">Marland Backus</a>
+      <a href="/brands/martha-calvo.html">Martha Calvo</a>
+      <a href="/brands/martine-rose.html">Martine Rose</a>
+      <a href="/brands/miaou.html">Miaou</a>
+      <a href="/brands/mirchi-by-kim.html">Mirchi by Kim</a>
+      <a href="/brands/mirror-palais.html">Mirror Palais</a>
+      <a href="/brands/misbhv.html">MISBHV</a>
+      <a href="/brands/mj.html">MJ</a>
+      <a href="/brands/mode-mischief.html">Mode Mischief</a>
+      <a href="/brands/mondo-mondo.html">Mondo Mondo</a>
+      <a href="/brands/moro-joyas.html">Moro Joyas</a>
+      <a href="/brands/moss-studio.html">Moss Studio</a>
+      <a href="/brands/mounser.html">Mounser</a>
+      <a href="/brands/mpaz-studio.html">Mpaz Studio</a>
+      <a href="/brands/musier-paris.html">Musier Paris</a>
+      <a href="/brands/my-mum-made-it.html">My Mum Made It</a>
+      <a href="/brands/nafsika-skourti.html">Nafsika Skourti</a>
+      <a href="/brands/nausicaa.html">Nausicaa</a>
+      <a href="/brands/nicole-saldana.html">Nicole Saldana</a>
+      <a href="/brands/niihai.html">Niihai</a>
+      <a href="/brands/nokshi-new-york.html">Nokshi New York</a>
+      <a href="/brands/nuovo-paris.html">Nuovo Paris</a>
+      <a href="/brands/nuri-studios.html">Nuri Studios</a>
+      <a href="/brands/nuuk-jewelry.html">NUUK Jewelry</a>
+      <a href="/brands/oddli.html">Oddli</a>
+      <a href="/brands/of-planet-earth.html">Of Planet Earth</a>
+      <a href="/brands/olivia-hurst.html">Olivia Hurst</a>
+      <a href="/brands/orseund-iris.html">Orseund Iris</a>
+      <a href="/brands/other-normal.html">Other Normal</a>
+      <a href="/brands/paloma-wool.html">Paloma Wool</a>
+      <a href="/brands/paris-georgia.html">Paris Georgia</a>
+      <a href="/brands/pdpaola.html">PDPAOLA</a>
+      <a href="/brands/peachy-den.html">Peachy Den</a>
+      <a href="/brands/phoebe-philo.html">Phoebe Philo</a>
+      <a href="/brands/port-tanger.html">Port Tanger</a>
+      <a href="/brands/priscavera.html">Priscavera</a>
+      <a href="/brands/proenza-schouler.html">Proenza Schouler</a>
+      <a href="/brands/p-rlemor.html">Pärlemor</a>
+      <a href="/brands/rabies-dog.html">Rabies Dog</a>
+      <a href="/brands/rat-and-boa.html">Rat and Boa</a>
+      <a href="/brands/rlt.html">RLT</a>
+      <a href="/brands/romontio.html">Romontio</a>
+      <a href="/brands/sentaler.html">Sentaler</a>
+      <a href="/brands/shop-peche.html">Shop Peche</a>
+      <a href="/brands/side-eye.html">Side Eye</a>
+      <a href="/brands/siedr-s.html">SIEDRÉS</a>
+      <a href="/brands/sir-the-label.html">Sir the Label</a>
+      <a href="/brands/sophie-buhai.html">Sophie Buhai</a>
+      <a href="/brands/st-agni.html">St. Agni</a>
+      <a href="/brands/staud.html">Staud</a>
+      <a href="/brands/stine-goya.html">Stine Goya</a>
+      <a href="/brands/studio-nani.html">Studio Nani</a>
+      <a href="/brands/susamusa.html">Susamusa</a>
+      <a href="/brands/susmies.html">Susmie&amp;#x27;s</a>
+      <a href="/brands/swf-boutique.html">SWF Boutique</a>
+      <a href="/brands/szade.html">Szade</a>
+      <a href="/brands/tae-park.html">Tae Park</a>
+      <a href="/brands/the-frankie-shop.html">The Frankie Shop</a>
+      <a href="/brands/the-isla.html">The Isla</a>
+      <a href="/brands/the-line-by-k.html">The Line by K</a>
+      <a href="/brands/the-row.html">The Row</a>
+      <a href="/brands/tigra-tigra.html">Tigra Tigra</a>
+      <a href="/brands/tone-deaf-studios.html">Tone Deaf Studios</a>
+      <a href="/brands/toteme.html">Toteme</a>
+      <a href="/brands/trashy-clothing.html">Trashy Clothing</a>
+      <a href="/brands/tyler-mcgillivary.html">Tyler McGillivary</a>
+      <a href="/brands/unica-leathers.html">Unica Leathers</a>
+      <a href="/brands/uniform-person.html">Uniform Person</a>
+      <a href="/brands/veroni.html">Veroni</a>
+      <a href="/brands/vestige.html">VESTIGE</a>
+      <a href="/brands/with-j-an.html">With Jéan</a>
+      <a href="/brands/wolf-circus.html">Wolf Circus</a>
+      <a href="/brands/woodrose-deli.html">Woodrose Deli</a>
+      <a href="/brands/yellow-the-label.html">Yellow the Label</a>
+      <a href="/brands/yuni-buffa.html">Yuni Buffa</a>
+    </div>
     <div style="margin-top:30px;">
-      <a href="/brands/" class="btn btn-ghost">Browse all 180+ brands →</a>
+      <a href="/brands/" class="btn btn-ghost">Browse the full directory →</a>
     </div>
   </div>
 </section>
@@ -283,7 +606,7 @@
 
 <!-- DISCLOSURE -->
 <section class="disclosure">
-  <div class="wrap"><p><strong>Affiliate disclosure:</strong> Loupe may earn a commission when you buy through links in the app, at no additional cost to you. We only feature brands we genuinely love, and commissions never influence what we show you.</p></div>
+  <div class="wrap"><p><strong>Affiliate disclosure:</strong> Loupe may earn a commission when you buy through links in the app and on this site, at no additional cost to you. We only feature brands we genuinely love, and commissions never influence what we show you. Prices shown in the demo are pulled live from each brand and may change.</p></div>
 </section>
 
 <footer>
@@ -291,6 +614,7 @@
     <div class="foot">
       <a href="#top" class="logo script">loupe</a>
       <nav class="foot-links">
+        <a href="#try">Try it</a>
         <a href="#how">How it works</a>
         <a href="#dna">Style DNA</a>
         <a href="/brands/">All brands</a>
@@ -308,10 +632,160 @@
 
 <script>
 (function(){
-  var brands = ["1XBLUE","A Bronze Age","Aeyde","Agmes","Aknvas","Alas Silk","ALEXIS","Alighieri","Allina Liu","ALOHAS","Ancegria","Anna October","Anni Lu","Anonie","Apres Studio","As if it wear","At First Sight Studio","Attega","Audette","Baserange","Battlo","Bec + Bridge","Belle Anna","Blanch Wear","Bonnie Clyde","Brooke Callahan","Buci NYC","By Gianna","C'est Nous","Cafe Forgot","Campbell and Kramer","Carmen Says","Chan Luu","Charlie Beads","Christopher Esber","Ciao Lucia","Collina Strada","Conner Ives","Coperni","Cou Cou Intimates","Cowboys of Habit","Cult Gaia","Damson Madder","De V","Deiji Studios","Designation","DMY Studios","Dries Van Noten","DémodéMODÉ","Easton Marley","EB Denim","Eckhaus Latta","Eliou","Ella Mae","Entremains","EREA","Eshim","Esquina","Fait Par Foutch","Faris","Fashion Brand Company","Feners","Find Me Now the Label","Flattered","Flore Flore","Frankies Bikinis","Fruity Booty","Ganni","Gaudir Swim","Geel","Ghostboy","Gimaguas","Guizio","Gumi","Hand Over","Heaven Mayhem","Hernan Herdez","INSIS","Into Eight","Jeanerica","Kernemilk","Khaite","Kinkifish","Lauren Manoogian","Le Febour","Lexxola","Liebestod","Lisa Says Gah","Little Yarn","Los Angeles Apparel","Maem Disko","Maguire","Mais x Frida","Maketh Thou","Marge Sherwood","Marland Backus","Martha Calvo","Martine Rose","Miaou","Mimesis","Mirchi by Kim","Mirror Palais","MISBHV","Mode Mischief","Mondo Mondo","Moro Joyas","Moss Studio","Mounser","Mpaz Studio","Musier Paris","My Mum Made It","Nafsika Skourti","Nausicaa","Nicole Saldana","Niihai","Nokshi New York","Nuda","Nuovo Paris","Nuri Studios","NUUK Jewelry","Oddli","Of Planet Earth","Orseund Iris","Other Normal","Paloma Wool","Paris Georgia","PDPAOLA","Peachy Den","Phoebe Philo","Port Tanger","Priscavera","Proenza Schouler","Pärlemor","Rabies Dog","Rat and Boa","RLT","Romontio","Rota","Sentaler","Shop Peche","Side Eye","SIEDRÉS","Sir the Label","Sophie Buhai","St. Agni","Staud","Stine Goya","Studio Nani","Susamusa","Susmie's","SWF Boutique","Tae Park","The Frankie Shop","The Row","Tigra Tigra","Tone Deaf Studios","Toteme","Trashy Clothing","Tyler McGillivary","Unica Leathers","Uniform Person","VESTIGE","With Jéan","Wolf Circus","Woodrose Deli","Yellow the Label","Yuni Buffa"];
-  var el = document.getElementById('brandCloud');
-  if(el){ el.innerHTML = brands.map(function(b){ return '<span>'+b+'</span>'; }).join(''); }
+  "use strict";
+  /* ── The 12 most-loved pieces on Loupe (live catalog data, refreshed with the site) ── */
+  var DECK = [{"b":"Of Planet Earth","n":"The Anemoia Skirt - NIGHTSHADE","p":166,"i":"https://cdn.shopify.com/s/files/1/0567/6669/3441/files/FRONT_NOIRE_COWL_MIDI_c28b9d3c-3fc0-4434-97cd-3485f198fe4d.jpg?v=1749761353&width=640","u":"https://ofplanet.earth/products/the-anemoia-skirt-nightshade?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Uniform Person","n":"LOLA lace mini skirt - butter yellow","p":94,"i":"https://cdn.shopify.com/s/files/1/0412/0743/1334/files/IMG_2844.jpg?v=1781740275&width=640","u":"https://uniform-person.com/products/lola-lace-mini-skirt-butter-yellow?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Fait Par Foutch","n":"CHARLOTTE DRESS - WHITE","p":275,"i":"https://cdn.shopify.com/s/files/1/0535/0673/6305/files/charlotte_white_3-01_73d61db9-8a7e-479c-b623-469f86f073e9.jpg?v=1752054004&width=640","u":"https://faitparfoutch.com/products/charlotte-dress-white?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Mirror Palais","n":"The Crinoline Skirt with Lace in Pearl","p":795,"i":"https://cdn.shopify.com/s/files/1/0255/3780/6424/files/CrinolineSkirtinPearl3.jpg?v=1775830923&width=640","u":"https://mirrorpalais.com/products/the-crinoline-skirt-with-lace-in-pearl?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Nafsika Skourti","n":"Denim Crescent Midi Skirt","p":330,"i":"https://cdn.shopify.com/s/files/1/0012/6586/0661/files/DSC_4982_1_8a5a6385-339a-4774-9edd-389dcd03ab19.jpg?v=1778494291&width=640","u":"https://nafsikaskourti.com/products/denim-crescent-midi-skirt?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Geel","n":"Ana Dress","p":103,"i":"https://cdn.shopify.com/s/files/1/0523/2561/3759/files/DSCF3210.jpg?v=1781907922&width=640","u":"https://geel.us/products/ana-dress?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Oddli","n":"Button Mini Skirt","p":110,"i":"https://cdn.shopify.com/s/files/1/0515/3662/5860/files/SUIT_SET_Navy_Denim_Skirt_Front_copy.jpg?v=1758660937&width=640","u":"https://oddli.com/products/button-suit-mini-skirt?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Anonie","n":"ELLA dress","p":225,"i":"https://cdn.shopify.com/s/files/1/1605/4515/files/ELLAbrown1_46c33d65-7ff2-40c8-94d2-8a2a53b88886.jpg?v=1775649476&width=640","u":"https://shopanonie.com/products/ella-dress-brown?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Lisa Says Gah","n":"Nora Pant - Cherry","p":104,"i":"https://cdn.shopify.com/s/files/1/3044/4744/files/lisa_says_gah_nora_pant_cherry_1.jpg?v=1780080122&width=640","u":"https://lisasaysgah.com/products/nora-pant-2?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"DémodéMODÉ","n":"Lior Dress","p":185,"i":"https://cdn.shopify.com/s/files/1/0650/4529/9378/files/0_7961884d-1d4e-448c-ba7a-89427eeeabbd.jpg?v=1755482727&width=640","u":"https://demodemode.com/products/dn25414002?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"With Jéan","n":"Olivia Jacket | Indigo","p":151,"i":"https://cdn.shopify.com/s/files/1/0512/3103/1472/files/olivia-jacket-indigo-with-jean-01-campaign.jpg?v=1779074026&width=640","u":"https://withjean.com/products/olivia-jacket-indigo?utm_source=loupe&utm_medium=referral&utm_campaign=app"},{"b":"Aknvas","n":"The Kirsten skorts in black tech taffeta","p":595,"i":"https://cdn.shopify.com/s/files/1/0274/6338/5221/files/AKNVAS_MAY_2026_ECOM33963.jpg?v=1779121733&width=640","u":"https://aknvas.com/products/the-kirsten-skort-in-black?utm_source=loupe&utm_medium=referral&utm_campaign=app"}];
 
+  var stack = document.getElementById('demoStack');
+  var countEl = document.getElementById('demoCount');
+  var endEl = document.getElementById('demoEnd');
+  var screenEl = document.getElementById('demoScreen');
+  if (!stack || !DECK.length) return;
+
+  var idx = 0, liked = [], busy = false;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function makeCard(item, pos) {
+    var el = document.createElement('div');
+    el.className = 'dcard';
+    el.style.zIndex = String(9 - pos);
+    el.style.transform = pos ? 'scale(' + (1 - pos * 0.035) + ') translateY(' + (pos * 10) + 'px)' : '';
+    var img = document.createElement('img');
+    img.alt = item.b + ' — ' + item.n;
+    img.draggable = false;
+    img.src = item.i;
+    img.onerror = function(){ el._dead = true; if (el._top) fling(1, true); };
+    el.appendChild(img);
+    var like = document.createElement('span'); like.className = 'stamp like'; like.textContent = 'LIKE';
+    var pass = document.createElement('span'); pass.className = 'stamp pass'; pass.textContent = 'PASS';
+    el.appendChild(like); el.appendChild(pass);
+    var info = document.createElement('div'); info.className = 'info';
+    var t = document.createElement('div'); t.className = 't';
+    var b = document.createElement('div'); b.className = 'b'; b.textContent = item.b;
+    var n = document.createElement('div'); n.className = 'n'; n.textContent = item.n;
+    t.appendChild(b); t.appendChild(n);
+    var right = document.createElement('div');
+    right.style.cssText = 'display:flex;align-items:center;gap:8px;flex-shrink:0;';
+    var p = document.createElement('span'); p.className = 'p'; p.textContent = '$' + item.p;
+    var shop = document.createElement('a'); shop.className = 'shop'; shop.textContent = 'Shop ↗';
+    shop.href = item.u; shop.target = '_blank'; shop.rel = 'noopener nofollow sponsored';
+    shop.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    right.appendChild(p); right.appendChild(shop);
+    info.appendChild(t); info.appendChild(right);
+    el.appendChild(info);
+    el._like = like; el._pass = pass;
+    return el;
+  }
+
+  function render() {
+    stack.innerHTML = '';
+    for (var i = Math.min(idx + 2, DECK.length - 1); i >= idx; i--) {
+      var pos = i - idx;
+      var card = makeCard(DECK[i], pos);
+      if (pos === 0) { card._top = true; attachDrag(card); }
+      stack.appendChild(card);
+    }
+    countEl.textContent = (idx + 1) + ' / ' + DECK.length;
+  }
+
+  function topCard() {
+    var cards = stack.querySelectorAll('.dcard');
+    for (var i = 0; i < cards.length; i++) if (cards[i]._top) return cards[i];
+    return null;
+  }
+
+  function fling(dir, instant) {
+    if (busy || idx >= DECK.length) return;
+    var card = topCard(); if (!card) return;
+    busy = true;
+    if (dir > 0 && !card._dead) liked.push(DECK[idx].b);
+    var done = function(){
+      idx++;
+      busy = false;
+      if (idx >= DECK.length) finish(); else render();
+    };
+    if (reduce || instant) { done(); return; }
+    card.style.transition = 'transform .34s ease, opacity .34s ease';
+    card.style.transform = 'translateX(' + (dir * 130) + '%) rotate(' + (dir * 22) + 'deg)';
+    card.style.opacity = '0';
+    (dir > 0 ? card._like : card._pass).style.opacity = '1';
+    setTimeout(done, 300);
+  }
+
+  function attachDrag(card) {
+    var sx = 0, sy = 0, dx = 0, dragging = false;
+    card.addEventListener('pointerdown', function(e){
+      if (busy) return;
+      dragging = true; sx = e.clientX; sy = e.clientY; dx = 0;
+      card.setPointerCapture(e.pointerId);
+      card.style.transition = 'none';
+    });
+    card.addEventListener('pointermove', function(e){
+      if (!dragging) return;
+      dx = e.clientX - sx;
+      var dy = e.clientY - sy;
+      card.style.transform = 'translate(' + dx + 'px,' + (dy * 0.25) + 'px) rotate(' + (dx * 0.055) + 'deg)';
+      var f = Math.min(Math.abs(dx) / 80, 1);
+      card._like.style.opacity = dx > 0 ? f : 0;
+      card._pass.style.opacity = dx < 0 ? f : 0;
+    });
+    var up = function(){
+      if (!dragging) return;
+      dragging = false;
+      if (Math.abs(dx) > 90) { fling(dx > 0 ? 1 : -1); }
+      else {
+        card.style.transition = 'transform .28s ease';
+        card.style.transform = '';
+        card._like.style.opacity = 0; card._pass.style.opacity = 0;
+      }
+    };
+    card.addEventListener('pointerup', up);
+    card.addEventListener('pointercancel', up);
+  }
+
+  function finish() {
+    stack.innerHTML = '';
+    countEl.textContent = '';
+    var head = document.getElementById('endHead');
+    var brands = document.getElementById('endBrands');
+    if (liked.length) {
+      head.textContent = 'You liked ' + liked.length + ' of ' + DECK.length + '.';
+      var uniq = liked.filter(function(v, i, a){ return a.indexOf(v) === i; });
+      brands.textContent = uniq.slice(0, 5).join(' · ') + (uniq.length > 5 ? ' + more' : '') + ' — the app remembers.';
+    } else {
+      head.textContent = 'Tough crowd.';
+      brands.textContent = 'The app learns from every pass too — that’s the point.';
+    }
+    endEl.classList.add('show');
+  }
+
+  document.getElementById('btnLike').addEventListener('click', function(){ fling(1); });
+  document.getElementById('btnPass').addEventListener('click', function(){ fling(-1); });
+  document.getElementById('demoReplay').addEventListener('click', function(){
+    idx = 0; liked = []; endEl.classList.remove('show'); render();
+  });
+  screenEl.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight') { e.preventDefault(); fling(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); fling(-1); }
+  });
+
+  render();
+
+  /* Look Builder collage reuses the deck's images (real pieces, zero extra requests once cached) */
+  var canvas = document.getElementById('lookCanvas');
+  if (canvas) {
+    var picks = [0, 1, 5, 8];
+    for (var k = 0; k < picks.length; k++) {
+      var w = document.createElement('div');
+      w.className = 'lk lk' + (k + 1);
+      var im = document.createElement('img');
+      im.src = DECK[picks[k]].i; im.alt = ''; im.loading = 'lazy';
+      w.appendChild(im);
+      canvas.insertBefore(w, canvas.firstChild);
+    }
+  }
+
+  /* In-app-browser hint (TikTok/IG open links in a webview that hobbles the App Store) */
   var ua = navigator.userAgent || "";
   if(/TikTok|musical_ly|Bytedance|Instagram|FBAN|FBAV|FB_IAB|Line\//i.test(ua)){
     var h = document.getElementById('iab-hint'); if(h) h.style.display='block';
