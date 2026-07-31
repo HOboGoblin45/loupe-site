@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Gemini on Loupe — engagement</title>
+<link rel="icon" type="image/png" href="/icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#F3CBF0;--pink-soft:#FCEFF8;--ink:#141414;--muted:#5A565A;--line:#E7E2E7;--coral:#FE6F6F;--white:#FFF;--paper:#FAF8F6;--good:#1F7A4D;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.wrap{max-width:940px;margin:0 auto;padding:0 22px;}
+.serif{font-family:"Fraunces",Georgia,serif;font-weight:500;letter-spacing:-.5px;}
+.script{font-family:"Beth Ellen",cursive;font-weight:400;}
+.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--coral);font-weight:700;}
+.muted{color:var(--muted);}
+header{border-bottom:1px solid var(--line);background:var(--white);}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{font-size:22px;}
+.hero{padding:44px 0 30px;}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.12;margin:8px 0 10px;}
+h2{font-size:22px;margin:0 0 6px;}
+section{padding:30px 0;border-top:1px solid var(--line);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:14px;margin-top:18px;}
+.card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:20px;}
+.card.lead{border-color:var(--pink);background:var(--pink-soft);}
+.big{font-size:40px;line-height:1;letter-spacing:-1.5px;}
+.vs{font-size:13px;margin-top:9px;}
+.bar{height:7px;border-radius:99px;background:#EDE9ED;overflow:hidden;margin-top:11px;}
+.bar i{display:block;height:100%;background:var(--pink);}
+.bar i.alt{background:var(--ink);}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px;}
+th,td{text-align:right;padding:9px 8px;border-bottom:1px solid var(--line);}
+th:first-child,td:first-child{text-align:left;}
+th{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700;}
+.idx{display:inline-block;min-width:52px;padding:2px 9px;border-radius:99px;font-weight:700;font-size:13px;background:#EFEFEF;}
+.idx.up{background:var(--pink);}
+.idx.down{background:#F1F1F1;color:var(--muted);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:16px;margin-top:18px;}
+.p img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;background:#F1EFED;display:block;}
+.p b{display:block;font-size:13px;margin-top:8px;}
+.p span{display:block;font-size:12.5px;color:var(--muted);}
+.tag{display:inline-block;margin-top:5px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;background:var(--pink);border-radius:99px;padding:2px 9px;}
+.note{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 20px;font-size:13.5px;color:var(--muted);}
+.note b{color:var(--ink);}
+footer{padding:30px 0 60px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);}
+#gate{max-width:520px;margin:16vh auto;text-align:center;padding:0 22px;}
+#gate p{color:var(--muted);margin-top:10px;}
+.hide{display:none;}
+@media(max-width:640px){.big{font-size:32px;} th,td{padding:8px 5px;font-size:13px;}}
+</style></head><body>
+
+<div id="gate">
+  <div class="logo script">Loupe</div>
+  <h2 class="serif" style="margin-top:16px">This report is private</h2>
+  <p>Open it with the full link from your email. If the link stopped working, reply to that email and we'll send a fresh one.</p>
+</div>
+
+<div id="report" class="hide">
+<header><div class="wrap nav">
+  <a href="https://useloupe.shop" class="logo script">Loupe</a>
+  <span class="muted" style="font-size:13px">Partner report &middot; <span id="gen"></span></span>
+</div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Private partner report</div>
+    <h1 class="serif"><span id="pname"></span> on Loupe</h1>
+    <p class="muted" id="sub"></p>
+  </div>
+</div>
+
+<div class="wrap"><section style="border-top:none;padding-top:0">
+  <h2 class="serif">How your pieces perform</h2>
+  <p class="muted">Every number is a rate, next to the same rate for the whole app over the same window. Rates are what a young feed can honestly be judged on; the raw counts are further down.</p>
+  <div class="cards" id="rates"></div>
+</section></div>
+
+<div class="wrap"><section>
+  <h2 class="serif">What to send us more of</h2>
+  <p class="muted">Share of your shelf space in the app against share of the saves it earned. <b>100 means a category saves exactly in proportion to how much of your feed it is.</b></p>
+  <table id="cats"><thead><tr><th>Category</th><th>Pieces</th><th>% of feed</th><th>Saves</th><th>% of saves</th><th>Index</th></tr></thead><tbody></tbody></table>
+  <p class="muted" style="margin-top:12px;font-size:13.5px" id="catread"></p>
+</section></div>
+
+<div class="wrap"><section>
+  <h2 class="serif">Your most saved pieces</h2>
+  <p class="muted">A save is deliberate: the piece goes into her Dresser and she gets told when it drops in price or comes back in stock.</p>
+  <div class="grid" id="top"></div>
+</section></div>
+
+<div class="wrap"><section>
+  <h2 class="serif">By label</h2>
+  <p class="muted">Labels we carry only through you, so these are your numbers and nobody else's. Labels under 8 impressions are held back rather than quoted off too little.</p>
+  <table id="brands"><thead><tr><th>Label</th><th>Pieces</th><th>Shown</th><th>Liked</th><th>Saved</th><th>Approval</th></tr></thead><tbody></tbody></table>
+</section></div>
+
+<div class="wrap"><section>
+  <h2 class="serif">The raw counts</h2>
+  <div class="cards" id="volume"></div>
+  <p class="muted" style="margin-top:16px;font-size:13.5px">These are small, and we would rather show you them than round them into something that sounds bigger. Loupe is early. What the rates above tell you is how your pieces do <em>per person who sees them</em>, and that number is already meaningful.</p>
+</section></div>
+
+<div class="wrap"><section>
+  <h2 class="serif">How this is measured</h2>
+  <div class="note" id="method"></div>
+</section></div>
+
+<div class="wrap"><footer>
+  <b class="serif">Loupe</b> &middot; <a href="https://useloupe.shop">useloupe.shop</a><br>
+  This page is private and refreshes on its own. Questions about any number here: just reply to the email it came in.
+</footer></div>
+</div>
+
+<script>
+(function(){
+  var k = new URLSearchParams(location.search).get('k') || '';
+  if (!/^[A-Za-z0-9_-]{10,64}$/.test(k)) return;         // no key, no fetch
+  fetch('/partners/d/' + k + '.json', {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(render)
+    .catch(function(){});                                 // bad key -> gate stays
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function n(x){ return Number(x||0).toLocaleString(); }
+
+  function card(o){
+    var d = o.delta;
+    return '<div class="card' + (o.lead?' lead':'') + '">'
+      + '<div class="eyebrow">' + esc(o.label) + '</div>'
+      + '<div class="big serif">' + esc(o.value) + '</div>'
+      + '<div class="vs muted">' + o.vs + '</div>'
+      + (o.mine!=null ? '<div class="bar"><i style="width:' + Math.min(100, o.mine/o.scale*100) + '%"></i></div>'
+                      + '<div class="bar"><i class="alt" style="width:' + Math.min(100, o.theirs/o.scale*100) + '%"></i></div>' : '')
+      + '</div>';
+  }
+
+  function render(d){
+    var h = d.headline;
+    document.getElementById('gate').className = 'hide';
+    document.getElementById('report').className = '';
+    document.title = d.name + ' on Loupe — engagement';
+    document.getElementById('pname').textContent = d.name;
+    document.getElementById('gen').textContent = d.generated;
+    document.getElementById('sub').textContent =
+      d.pieces + ' pieces from ' + d.labels + ' labels, live in the app. '
+      + 'Median price $' + d.price_median + '. Trailing ' + d.window_days + ' days.';
+
+    var scale = Math.max(h.approval, h.app_approval, h.save_intent, h.app_save_intent);
+    document.getElementById('rates').innerHTML = [
+      card({ lead:true, label:'Save intent', value:h.save_intent + '%',
+        vs:'of everyone who engaged with your pieces went on to <b>save</b> one, against <b>'
+           + h.app_save_intent + '%</b> app-wide. Your pieces get browsed less and committed to more.',
+        mine:h.save_intent, theirs:h.app_save_intent, scale:scale }),
+      card({ label:'Save rate', value:h.save_rate + '%',
+        vs:'of the times a piece of yours was shown, it was saved. App-wide: <b>' + h.app_save_rate + '%</b>.',
+        mine:h.save_rate, theirs:h.app_save_rate, scale:scale }),
+      card({ label:'Approval rate', value:h.approval + '%',
+        vs:'liked or saved rather than passed (95% confidence: ' + h.approval_lo + '–' + h.approval_hi
+           + '%). App-wide: <b>' + h.app_approval + '%</b> — so your pieces are passed on more often than average, and the category table below shows where that comes from.',
+        mine:h.approval, theirs:h.app_approval, scale:scale })
+    ].join('');
+
+    var tb = document.querySelector('#cats tbody'), best = null;
+    tb.innerHTML = d.categories.map(function(c){
+      if (c.pieces >= 15 && (!best || c.index > best.index)) best = c;
+      var cls = c.index >= 130 ? 'idx up' : (c.index < 70 ? 'idx down' : 'idx');
+      return '<tr><td style="text-transform:capitalize">' + esc(c.category) + '</td><td>' + c.pieces
+        + '</td><td>' + c.feed_pct + '%</td><td>' + c.saves + '</td><td>' + c.saves_pct
+        + '%</td><td><span class="' + cls + '">' + c.index + '</span></td></tr>';
+    }).join('');
+    var top = d.categories.slice().sort(function(a,b){ return b.index - a.index; })[0];
+    if (top) document.getElementById('catread').innerHTML =
+      '<b>' + esc(top.category) + '</b> are ' + top.feed_pct + '% of what we show from you and '
+      + top.saves_pct + '% of what gets saved — they earn saves at <b>' + (top.index/100).toFixed(1)
+      + 'x</b> the rate of an average piece in your feed. That is the clearest thing this report has to say: more of those.';
+
+    document.getElementById('top').innerHTML = d.top.map(function(p){
+      return '<a class="p" href="' + esc(p.url) + '" target="_blank" rel="noopener">'
+        + '<img loading="lazy" src="' + esc(p.image) + '" alt="' + esc(p.name) + '">'
+        + '<b>' + esc(p.brand) + '</b><span>' + esc(p.name) + '</span>'
+        + '<span>$' + n(p.price) + '</span>'
+        + '<span class="tag">' + p.saves + ' save' + (p.saves===1?'':'s') + '</span></a>';
+    }).join('');
+
+    document.querySelector('#brands tbody').innerHTML = d.brands.map(function(b){
+      return '<tr><td>' + esc(b.brand) + '</td><td>' + b.pieces + '</td><td>' + n(b.imps)
+        + '</td><td>' + b.likes + '</td><td>' + b.saves + '</td><td><b>' + b.approval + '%</b></td></tr>';
+    }).join('');
+
+    document.getElementById('volume').innerHTML = [
+      card({label:'Times shown', value:n(h.impressions), vs:'your pieces at the top of someone\'s deck'}),
+      card({label:'Saved', value:n(h.saves), vs:'into a Dresser, with price-drop alerts attached'}),
+      card({label:'Liked', value:n(h.likes), vs:'swiped right, teaching the feed'}),
+      card({label:'Sent to your site', value:n(h.clicks), vs:'tapped through to shop, tagged so you can see them in your own analytics'})
+    ].join('');
+
+    document.getElementById('method').innerHTML =
+      '<b>Window.</b> Trailing ' + d.window_days + ' days, refreshed weekly. <br>'
+      + '<b>Impression.</b> A piece reaching the top of the deck, where it is the only thing on screen. Every one was actually looked at.<br>'
+      + '<b>Approval.</b> (likes + saves) / times shown. <b>Save intent.</b> saves / (likes + saves).<br>'
+      + '<b>Whose numbers.</b> The ' + d.exclusive_labels + ' labels we carry only through ' + esc(d.name)
+      + ', so nothing from another stockist is mixed in.<br>'
+      + '<b>Comparison.</b> Every app-wide figure is the same metric over the same window across '
+      + n(h.app_impressions) + ' impressions.<br>'
+      + '<b>What we do not have.</b> Whether a click became a sale. Your own analytics can tell you that — '
+      + 'every link we send you carries a UTM tag.';
+  }
+})();
+</script>
+</body></html>

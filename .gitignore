@@ -1,0 +1,4 @@
+# Partner report access tokens. The token IS the password for a partner's
+# private report URL, so it stays on this machine. Losing this file just means
+# the next build mints new tokens and you re-send the links.
+tools/data/keys.json

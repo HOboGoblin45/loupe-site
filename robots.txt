@@ -2,4 +2,9 @@
 User-agent: *
 Allow: /
 
+# Private partner engagement reports. These live behind an unguessable link
+# (the ?k= token), and the pages themselves are noindex, but a crawler that
+# ever saw one shared in a mail client should not put it in an index.
+Disallow: /partners/
+
 Sitemap: https://useloupe.shop/sitemap.xml
