@@ -822,6 +822,11 @@ def compute(days, feed_repo, verbose=True):
         "gaps": gaps,
         "coverage": {
             "brands_now": len({r[BRAND] for r in direct(last).values()}),
+            # Every label in the app, including those that reach it only through a
+            # partner boutique. Emitted so the page can explain the gap between this
+            # and brands_now instead of leaving a reader to assume a bug — the first
+            # question the founder asked on seeing the page was "why 177 and not 209".
+            "brands_all": len({r[BRAND] for r in last.values()}),
             "pieces_now": len(direct(last)),
             "brands_roster": len(roster),
             "left_roster": left_roster,
@@ -1362,6 +1367,12 @@ def render_public(d):
     published listings. For a small store that is the entire store; for a large one it is the
     front of the catalogue. Every number on this page is <em>of what we track</em> and we mean
     it literally.</p>
+    <p><b>Why {d['coverage']['brands_now']} and not {d['coverage']['brands_all']}.</b> The Loupe app carries
+    {d['coverage']['brands_all']} labels, but {d['coverage']['brands_all'] - d['coverage']['brands_now']} of those
+    reach it only through a partner boutique's shelf. What a boutique chooses to buy, and what it
+    charges, is that boutique's decision &mdash; not the label's. Mixing the two would corrupt every
+    number here, so the Index reads <em>brand-direct storefronts only</em>: labels publishing their
+    own prices, their own assortment, their own drops.</p>
     <p><b>The window.</b> {d['snapshots']} daily snapshots, {E(d['windowStart'])} to
     {E(d['windowEnd'])}. Comparisons over time start at {E(d['eraStart'])}, when our roster
     stopped growing — before that, new pieces are us adding labels, not brands publishing.{gap_txt}</p>

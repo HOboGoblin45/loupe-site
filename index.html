@@ -64,7 +64,36 @@
   .nav-links{display:flex;gap:30px;align-items:center;font-size:14px;color:var(--muted);}
   .nav-links a.hide-sm:hover{color:var(--ink);}
   .nav .btn{padding:10px 20px;font-size:14px;}
-  @media(max-width:720px){.nav-links a.hide-sm{display:none;}}
+  .nav-links a.nav-index{color:var(--ink);font-weight:600;}
+  .nav-links a.nav-index:hover{color:var(--coral);}
+  @media(max-width:720px){
+    .nav-links a.hide-sm{display:none;}
+    /* The Index stays. Tighten the row so logo + Index + CTA still fit at 360px:
+       measured at 360px this leaves ~14px of slack, and at 320px the gap and
+       button padding absorb the rest without wrapping. */
+    .nav-links{gap:14px;font-size:13px;}
+    .nav .btn{padding:9px 14px;font-size:13px;}
+  }
+  @media(max-width:360px){
+    .nav-links{gap:10px;}
+    .nav .btn{padding:9px 12px;}
+  }
+
+  /* Brand band — the Index is the paid product, so it gets its own entry
+     point rather than living in the footer. Flat colours only. */
+  .bband{background:var(--ink);color:#fff;}
+  .bband .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 24px;flex-wrap:wrap;}
+  .bband .bb-copy{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;min-width:0;}
+  .bband .bb-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--pink);}
+  .bband .bb-line{font-size:15px;line-height:1.5;color:#F2EFF2;}
+  .bband .bb-line b{color:#fff;font-weight:600;}
+  .bband .bb-cta{background:var(--pink);color:var(--ink);padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;white-space:nowrap;transition:transform .14s ease;}
+  .bband .bb-cta:hover{transform:translateY(-2px);}
+  @media(max-width:720px){
+    .bband .wrap{padding:16px 22px;gap:14px;}
+    .bband .bb-line{font-size:14px;}
+    .bband .bb-cta{width:100%;text-align:center;}
+  }
 
   /* Phone mockup */
   .phone{position:relative;width:100%;max-width:300px;border:9px solid #0E0E12;border-radius:46px;overflow:hidden;background:#0E0E12;box-shadow:0 30px 70px -24px rgba(20,10,30,.45);}
@@ -223,11 +252,24 @@
       <a href="#how" class="hide-sm">How it works</a>
       <a href="#dna" class="hide-sm">Style DNA</a>
       <a href="/brands/" class="hide-sm">Brands</a>
-      <a href="/index/" class="hide-sm">The Index</a>
+      <a href="/index/" class="nav-index">The Index</a>
       <a href="https://apps.apple.com/app/id6781137336" target="_blank" rel="noopener" class="btn btn-pink">Get the app</a>
     </nav>
   </div>
 </header>
+
+<!-- FOR BRANDS — the Index, above the fold rather than in the footer -->
+<section class="bband">
+  <div class="wrap">
+    <div class="bb-copy">
+      <span class="bb-tag">For brands</span>
+      <span class="bb-line">
+        <b>98.4% of independent labels held their price</b> last fortnight. We track 177 of them daily — see where yours sits, free.
+      </span>
+    </div>
+    <a href="/index/" class="bb-cta">Open The Loupe Index &rarr;</a>
+  </div>
+</section>
 
 <!-- HERO with a LIVE swipe demo -->
 <section class="hero" id="try">
