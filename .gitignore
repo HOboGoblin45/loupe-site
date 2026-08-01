@@ -2,3 +2,13 @@
 # private report URL, so it stays on this machine. Losing this file just means
 # the next build mints new tokens and you re-send the links.
 tools/data/keys.json
+
+# Loupe Index brand-card tokens, and the outreach list built from them. These
+# are stronger than the partner tokens: the card files in /index/d/ are AES-GCM
+# ciphertext keyed on the token, so this file is the ONLY way to read any of
+# them. That is deliberate — loupe-site is a public repository, so an
+# unguessable filename protects nothing on its own. Losing this file makes 139
+# cards permanently unreadable by anyone including us; rebuilding mints new
+# tokens and new links.
+tools/data/index_keys.json
+tools/data/index_links.txt

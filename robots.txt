@@ -7,4 +7,11 @@ Allow: /
 # ever saw one shared in a mail client should not put it in an index.
 Disallow: /partners/
 
+# Loupe Index brand cards. The public Index at /index/ is meant to be crawled
+# and cited; the per-label cards are not. /index/d/ holds AES-GCM payloads that
+# are useless without the token in the link, and /index/brand/ is the noindex
+# shell that reads them.
+Disallow: /index/brand/
+Disallow: /index/d/
+
 Sitemap: https://useloupe.shop/sitemap.xml
