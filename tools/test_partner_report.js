@@ -90,8 +90,12 @@ function run(search, payload, shouldFetch) {
   ok('gate hidden, report shown',
      els.gate.className === 'hide' && els.report.className === '');
   ok('partner name rendered', els.pname._text === 'Gemini', els.pname._text);
-  ok('subtitle has piece + label counts',
-     /400 pieces from 52 labels/.test(els.sub._text), els.sub._text);
+  // Assert the SHAPE against the payload, not literal counts — a shelf is
+  // re-curated from time to time (Gemini went 400/52 to 295/36 when the
+  // trinkets came out) and a test pinned to today's numbers just goes red.
+  ok('subtitle reports the live piece + label counts',
+     els.sub._text.includes(`${data.pieces} pieces from ${data.labels} labels`),
+     els.sub._text);
 
   const rates = els.rates._html;
   console.log('\n  rate cards:');
@@ -121,6 +125,23 @@ function run(search, payload, shouldFetch) {
   ok('method names the exclusive-label basis',
      els.method._html.includes(String(data.exclusive_labels) + ' labels we carry only through'));
   ok('method admits what we cannot see', /not have|became a sale/.test(els.method._html));
+
+  // Saves belonging to pieces that have left the shelf must be disclosed, not
+  // silently dropped — otherwise the category denominators look wrong to anyone
+  // who adds up the columns.
+  if (data.headline.orphan_saves) {
+    ok('discloses saves from pieces no longer carried',
+       els.method._html.includes('no longer carried'));
+    // Reconcile against shelf_saves (directly-tagged events), which is what the
+    // category table is built from — NOT headline.saves, which comes from the
+    // exclusive-brand proxy and legitimately differs. Both are on the page.
+    const shown = data.categories.reduce((a, c) => a + c.saves, 0);
+    ok('category saves + orphans = directly-tagged saves',
+       shown + data.headline.orphan_saves === data.headline.shelf_saves,
+       `${shown} + ${data.headline.orphan_saves} vs ${data.headline.shelf_saves}`);
+    ok('the page explains why the two save counts differ',
+       els.method._html.includes('Two counts, on purpose'));
+  }
 
   console.log('\nNUMBERS (recomputed from the payload, not trusted from it)');
   const h = data.headline;

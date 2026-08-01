@@ -205,6 +205,14 @@ footer{padding:30px 0 60px;font-size:13px;color:var(--muted);border-top:1px soli
       + ', so nothing from another stockist is mixed in.<br>'
       + '<b>Comparison.</b> Every app-wide figure is the same metric over the same window across '
       + n(h.app_impressions) + ' impressions.<br>'
+      + (h.orphan_saves ? '<b>Pieces no longer carried.</b> ' + n(h.orphan_saves)
+         + ' saves were earned by pieces that have since left the feed. They are excluded '
+         + 'from the category table, whose denominator is the shelf as it stands today.<br>' : '')
+      + '<b>Two counts, on purpose.</b> The rates above are all computed from one source over '
+      + 'one brand set, so they are consistent with each other. The category table and the '
+      + 'pieces below come from save events tagged with your shop directly (' + n(h.shelf_saves)
+      + ' saves), which is the more precise count. We would rather show you both than average '
+      + 'them into one number that is not quite either.<br>'
       + '<b>What we do not have.</b> Whether a click became a sale. Your own analytics can tell you that — '
       + 'every link we send you carries a UTM tag.';
   }

@@ -144,9 +144,31 @@ def compute(partner_id, catalog, ph):
 
     # Category: share of the partner's FEED vs share of their SAVES. The ratio
     # is the single most actionable number here — it says what to send more of.
+    #
+    # Saves are attributed through the CURRENT shelf, not the raw category
+    # tallies. When a shelf is re-curated, the pieces that leave take their saves
+    # with them, and crediting those saves to a category we no longer carry
+    # inflates its index — an accessories row reading "22 saves off 63 pieces"
+    # when most of those saves belonged to 107 pieces that are gone. The count of
+    # orphaned saves is surfaced rather than quietly dropped.
     feed_mix = {}
     for p in mine:
         feed_mix[p.get("category", "other")] = feed_mix.get(p.get("category", "other"), 0) + 1
+
+    by_id_all = {p["id"]: p for p in mine}
+    current_saves, orphan_saves = {}, 0
+    for pid, n in saves_by_product.items():
+        prod = by_id_all.get(pid)
+        if prod:
+            c = prod.get("category", "other")
+            current_saves[c] = current_saves.get(c, 0) + n
+        else:
+            orphan_saves += n
+    # Fall back to the raw category map only if per-product data is unusable
+    # (e.g. an old snapshot taken before the per-product query existed).
+    if sum(current_saves.values()) == 0 and saves_by_category:
+        current_saves, orphan_saves = dict(saves_by_category), 0
+    saves_by_category = current_saves
     total_saves = sum(saves_by_category.values()) or 1
     cats = []
     for c, n in sorted(feed_mix.items(), key=lambda kv: -kv[1]):
@@ -217,6 +239,28 @@ def compute(partner_id, catalog, ph):
             "app_save_rate": pct(a_saves, a_imps),
             "app_save_intent": pct(a_saves, a_likes + a_saves),
             "app_impressions": a_imps,
+            # Saves earned by pieces the shelf no longer carries. Surfaced so the
+            # category table's denominators are checkable rather than mysterious.
+            "orphan_saves": orphan_saves,
+            # TWO SOURCES, and they do not agree — deliberately kept apart:
+            #
+            #   `saves` above comes from brand_engagement, summed over the labels
+            #   this partner stocks exclusively. It is what the RATES are built
+            #   from, so impressions, likes and saves all describe the same brand
+            #   set over the same window and the ratios are internally consistent.
+            #
+            #   `shelf_saves` comes from product_saved events tagged with the
+            #   retailer directly. It is the more accurate count, and it is what
+            #   the category table and the top-pieces list are built from.
+            #
+            # The proxy UNDERCOUNTS once a re-curation removes whole labels from
+            # the catalog: those labels stop being "exclusive to this partner"
+            # because they stop existing, and their saves drop out of the sum.
+            # After the trinket cut the gap was 50 against 57. That gap is the
+            # argument for the retailer-level telemetry shipped 2026-07-31 — once
+            # it has a sample, both numbers come from one measured source and
+            # this note goes away.
+            "shelf_saves": sum(saves_by_product.values()),
         },
         "categories": cats,
         "top": top,
@@ -488,6 +532,14 @@ footer{{padding:30px 0 60px;font-size:13px;color:var(--muted);border-top:1px sol
       + ', so nothing from another stockist is mixed in.<br>'
       + '<b>Comparison.</b> Every app-wide figure is the same metric over the same window across '
       + n(h.app_impressions) + ' impressions.<br>'
+      + (h.orphan_saves ? '<b>Pieces no longer carried.</b> ' + n(h.orphan_saves)
+         + ' saves were earned by pieces that have since left the feed. They are excluded '
+         + 'from the category table, whose denominator is the shelf as it stands today.<br>' : '')
+      + '<b>Two counts, on purpose.</b> The rates above are all computed from one source over '
+      + 'one brand set, so they are consistent with each other. The category table and the '
+      + 'pieces below come from save events tagged with your shop directly (' + n(h.shelf_saves)
+      + ' saves), which is the more precise count. We would rather show you both than average '
+      + 'them into one number that is not quite either.<br>'
       + '<b>What we do not have.</b> Whether a click became a sale. Your own analytics can tell you that — '
       + 'every link we send you carries a UTM tag.';
   }}

@@ -1,5 +1,5 @@
 {
- "_comment": "Snapshot of the PostHog pull, committed so the report can always be rebuilt and diffed week over week without a key. A live run (POSTHOG_API_KEY set) overwrites this file.",
+ "_comment": "Snapshot of the PostHog pull, committed so the report can always be rebuilt and diffed week over week without a key. A live run (POSTHOG_API_KEY set) overwrites this file. saves_by_product is the COMPLETE list, not a top-N: the report attributes saves to categories through it, so a truncated list would silently understate a category.",
  "pulled_at": "2026-07-31T23:05:00+00:00",
  "clicks": 6,
  "saves_by_category": {
@@ -20,8 +20,8 @@
   "gemini-tiny-big-sister-striped-bows-dress-in-summer-red": 1,
   "gemini-room-shop-mini-sheer-rose-stuffed-scrunchie-ivory-red": 1,
   "gemini-amt-burbuja-necklace-in-white": 1,
-  "gemini-rita-row-bolshoi-shirt-in-white": 1,
   "gemini-cities-in-dust-pearl-daisy-necklace": 1,
+  "gemini-rita-row-bolshoi-shirt-in-white": 1,
   "gemini-olive---pique-structured-summer-straw-rancher-hat-with-chin-cord-black": 1,
   "gemini-pure-cashmere-nyc-silk-cashmere-short-sleeve-top-in-sky-sorbet": 1,
   "gemini-tiny-big-sister-striped-yoke-trousers-in-dark-vanilla": 1,
@@ -29,8 +29,8 @@
   "gemini-ink---alloy-margot-stripe-kaftan-in-black-white": 1,
   "gemini-haricot-vert-freshly-shucked-earrings": 1,
   "gemini-hvisk-cayman-purse-in-black": 1,
-  "gemini-bobo-choses-washed-twill-boot-cut-pants-in-hot-pink": 1,
   "gemini-tiny-big-sister-striped-bow-blouse-in-light-navy": 1,
+  "gemini-bobo-choses-washed-twill-boot-cut-pants-in-hot-pink": 1,
   "gemini-et-cetera-addie-hair-claw": 1,
   "gemini-the-artisan-and-company-pia-rattan-shoulder-bag-in-tan": 1,
   "gemini-jessa-jewelry-lune-baroque-pearl-earrings": 1,
@@ -39,250 +39,1239 @@
   "gemini-tai-jewelry-enamel-bird-and-flower-mismatched-studs": 1,
   "gemini-po-em-stitched-knee-lounger-pants": 1,
   "gemini-jungmaven-baez-dress-in-washed-white": 1,
-  "gemini-linen---more-linen-polka-dot-dress": 1
+  "gemini-linen---more-linen-polka-dot-dress": 1,
+  "gemini-jungmaven-venice-short-in-black": 1,
+  "gemini-find-me-now-flora-top": 1,
+  "gemini-primecut-patchwork-leather-zipper-pouch-in-abstract-shapes": 1,
+  "gemini-second-skin-mariposa-bow-tights-in-night": 1,
+  "gemini-nat---noor-delicate-box-chain-necklace-gold-filled": 1,
+  "gemini-etc-two-tone-triangle-scarf": 1,
+  "gemini-casa-clara-dreamer-bag-rattan": 1,
+  "gemini-pure-cashmere-nyc-high-neck-poncho-in-camel": 1,
+  "gemini-american-trench-womens-sunday-sock": 1,
+  "gemini-echo-split-scarf-in-cream": 1,
+  "gemini-tyler-mcgillivary-delphi-dress-in-neon-coral": 1,
+  "gemini-linenfox-edith-skirt-in-milky-white": 1,
+  "gemini-girls-crew-fruit-basket-choker": 1,
+  "gemini-tiny-big-sister-straps-dress-in-off-white": 1,
+  "gemini-le-bon-shoppe-camille-dress-in-olive": 1,
+  "gemini-intentionally-blank-imagine-leather-slide-in-black": 1,
+  "gemini-girls-crew-ramen-studs-gold": 1,
+  "gemini-damson-madder-caspia-midi-skirt-in-green-stripe": 1,
+  "gemini-boyville-denim-fatigue-shorts": 1,
+  "gemini-tach-aralia-dress-in-black": 1,
+  "gemini-swedish-stockings-olivia-premium-tights-in-black": 1
  },
  "engagement": {
-  "Fait Par Foutch": [246, 45, 26],
-  "Ancegria": [209, 21, 16],
-  "Cou Cou Intimates": [204, 40, 12],
-  "Tyler McGillivary": [204, 29, 16],
-  "Ella Mae": [203, 18, 10],
-  "Guizio": [202, 34, 14],
-  "Mirror Palais": [196, 34, 15],
-  "Buci NYC": [176, 23, 11],
-  "Romontio": [176, 47, 14],
-  "DémodéMODÉ": [172, 34, 21],
-  "Maguire": [170, 25, 12],
-  "My Mum Made It": [168, 31, 12],
-  "Oddli": [167, 26, 20],
-  "Cafe Forgot": [167, 22, 14],
-  "Susmie's": [160, 25, 8],
-  "Fruity Booty": [159, 18, 13],
-  "Orseund Iris": [158, 31, 13],
-  "Charlie Beads": [157, 36, 17],
-  "Ganni": [156, 13, 13],
-  "Apres Studio": [156, 17, 12],
-  "Flattered": [155, 8, 9],
-  "Lisa Says Gah": [155, 21, 16],
-  "Ciao Lucia": [154, 22, 11],
-  "Uniform Person": [152, 39, 19],
-  "Entremains": [152, 38, 17],
-  "By Gianna": [151, 24, 14],
-  "Conner Ives": [150, 21, 11],
-  "Miaou": [150, 25, 13],
-  "Priscavera": [149, 14, 9],
-  "Heaven Mayhem": [148, 20, 8],
-  "Of Planet Earth": [147, 49, 12],
-  "SIEDRÉS": [147, 19, 16],
-  "Niihai": [146, 20, 14],
-  "EB Denim": [145, 21, 11],
-  "Little Yarn": [145, 32, 15],
-  "Paloma Wool": [145, 26, 9],
-  "Brooke Callahan": [143, 24, 18],
-  "Mais x Frida": [143, 23, 12],
-  "Anna October": [143, 18, 14],
-  "Find Me Now the Label": [142, 28, 11],
-  "Belle Anna": [141, 24, 18],
-  "Geel": [139, 30, 9],
-  "With Jéan": [139, 33, 13],
-  "Attega": [139, 38, 10],
-  "Deiji Studios": [139, 24, 14],
-  "Woodrose Deli": [138, 23, 14],
-  "Lexxola": [138, 21, 12],
-  "Carmen Says": [138, 21, 7],
-  "Paris Georgia": [137, 25, 11],
-  "Studio Nani": [137, 19, 13],
-  "Aknvas": [137, 11, 15],
-  "Fashion Brand Company": [136, 11, 7],
-  "Kernemilk": [136, 17, 10],
-  "Mpaz Studio": [136, 34, 10],
-  "Trashy Clothing": [136, 10, 8],
-  "Gaudir Swim": [135, 22, 9],
-  "Tae Park": [135, 24, 10],
-  "Hand Over": [135, 20, 8],
-  "Feners": [135, 21, 13],
-  "Baserange": [134, 11, 8],
-  "Gumi": [134, 21, 14],
-  "The Frankie Shop": [134, 8, 12],
-  "Susamusa": [133, 30, 10],
-  "A Bronze Age": [133, 15, 7],
-  "Unica Leathers": [132, 17, 8],
-  "Cowboys of Habit": [132, 9, 7],
-  "Collina Strada": [131, 14, 10],
-  "Peachy Den": [131, 17, 13],
-  "Chan Luu": [131, 14, 11],
-  "Musier Paris": [130, 14, 10],
-  "Gimaguas": [130, 21, 11],
-  "Bonnie Clyde": [130, 14, 11],
-  "Rat and Boa": [129, 19, 8],
-  "Mode Mischief": [129, 31, 4],
-  "Maem Disko": [128, 37, 14],
-  "St. Agni": [128, 19, 8],
-  "Eshim": [128, 14, 7],
-  "Tigra Tigra": [127, 16, 7],
-  "Alighieri": [127, 18, 7],
-  "Martine Rose": [127, 4, 7],
-  "Anonie": [127, 20, 17],
-  "Los Angeles Apparel": [126, 11, 10],
-  "Flore Flore": [126, 14, 4],
-  "Nafsika Skourti": [126, 16, 20],
-  "Nuri Studios": [126, 21, 9],
-  "MISBHV": [126, 7, 8],
-  "DMY Studios": [125, 14, 10],
-  "Sentaler": [124, 10, 8],
-  "Mirchi by Kim": [124, 23, 6],
-  "Eliou": [123, 18, 8],
-  "Kinkifish": [123, 12, 7],
-  "Sir the Label": [123, 16, 10],
-  "Mondo Mondo": [122, 24, 9],
-  "Tone Deaf Studios": [121, 12, 6],
-  "SWF Boutique": [120, 13, 13],
-  "Audette": [120, 5, 10],
-  "Anni Lu": [119, 7, 6],
-  "Other Normal": [119, 35, 9],
-  "Le Febour": [118, 20, 11],
-  "Faris": [118, 22, 10],
-  "Wolf Circus": [117, 11, 5],
-  "Sophie Buhai": [115, 7, 9],
-  "Bec + Bridge": [115, 14, 10],
-  "Shop Peche": [115, 23, 14],
-  "Nuovo Paris": [114, 11, 9],
-  "Martha Calvo": [113, 16, 4],
-  "Jeanerica": [111, 6, 4],
-  "NUUK Jewelry": [109, 13, 9],
-  "Marge Sherwood": [109, 8, 8],
-  "Mounser": [109, 12, 3],
-  "Yellow the Label": [109, 23, 6],
-  "ALEXIS": [108, 10, 7],
-  "Moro Joyas": [108, 12, 8],
-  "PDPAOLA": [107, 9, 9],
-  "VESTIGE": [107, 10, 11],
-  "INSIS": [106, 11, 10],
-  "Damson Madder": [106, 12, 12],
-  "Christopher Esber": [106, 11, 13],
-  "Stine Goya": [104, 4, 9],
-  "Allina Liu": [104, 18, 10],
-  "Marland Backus": [102, 16, 8],
-  "Agmes": [102, 5, 8],
-  "Khaite": [101, 11, 7],
-  "ALOHAS": [101, 17, 8],
-  "Lauren Manoogian": [101, 7, 6],
-  "Frankies Bikinis": [101, 10, 4],
-  "1XBLUE": [99, 10, 8],
-  "Eckhaus Latta": [99, 9, 9],
-  "Staud": [97, 13, 9],
-  "RLT": [97, 13, 4],
-  "Easton Marley": [97, 16, 5],
-  "Nokshi New York": [97, 11, 10],
-  "Cult Gaia": [96, 10, 7],
-  "Pärlemor": [94, 24, 5],
-  "At First Sight Studio": [92, 13, 11],
-  "Proenza Schouler": [89, 10, 10],
-  "Hernan Herdez": [89, 12, 9],
-  "Coperni": [88, 12, 5],
-  "Ghostboy": [88, 18, 5],
-  "Blanch Wear": [85, 23, 8],
-  "Port Tanger": [85, 9, 6],
-  "Maketh Thou": [84, 7, 5],
-  "Toteme": [80, 3, 4],
-  "Aeyde": [80, 3, 6],
-  "Mackage": [79, 0, 8],
-  "C'est Nous": [78, 5, 5],
-  "Dries Van Noten": [77, 10, 6],
-  "Yuni Buffa": [70, 8, 9],
-  "28natelier": [69, 4, 1],
-  "Mali Marea": [69, 14, 4],
-  "6397": [67, 2, 0],
-  "Side Eye": [66, 14, 5],
-  "Alas Silk": [65, 14, 4],
-  "Phoebe Philo": [65, 2, 7],
-  "Donde Esteban": [64, 15, 0],
-  "Olivia Hurst": [63, 14, 3],
-  "The Row": [61, 8, 4],
-  "The Line by K": [57, 7, 1],
-  "Szade": [55, 7, 1],
-  "The Isla": [55, 11, 6],
-  "Nicole Saldana": [55, 0, 1],
-  "Nausicaa": [55, 8, 3],
-  "Darbary Paris": [53, 10, 1],
-  "ESIO": [53, 8, 0],
-  "Andrea Kader": [53, 4, 2],
-  "Affection Blvd": [50, 8, 5],
-  "Intentionally Blank": [44, 3, 2],
-  "Esquina": [42, 5, 5],
-  "Liebestod": [40, 4, 4],
-  "Find Me Now": [39, 4, 2],
-  "Helena Magdalena": [39, 2, 1],
-  "Moss Studio": [39, 4, 2],
-  "Campbell and Kramer": [38, 7, 2],
-  "Nuda": [38, 9, 3],
-  "Jungmaven": [37, 1, 4],
-  "Rabies Dog": [35, 4, 0],
-  "Thinking Mu": [35, 1, 4],
-  "Le Bon Shoppe": [34, 2, 3],
-  "Tiny Big Sister": [33, 2, 5],
-  "EREA": [33, 7, 1],
-  "De V": [33, 6, 5],
-  "Agus Chueizer": [32, 3, 3],
-  "Linen & More": [32, 2, 1],
-  "Bobo Choses": [32, 1, 1],
-  "Veroni": [31, 4, 0],
-  "Loup": [31, 4, 0],
-  "Battlo": [31, 7, 4],
-  "MJ": [31, 4, 1],
-  "Esthé": [31, 1, 4],
-  "INK + ALLOY": [29, 2, 1],
-  "Designation": [28, 4, 2],
-  "Casa Clara": [27, 1, 3],
-  "etc.": [26, 3, 1],
-  "Hansel from Basel": [26, 1, 0],
-  "Marfa Stance": [25, 0, 0],
-  "LinenFox": [25, 0, 2],
-  "Rota": [24, 4, 3],
-  "Boyville": [24, 0, 2],
-  "Studio Prati": [23, 4, 2],
-  "The Artisan and Company": [23, 0, 1],
-  "Chunks": [23, 3, 0],
-  "Haricot Vert": [22, 2, 1],
-  "Rita Row": [21, 0, 1],
-  "As if it wear": [21, 2, 2],
-  "CHINI": [21, 6, 1],
-  "Our Sister": [20, 1, 0],
-  "American Trench": [20, 0, 1],
-  "byWolfgang": [20, 4, 0],
-  "Alohas": [19, 3, 0],
-  "et cetera": [19, 2, 2],
-  "Tach": [19, 2, 2],
-  "LESLYE RAE": [18, 5, 1],
-  "JESSA Jewelry": [18, 0, 1],
-  "Gintonic": [18, 2, 0],
-  "MAIVE": [18, 1, 0],
-  "Primecut": [18, 1, 1],
-  "Tai Jewelry": [18, 0, 0],
-  "Hvisk": [17, 1, 1],
-  "Tabbisocks": [17, 4, 1],
-  "Pure Cashmere NYC": [17, 0, 2],
-  "CHNITA": [16, 3, 1],
-  "Cities in Dust": [16, 1, 1],
-  "PSC": [15, 0, 1],
-  "Peter and June": [15, 0, 0],
-  "Altiplano": [15, 1, 0],
-  "Olive & Pique": [15, 0, 1],
-  "Veridis": [15, 4, 0],
-  "Into Eight": [14, 1, 1],
-  "Girls Crew": [14, 0, 2],
-  "Po-em": [12, 0, 1],
-  "Nat + Noor": [12, 1, 2],
-  "PRIMECUT": [11, 1, 1],
-  "Maraki": [11, 3, 0],
-  "Swedish Stockings": [11, 1, 1],
-  "Second Skin": [11, 0, 2],
-  "Namaste Jewelry": [10, 1, 0],
-  "Amt.": [10, 0, 1],
-  "Echo": [10, 0, 1],
-  "Cableami": [10, 2, 0],
-  "CONCEPTO LITTE": [9, 4, 0],
-  "Room Shop": [8, 0, 1],
-  "Mimesis": [8, 0, 2]
+  "Fait Par Foutch": [
+   246,
+   45,
+   26
+  ],
+  "Ancegria": [
+   209,
+   21,
+   16
+  ],
+  "Cou Cou Intimates": [
+   204,
+   40,
+   12
+  ],
+  "Tyler McGillivary": [
+   204,
+   29,
+   16
+  ],
+  "Ella Mae": [
+   203,
+   18,
+   10
+  ],
+  "Guizio": [
+   202,
+   34,
+   14
+  ],
+  "Mirror Palais": [
+   196,
+   34,
+   15
+  ],
+  "Buci NYC": [
+   176,
+   23,
+   11
+  ],
+  "Romontio": [
+   176,
+   47,
+   14
+  ],
+  "DémodéMODÉ": [
+   172,
+   34,
+   21
+  ],
+  "Maguire": [
+   170,
+   25,
+   12
+  ],
+  "My Mum Made It": [
+   168,
+   31,
+   12
+  ],
+  "Oddli": [
+   167,
+   26,
+   20
+  ],
+  "Cafe Forgot": [
+   167,
+   22,
+   14
+  ],
+  "Susmie's": [
+   160,
+   25,
+   8
+  ],
+  "Fruity Booty": [
+   159,
+   18,
+   13
+  ],
+  "Orseund Iris": [
+   158,
+   31,
+   13
+  ],
+  "Charlie Beads": [
+   157,
+   36,
+   17
+  ],
+  "Ganni": [
+   156,
+   13,
+   13
+  ],
+  "Apres Studio": [
+   156,
+   17,
+   12
+  ],
+  "Flattered": [
+   155,
+   8,
+   9
+  ],
+  "Lisa Says Gah": [
+   155,
+   21,
+   16
+  ],
+  "Ciao Lucia": [
+   154,
+   22,
+   11
+  ],
+  "Uniform Person": [
+   152,
+   39,
+   19
+  ],
+  "Entremains": [
+   152,
+   38,
+   17
+  ],
+  "By Gianna": [
+   151,
+   24,
+   14
+  ],
+  "Conner Ives": [
+   150,
+   21,
+   11
+  ],
+  "Miaou": [
+   150,
+   25,
+   13
+  ],
+  "Priscavera": [
+   149,
+   14,
+   9
+  ],
+  "Heaven Mayhem": [
+   148,
+   20,
+   8
+  ],
+  "Of Planet Earth": [
+   147,
+   49,
+   12
+  ],
+  "SIEDRÉS": [
+   147,
+   19,
+   16
+  ],
+  "Niihai": [
+   146,
+   20,
+   14
+  ],
+  "EB Denim": [
+   145,
+   21,
+   11
+  ],
+  "Little Yarn": [
+   145,
+   32,
+   15
+  ],
+  "Paloma Wool": [
+   145,
+   26,
+   9
+  ],
+  "Brooke Callahan": [
+   143,
+   24,
+   18
+  ],
+  "Mais x Frida": [
+   143,
+   23,
+   12
+  ],
+  "Anna October": [
+   143,
+   18,
+   14
+  ],
+  "Find Me Now the Label": [
+   142,
+   28,
+   11
+  ],
+  "Belle Anna": [
+   141,
+   24,
+   18
+  ],
+  "Geel": [
+   139,
+   30,
+   9
+  ],
+  "With Jéan": [
+   139,
+   33,
+   13
+  ],
+  "Attega": [
+   139,
+   38,
+   10
+  ],
+  "Deiji Studios": [
+   139,
+   24,
+   14
+  ],
+  "Woodrose Deli": [
+   138,
+   23,
+   14
+  ],
+  "Lexxola": [
+   138,
+   21,
+   12
+  ],
+  "Carmen Says": [
+   138,
+   21,
+   7
+  ],
+  "Paris Georgia": [
+   137,
+   25,
+   11
+  ],
+  "Studio Nani": [
+   137,
+   19,
+   13
+  ],
+  "Aknvas": [
+   137,
+   11,
+   15
+  ],
+  "Fashion Brand Company": [
+   136,
+   11,
+   7
+  ],
+  "Kernemilk": [
+   136,
+   17,
+   10
+  ],
+  "Mpaz Studio": [
+   136,
+   34,
+   10
+  ],
+  "Trashy Clothing": [
+   136,
+   10,
+   8
+  ],
+  "Gaudir Swim": [
+   135,
+   22,
+   9
+  ],
+  "Tae Park": [
+   135,
+   24,
+   10
+  ],
+  "Hand Over": [
+   135,
+   20,
+   8
+  ],
+  "Feners": [
+   135,
+   21,
+   13
+  ],
+  "Baserange": [
+   134,
+   11,
+   8
+  ],
+  "Gumi": [
+   134,
+   21,
+   14
+  ],
+  "The Frankie Shop": [
+   134,
+   8,
+   12
+  ],
+  "Susamusa": [
+   133,
+   30,
+   10
+  ],
+  "A Bronze Age": [
+   133,
+   15,
+   7
+  ],
+  "Unica Leathers": [
+   132,
+   17,
+   8
+  ],
+  "Cowboys of Habit": [
+   132,
+   9,
+   7
+  ],
+  "Collina Strada": [
+   131,
+   14,
+   10
+  ],
+  "Peachy Den": [
+   131,
+   17,
+   13
+  ],
+  "Chan Luu": [
+   131,
+   14,
+   11
+  ],
+  "Musier Paris": [
+   130,
+   14,
+   10
+  ],
+  "Gimaguas": [
+   130,
+   21,
+   11
+  ],
+  "Bonnie Clyde": [
+   130,
+   14,
+   11
+  ],
+  "Rat and Boa": [
+   129,
+   19,
+   8
+  ],
+  "Mode Mischief": [
+   129,
+   31,
+   4
+  ],
+  "Maem Disko": [
+   128,
+   37,
+   14
+  ],
+  "St. Agni": [
+   128,
+   19,
+   8
+  ],
+  "Eshim": [
+   128,
+   14,
+   7
+  ],
+  "Tigra Tigra": [
+   127,
+   16,
+   7
+  ],
+  "Alighieri": [
+   127,
+   18,
+   7
+  ],
+  "Martine Rose": [
+   127,
+   4,
+   7
+  ],
+  "Anonie": [
+   127,
+   20,
+   17
+  ],
+  "Los Angeles Apparel": [
+   126,
+   11,
+   10
+  ],
+  "Flore Flore": [
+   126,
+   14,
+   4
+  ],
+  "Nafsika Skourti": [
+   126,
+   16,
+   20
+  ],
+  "Nuri Studios": [
+   126,
+   21,
+   9
+  ],
+  "MISBHV": [
+   126,
+   7,
+   8
+  ],
+  "DMY Studios": [
+   125,
+   14,
+   10
+  ],
+  "Sentaler": [
+   124,
+   10,
+   8
+  ],
+  "Mirchi by Kim": [
+   124,
+   23,
+   6
+  ],
+  "Eliou": [
+   123,
+   18,
+   8
+  ],
+  "Kinkifish": [
+   123,
+   12,
+   7
+  ],
+  "Sir the Label": [
+   123,
+   16,
+   10
+  ],
+  "Mondo Mondo": [
+   122,
+   24,
+   9
+  ],
+  "Tone Deaf Studios": [
+   121,
+   12,
+   6
+  ],
+  "SWF Boutique": [
+   120,
+   13,
+   13
+  ],
+  "Audette": [
+   120,
+   5,
+   10
+  ],
+  "Anni Lu": [
+   119,
+   7,
+   6
+  ],
+  "Other Normal": [
+   119,
+   35,
+   9
+  ],
+  "Le Febour": [
+   118,
+   20,
+   11
+  ],
+  "Faris": [
+   118,
+   22,
+   10
+  ],
+  "Wolf Circus": [
+   117,
+   11,
+   5
+  ],
+  "Sophie Buhai": [
+   115,
+   7,
+   9
+  ],
+  "Bec + Bridge": [
+   115,
+   14,
+   10
+  ],
+  "Shop Peche": [
+   115,
+   23,
+   14
+  ],
+  "Nuovo Paris": [
+   114,
+   11,
+   9
+  ],
+  "Martha Calvo": [
+   113,
+   16,
+   4
+  ],
+  "Jeanerica": [
+   111,
+   6,
+   4
+  ],
+  "NUUK Jewelry": [
+   109,
+   13,
+   9
+  ],
+  "Marge Sherwood": [
+   109,
+   8,
+   8
+  ],
+  "Mounser": [
+   109,
+   12,
+   3
+  ],
+  "Yellow the Label": [
+   109,
+   23,
+   6
+  ],
+  "ALEXIS": [
+   108,
+   10,
+   7
+  ],
+  "Moro Joyas": [
+   108,
+   12,
+   8
+  ],
+  "PDPAOLA": [
+   107,
+   9,
+   9
+  ],
+  "VESTIGE": [
+   107,
+   10,
+   11
+  ],
+  "INSIS": [
+   106,
+   11,
+   10
+  ],
+  "Damson Madder": [
+   106,
+   12,
+   12
+  ],
+  "Christopher Esber": [
+   106,
+   11,
+   13
+  ],
+  "Stine Goya": [
+   104,
+   4,
+   9
+  ],
+  "Allina Liu": [
+   104,
+   18,
+   10
+  ],
+  "Marland Backus": [
+   102,
+   16,
+   8
+  ],
+  "Agmes": [
+   102,
+   5,
+   8
+  ],
+  "Khaite": [
+   101,
+   11,
+   7
+  ],
+  "ALOHAS": [
+   101,
+   17,
+   8
+  ],
+  "Lauren Manoogian": [
+   101,
+   7,
+   6
+  ],
+  "Frankies Bikinis": [
+   101,
+   10,
+   4
+  ],
+  "1XBLUE": [
+   99,
+   10,
+   8
+  ],
+  "Eckhaus Latta": [
+   99,
+   9,
+   9
+  ],
+  "Staud": [
+   97,
+   13,
+   9
+  ],
+  "RLT": [
+   97,
+   13,
+   4
+  ],
+  "Easton Marley": [
+   97,
+   16,
+   5
+  ],
+  "Nokshi New York": [
+   97,
+   11,
+   10
+  ],
+  "Cult Gaia": [
+   96,
+   10,
+   7
+  ],
+  "Pärlemor": [
+   94,
+   24,
+   5
+  ],
+  "At First Sight Studio": [
+   92,
+   13,
+   11
+  ],
+  "Proenza Schouler": [
+   89,
+   10,
+   10
+  ],
+  "Hernan Herdez": [
+   89,
+   12,
+   9
+  ],
+  "Coperni": [
+   88,
+   12,
+   5
+  ],
+  "Ghostboy": [
+   88,
+   18,
+   5
+  ],
+  "Blanch Wear": [
+   85,
+   23,
+   8
+  ],
+  "Port Tanger": [
+   85,
+   9,
+   6
+  ],
+  "Maketh Thou": [
+   84,
+   7,
+   5
+  ],
+  "Toteme": [
+   80,
+   3,
+   4
+  ],
+  "Aeyde": [
+   80,
+   3,
+   6
+  ],
+  "Mackage": [
+   79,
+   0,
+   8
+  ],
+  "C'est Nous": [
+   78,
+   5,
+   5
+  ],
+  "Dries Van Noten": [
+   77,
+   10,
+   6
+  ],
+  "Yuni Buffa": [
+   70,
+   8,
+   9
+  ],
+  "28natelier": [
+   69,
+   4,
+   1
+  ],
+  "Mali Marea": [
+   69,
+   14,
+   4
+  ],
+  "6397": [
+   67,
+   2,
+   0
+  ],
+  "Side Eye": [
+   66,
+   14,
+   5
+  ],
+  "Alas Silk": [
+   65,
+   14,
+   4
+  ],
+  "Phoebe Philo": [
+   65,
+   2,
+   7
+  ],
+  "Donde Esteban": [
+   64,
+   15,
+   0
+  ],
+  "Olivia Hurst": [
+   63,
+   14,
+   3
+  ],
+  "The Row": [
+   61,
+   8,
+   4
+  ],
+  "The Line by K": [
+   57,
+   7,
+   1
+  ],
+  "Szade": [
+   55,
+   7,
+   1
+  ],
+  "The Isla": [
+   55,
+   11,
+   6
+  ],
+  "Nicole Saldana": [
+   55,
+   0,
+   1
+  ],
+  "Nausicaa": [
+   55,
+   8,
+   3
+  ],
+  "Darbary Paris": [
+   53,
+   10,
+   1
+  ],
+  "ESIO": [
+   53,
+   8,
+   0
+  ],
+  "Andrea Kader": [
+   53,
+   4,
+   2
+  ],
+  "Affection Blvd": [
+   50,
+   8,
+   5
+  ],
+  "Intentionally Blank": [
+   44,
+   3,
+   2
+  ],
+  "Esquina": [
+   42,
+   5,
+   5
+  ],
+  "Liebestod": [
+   40,
+   4,
+   4
+  ],
+  "Find Me Now": [
+   39,
+   4,
+   2
+  ],
+  "Helena Magdalena": [
+   39,
+   2,
+   1
+  ],
+  "Moss Studio": [
+   39,
+   4,
+   2
+  ],
+  "Campbell and Kramer": [
+   38,
+   7,
+   2
+  ],
+  "Nuda": [
+   38,
+   9,
+   3
+  ],
+  "Jungmaven": [
+   37,
+   1,
+   4
+  ],
+  "Rabies Dog": [
+   35,
+   4,
+   0
+  ],
+  "Thinking Mu": [
+   35,
+   1,
+   4
+  ],
+  "Le Bon Shoppe": [
+   34,
+   2,
+   3
+  ],
+  "Tiny Big Sister": [
+   33,
+   2,
+   5
+  ],
+  "EREA": [
+   33,
+   7,
+   1
+  ],
+  "De V": [
+   33,
+   6,
+   5
+  ],
+  "Agus Chueizer": [
+   32,
+   3,
+   3
+  ],
+  "Linen & More": [
+   32,
+   2,
+   1
+  ],
+  "Bobo Choses": [
+   32,
+   1,
+   1
+  ],
+  "Veroni": [
+   31,
+   4,
+   0
+  ],
+  "Loup": [
+   31,
+   4,
+   0
+  ],
+  "Battlo": [
+   31,
+   7,
+   4
+  ],
+  "MJ": [
+   31,
+   4,
+   1
+  ],
+  "Esthé": [
+   31,
+   1,
+   4
+  ],
+  "INK + ALLOY": [
+   29,
+   2,
+   1
+  ],
+  "Designation": [
+   28,
+   4,
+   2
+  ],
+  "Casa Clara": [
+   27,
+   1,
+   3
+  ],
+  "etc.": [
+   26,
+   3,
+   1
+  ],
+  "Hansel from Basel": [
+   26,
+   1,
+   0
+  ],
+  "Marfa Stance": [
+   25,
+   0,
+   0
+  ],
+  "LinenFox": [
+   25,
+   0,
+   2
+  ],
+  "Rota": [
+   24,
+   4,
+   3
+  ],
+  "Boyville": [
+   24,
+   0,
+   2
+  ],
+  "Studio Prati": [
+   23,
+   4,
+   2
+  ],
+  "The Artisan and Company": [
+   23,
+   0,
+   1
+  ],
+  "Chunks": [
+   23,
+   3,
+   0
+  ],
+  "Haricot Vert": [
+   22,
+   2,
+   1
+  ],
+  "Rita Row": [
+   21,
+   0,
+   1
+  ],
+  "As if it wear": [
+   21,
+   2,
+   2
+  ],
+  "CHINI": [
+   21,
+   6,
+   1
+  ],
+  "Our Sister": [
+   20,
+   1,
+   0
+  ],
+  "American Trench": [
+   20,
+   0,
+   1
+  ],
+  "byWolfgang": [
+   20,
+   4,
+   0
+  ],
+  "Alohas": [
+   19,
+   3,
+   0
+  ],
+  "et cetera": [
+   19,
+   2,
+   2
+  ],
+  "Tach": [
+   19,
+   2,
+   2
+  ],
+  "LESLYE RAE": [
+   18,
+   5,
+   1
+  ],
+  "JESSA Jewelry": [
+   18,
+   0,
+   1
+  ],
+  "Gintonic": [
+   18,
+   2,
+   0
+  ],
+  "MAIVE": [
+   18,
+   1,
+   0
+  ],
+  "Primecut": [
+   18,
+   1,
+   1
+  ],
+  "Tai Jewelry": [
+   18,
+   0,
+   0
+  ],
+  "Hvisk": [
+   17,
+   1,
+   1
+  ],
+  "Tabbisocks": [
+   17,
+   4,
+   1
+  ],
+  "Pure Cashmere NYC": [
+   17,
+   0,
+   2
+  ],
+  "CHNITA": [
+   16,
+   3,
+   1
+  ],
+  "Cities in Dust": [
+   16,
+   1,
+   1
+  ],
+  "PSC": [
+   15,
+   0,
+   1
+  ],
+  "Peter and June": [
+   15,
+   0,
+   0
+  ],
+  "Altiplano": [
+   15,
+   1,
+   0
+  ],
+  "Olive & Pique": [
+   15,
+   0,
+   1
+  ],
+  "Veridis": [
+   15,
+   4,
+   0
+  ],
+  "Into Eight": [
+   14,
+   1,
+   1
+  ],
+  "Girls Crew": [
+   14,
+   0,
+   2
+  ],
+  "Po-em": [
+   12,
+   0,
+   1
+  ],
+  "Nat + Noor": [
+   12,
+   1,
+   2
+  ],
+  "PRIMECUT": [
+   11,
+   1,
+   1
+  ],
+  "Maraki": [
+   11,
+   3,
+   0
+  ],
+  "Swedish Stockings": [
+   11,
+   1,
+   1
+  ],
+  "Second Skin": [
+   11,
+   0,
+   2
+  ],
+  "Namaste Jewelry": [
+   10,
+   1,
+   0
+  ],
+  "Amt.": [
+   10,
+   0,
+   1
+  ],
+  "Echo": [
+   10,
+   0,
+   1
+  ],
+  "Cableami": [
+   10,
+   2,
+   0
+  ],
+  "CONCEPTO LITTE": [
+   9,
+   4,
+   0
+  ],
+  "Room Shop": [
+   8,
+   0,
+   1
+  ],
+  "Mimesis": [
+   8,
+   0,
+   2
+  ]
  }
 }
