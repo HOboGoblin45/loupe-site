@@ -190,18 +190,24 @@ FOUNDER_REMOVED = ["Taottao", "Rota", "Mackage", "Marfa Stance"]
 # Site tokens, unchanged: paper #FAF8F6, ink #141414, pink #F3CBF0, coral
 # #FE6F6F, Fraunces, Beth Ellen. Flat colours only — no gradient anywhere.
 #
-# MEASURED, not eyeballed. Relative luminance by WCAG 2.1, against paper:
-#   ink   #141414  17.8:1   body and headings
-#   muted #6E6A6E   5.0:1   secondary text  (passes AA at any size)
-#   accent#C2453F   4.7:1   eyebrows and small emphasis (passes AA)
-#   coral #FE6F6F   2.6:1   FAILS as text — so it is used only as a fill on a
-#                           chart bar that already carries its number in words.
-# The site's own .eyebrow is coral-on-paper at 2.6:1, i.e. below AA; this page
-# keeps the same hue family two steps darker rather than inherit a defect.
+# MEASURED, not eyeballed — WCAG 2.1 relative luminance, computed in
+# test_loupe_index.js on every build. Ratios on paper / white card / pink-soft
+# card, which are the only three surfaces text sits on here:
+#   ink    #141414   17.4 / 18.4 / 16.5   body and headings
+#   muted  #6E6A6E    5.0 /  5.3 /  4.8   secondary text
+#   accent #B8403A    5.2 /  5.5 /  4.9   eyebrows and small emphasis
+#   coral  #FE6F6F    2.6 — FAILS as text, so it is never text: it fills a bar
+#                     that already carries its own number in words beside it.
+#
+# The site's own .eyebrow is coral-on-paper at 2.6:1, below AA. This page keeps
+# the same hue (2.9° against coral's 0°) several steps darker rather than
+# inherit the defect. The first attempt, #C2453F, measured 4.70:1 on paper and
+# looked fine — but 4.47:1 on the pink-soft lead cards, i.e. it failed on the
+# surface it appears on most. Checking one background is not checking.
 COL = {
     "paper": "#FAF8F6", "ink": "#141414", "muted": "#6E6A6E", "line": "#ECE7EC",
     "white": "#FFFFFF", "pink": "#F3CBF0", "pink_soft": "#FCEFF8",
-    "coral": "#FE6F6F", "accent": "#C2453F", "navy": "#15152A",
+    "coral": "#FE6F6F", "accent": "#B8403A", "navy": "#15152A",
 }
 
 
@@ -1605,10 +1611,18 @@ def encrypt_card(payload, token):
                  "  It is what keeps 139 labels' private figures out of a PUBLIC repo.\n"
                  "  There is no unencrypted fallback on purpose.")
     import hashlib
+    import hmac
     key = hashlib.sha256(token.encode()).digest()
-    iv = secrets.token_bytes(12)
-    ct = AESGCM(key).encrypt(iv, json.dumps(payload, ensure_ascii=False,
-                                           separators=(",", ":")).encode(), None)
+    plain = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()
+    # DETERMINISTIC nonce, derived from the key and the plaintext, so the build
+    # is reproducible: re-running it after a wording tweak leaves the 139 card
+    # files byte-identical instead of showing 139 spurious diffs that have to be
+    # eyeballed before every commit. (Week to week they all change regardless —
+    # the reporting window itself is inside the payload.) Key+nonce reuse is
+    # only unsafe when the PLAINTEXT differs; here an identical nonce implies an
+    # identical plaintext by construction, so there is nothing to leak.
+    iv = hmac.new(key, plain, hashlib.sha256).digest()[:12]
+    ct = AESGCM(key).encrypt(iv, plain, None)
     # No brand, no slug, no plaintext length hint beyond the ciphertext's own.
     return json.dumps({"v": 1,
                        "iv": base64.b64encode(iv).decode(),

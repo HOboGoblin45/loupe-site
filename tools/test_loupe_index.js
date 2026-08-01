@@ -67,6 +67,39 @@ ok('no gradients anywhere', !/gradient/i.test(html));
 ok('canonical is set', /rel="canonical" href="https:\/\/useloupe\.shop\/index\/"/.test(html));
 ok('the public page is indexable', !/noindex/.test(html));
 
+// ── contrast, computed from the page's own variables ────────────────────────
+// Measured, never eyeballed. A previous accent (#C2453F) cleared AA on paper at
+// 4.70:1 and quietly failed at 4.47:1 on the pink-soft lead cards — the surface
+// it appears on most. Reading the values back out of the shipped CSS is the only
+// version of this check that cannot drift from what a reader actually sees.
+console.log('\nCONTRAST (WCAG 2.1, from the page\'s own CSS variables)');
+const V = {};
+(html.match(/--[a-z-]+:#[0-9A-Fa-f]{6}/g) || []).forEach((m) => {
+  const [k, v] = m.split(':'); V[k.replace('--', '')] = v;
+});
+const lum = (hex) => {
+  const c = [1, 3, 5].map((i) => parseInt(hex.substr(i, 2), 16) / 255)
+    .map((x) => (x <= 0.04045 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4)));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const contrast = (a, b) => {
+  const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+};
+// The three surfaces text actually sits on in this page.
+[['ink', 'paper'], ['ink', 'white'], ['ink', 'pink-soft'],
+ ['muted', 'paper'], ['muted', 'white'], ['muted', 'pink-soft'],
+ ['accent', 'paper'], ['accent', 'white'], ['accent', 'pink-soft']].forEach(([f, b]) => {
+  const r = contrast(V[f], V[b]);
+  ok(f + ' on ' + b + ' clears AA (' + r.toFixed(2) + ':1)', r >= 4.5,
+     V[f] + ' on ' + V[b]);
+});
+// Coral is below AA as text at any size and is only ever a bar fill here, next
+// to a printed number. If it ever becomes text the page has a defect.
+ok('coral is never used as a text colour',
+   contrast(V.coral, V.paper) < 4.5 && !/color:var\(--coral\)/.test(html),
+   contrast(V.coral, V.paper).toFixed(2) + ':1');
+
 // ── every rate carries its sample ───────────────────────────────────────────
 console.log('\nEVERY RATE CARRIES ITS SAMPLE');
 const rates = [
