@@ -20,10 +20,32 @@ const ok = (name, cond, extra) => {
   else { console.log('  FAIL  ' + name + (extra ? '  -> ' + extra : '')); failures++; }
 };
 
+const crypto = require('crypto');
+
 const html = fs.readFileSync(SHELL, 'utf8');
 const token = JSON.parse(fs.readFileSync(KEYS, 'utf8')).gemini;
-const data = JSON.parse(
+
+// The committed payload is AES-256-GCM ciphertext keyed on the token. It used to
+// be plaintext, on the theory that an unguessable filename was the secret — but
+// loupe-site is a PUBLIC repo, so the filename was listable via the GitHub
+// contents API and the "secret" was published in a directory index. Decrypting
+// here rather than reading JSON is the test's own record of that.
+const envelope = JSON.parse(
   fs.readFileSync(path.join(ROOT, 'partners', 'd', token + '.json'), 'utf8'));
+
+function decryptCard(env, tok) {
+  const key = crypto.createHash('sha256').update(tok).digest();
+  const iv = Buffer.from(env.iv, 'base64');
+  const blob = Buffer.from(env.ct, 'base64');
+  // Node wants the 16-byte GCM tag split off the end; WebCrypto keeps it inline.
+  const tag = blob.subarray(blob.length - 16);
+  const body = blob.subarray(0, blob.length - 16);
+  const d = crypto.createDecipheriv('aes-256-gcm', key, iv);
+  d.setAuthTag(tag);
+  return JSON.parse(Buffer.concat([d.update(body), d.final()]).toString('utf8'));
+}
+
+const data = decryptCard(envelope, token);
 
 // ── the shell must be inert without a key ────────────────────────────────────
 console.log('\nSHELL');
@@ -32,6 +54,19 @@ ok('contains no figures from the report',
 ok('is marked noindex', /name="robots"[^>]*noindex/.test(html));
 ok('data lives at an unguessable path', /\/partners\/d\/'\s*\+\s*k/.test(html));
 ok('the token is not baked into the page', !html.includes(token));
+
+// ── The committed payload must be USELESS to someone who lists the directory ──
+// This is the property the first version got wrong. A public repo exposes every
+// filename, so the file itself has to be the thing that resists reading.
+const raw = fs.readFileSync(path.join(ROOT, 'partners', 'd', token + '.json'), 'utf8');
+ok('the committed payload is encrypted, not JSON',
+   /^\{"v":\d+,"iv":"/.test(raw) && !raw.includes('approval'));
+ok('the ciphertext names no partner',
+   !/gemini/i.test(raw) && !/Gemini/.test(raw));
+ok('the ciphertext leaks no figures',
+   !new RegExp(String(data.headline.approval)).test(raw));
+ok('the page decrypts client-side before rendering',
+   /crypto\.subtle\.decrypt/.test(html) && /\.then\(decrypt\)/.test(html));
 
 // ── extract and run the inline script ────────────────────────────────────────
 const script = html.slice(html.lastIndexOf('<script>') + 8, html.lastIndexOf('</script>'));
@@ -63,29 +98,46 @@ function run(search, payload, shouldFetch) {
         : Promise.resolve({ ok: false });
     },
     Number, Math, String, JSON, console,
+    // The page decrypts before it renders, so the stub needs the same primitives
+    // a browser gives it. Node's WebCrypto is API-identical, and atob/TextEncoder
+    // are global from Node 16 — without these, decrypt() throws, render() never
+    // runs, and every assertion below fails for a reason that has nothing to do
+    // with the thing being tested.
+    crypto: globalThis.crypto,
+    atob: globalThis.atob,
+    TextEncoder, TextDecoder, Uint8Array,
   };
-  const fn = new Function(
-    'location', 'URLSearchParams', 'document', 'fetch', 'Number', 'Math', 'String', 'JSON', 'console',
-    script);
-  fn(sandbox.location, sandbox.URLSearchParams, sandbox.document, sandbox.fetch,
-     Number, Math, String, JSON, console);
-  return new Promise((r) => setTimeout(r, 0));
+  const args = ['location', 'URLSearchParams', 'document', 'fetch', 'Number', 'Math',
+                'String', 'JSON', 'console', 'crypto', 'atob', 'TextEncoder',
+                'TextDecoder', 'Uint8Array'];
+  const fn = new Function(...args, script);
+  fn(...args.map((a) => sandbox[a]));
+  // Decryption is async and native: digest → importKey → decrypt → JSON.parse,
+  // each resolving on its own tick, and crypto.subtle's work happens off the JS
+  // thread. A fixed number of ticks is a race — poll for the render instead, and
+  // give up after a bound so a genuine failure still fails fast.
+  return (async () => {
+    for (let i = 0; i < 50; i++) {
+      await new Promise((r) => setImmediate(r));
+      if (els.report || fetched === null) return;   // rendered, or never fetched
+    }
+  })();
 }
 
 (async () => {
   console.log('\nKEY GATE');
-  await run('', data, true);
+  await run('', envelope, true);
   ok('no key -> no fetch at all', fetched === null);
 
-  await run('?k=' + '.'.repeat(20), data, true);
+  await run('?k=' + '.'.repeat(20), envelope, true);
   ok('malformed key -> no fetch', fetched === null, String(fetched));
 
-  await run('?k=' + token, data, false);
+  await run('?k=' + token, envelope, false);
   ok('wrong key (404) -> report stays hidden',
      !els.report || els.report.className === 'hide' || els.report.className === '');
 
   console.log('\nRENDER (real data)');
-  await run('?k=' + token, data, true);
+  await run('?k=' + token, envelope, true);
   ok('fetches the token path', fetched === '/partners/d/' + token + '.json', String(fetched));
   ok('gate hidden, report shown',
      els.gate.className === 'hide' && els.report.className === '');

@@ -117,8 +117,27 @@ footer{padding:30px 0 60px;font-size:13px;color:var(--muted);border-top:1px soli
 (function(){
   var k = new URLSearchParams(location.search).get('k') || '';
   if (!/^[A-Za-z0-9_-]{10,64}$/.test(k)) return;         // no key, no fetch
+  // The payload is AES-256-GCM ciphertext keyed on the token — see PRIVACY
+  // MODEL in build_partner_report.py. A public repo makes the filename readable,
+  // so the filename cannot be the secret. Requires a secure context (https),
+  // which useloupe.shop is.
+  function bytes(b64){
+    var s = atob(b64), a = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
+    return a;
+  }
+  function decrypt(env){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(k))
+      .then(function(kb){ return crypto.subtle.importKey('raw', kb, 'AES-GCM', false, ['decrypt']); })
+      .then(function(key){
+        return crypto.subtle.decrypt({name:'AES-GCM', iv: bytes(env.iv)}, key, bytes(env.ct));
+      })
+      .then(function(buf){ return JSON.parse(new TextDecoder().decode(buf)); });
+  }
+
   fetch('/partners/d/' + k + '.json', {cache:'no-store'})
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(decrypt)
     .then(render)
     .catch(function(){});                                 // bad key -> gate stays
 

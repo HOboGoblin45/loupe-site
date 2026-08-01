@@ -17,14 +17,26 @@ WHAT IT OPTIMISES FOR
 
 PRIVACY MODEL (this is a static site, so there is no server to check a password)
   The page at /partners/<slug>/ contains NO numbers. It is a shell that reads
-  ?k=<token> and fetches /partners/d/<token>.json. Without the token there is
-  nothing to read — not hidden, absent. The token is a 22-char random string, so
-  the data URL is not enumerable, and /partners/ is disallowed in robots.txt and
-  marked noindex so it never reaches a search index.
+  ?k=<token> and fetches /partners/d/<token>.json.
 
-  This is "unguessable link" security, the same model as a Google Doc shared by
-  link. It is right for engagement stats a partner would happily be shown. It
-  would NOT be right for anything genuinely confidential.
+  ⚠️ THE UNGUESSABLE-LINK MODEL WAS NOT ENOUGH, AND SHIPPED BROKEN FOR A DAY.
+  This file used to claim "without the token there is nothing to read — not
+  hidden, absent." That is true of a random URL on an opaque host. It is FALSE
+  here, because loupe-site is a PUBLIC GitHub repository: anyone could call
+  api.github.com/repos/HOboGoblin45/loupe-site/contents/partners/d, read the
+  filename, and recover the token verbatim. Verified on 2026-08-01 — Gemini's
+  report was listable and openable by a stranger. The directory listing was the
+  password.
+
+  So the payload is now encrypted at rest with AES-256-GCM under a key derived
+  from the token, exactly as the Loupe Index does for its 139 brand cards. What
+  is committed is {"v","iv","ct"} — no partner name, no numbers, nothing that
+  says whose report it is. The URL is the key in the literal sense. Losing
+  tools/data/keys.json makes every report permanently unreadable by anyone
+  including us, which is the correct failure mode; --rotate-key mints a new one.
+
+  The generic lesson, worth more than the fix: "unguessable" is a property of
+  the whole system, not of the string. Ours was published in a directory index.
 
 DATA
   PostHog (HogQL) when POSTHOG_API_KEY is set; otherwise the committed snapshot
@@ -40,6 +52,7 @@ USAGE
 """
 
 import argparse
+import base64
 import datetime as dt
 import html
 import json
@@ -322,6 +335,38 @@ def pull(partner_id):
 E = lambda s: html.escape(str(s), quote=True)
 
 
+def encrypt_payload(payload, token):
+    """AES-256-GCM under SHA-256(token). See PRIVACY MODEL in the module docstring.
+
+    The key is the token hashed to 32 bytes, deliberately NOT stretched with a
+    KDF: a 22-character secrets.token_urlsafe(16) is 128 bits of real entropy,
+    so there is nothing to brute-force and a slow hash would protect nothing.
+    Stretching only matters for secrets a human chose.
+
+    The nonce is derived from key+plaintext so a rebuild with unchanged numbers
+    produces a byte-identical file, rather than a spurious diff to eyeball before
+    every commit. Key/nonce reuse is only unsafe when the PLAINTEXT differs, and
+    here an identical nonce implies identical plaintext by construction.
+    """
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+    except ImportError:
+        sys.exit("Partner reports need `cryptography` (pip install cryptography).\n"
+                 "  It is what keeps a partner's private numbers out of a PUBLIC repo.\n"
+                 "  There is deliberately no unencrypted fallback.")
+    import hashlib
+    import hmac
+    key = hashlib.sha256(token.encode()).digest()
+    plain = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()
+    iv = hmac.new(key, plain, hashlib.sha256).digest()[:12]
+    ct = AESGCM(key).encrypt(iv, plain, None)
+    return json.dumps({
+        "v": 1,
+        "iv": base64.b64encode(iv).decode(),
+        "ct": base64.b64encode(ct).decode(),
+    }, separators=(",", ":"))
+
+
 def render_shell(d, token):
     """The page. Deliberately contains no numbers — see PRIVACY MODEL above."""
     name = E(d["name"])
@@ -444,8 +489,27 @@ footer{{padding:30px 0 60px;font-size:13px;color:var(--muted);border-top:1px sol
 (function(){{
   var k = new URLSearchParams(location.search).get('k') || '';
   if (!/^[A-Za-z0-9_-]{{10,64}}$/.test(k)) return;         // no key, no fetch
+  // The payload is AES-256-GCM ciphertext keyed on the token — see PRIVACY
+  // MODEL in build_partner_report.py. A public repo makes the filename readable,
+  // so the filename cannot be the secret. Requires a secure context (https),
+  // which useloupe.shop is.
+  function bytes(b64){{
+    var s = atob(b64), a = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
+    return a;
+  }}
+  function decrypt(env){{
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(k))
+      .then(function(kb){{ return crypto.subtle.importKey('raw', kb, 'AES-GCM', false, ['decrypt']); }})
+      .then(function(key){{
+        return crypto.subtle.decrypt({{name:'AES-GCM', iv: bytes(env.iv)}}, key, bytes(env.ct));
+      }})
+      .then(function(buf){{ return JSON.parse(new TextDecoder().decode(buf)); }});
+  }}
+
   fetch('/partners/d/' + k + '.json', {{cache:'no-store'}})
     .then(function(r){{ if(!r.ok) throw 0; return r.json(); }})
+    .then(decrypt)
     .then(render)
     .catch(function(){{}});                                 // bad key -> gate stays
 
@@ -592,8 +656,7 @@ def main():
 
     data_dir = ROOT / "partners" / "d"
     data_dir.mkdir(parents=True, exist_ok=True)
-    (data_dir / f"{token}.json").write_text(
-        json.dumps(d, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    (data_dir / f"{token}.json").write_text(encrypt_payload(d, token), encoding="utf-8")
 
     h = d["headline"]
     print(f"\n  {d['name']}: {d['pieces']} pieces / {d['labels']} labels")
