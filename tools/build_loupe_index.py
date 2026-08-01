@@ -867,7 +867,7 @@ def compute(days, feed_repo, verbose=True):
             "depth_p75": round(sorted(depths)[3 * len(depths) // 4]) if depths else None,
             "brands_measured": len(disc_brands),
             "brands_never": sum(1 for r in disc_brands if r["cut"] == 0),
-            "full_price_houses": [r["brand"] for r in disc_brands if r["cut"] == 0][:24],
+                "full_price_houses": [r["brand"] for r in disc_brands if r["cut"] == 0][:24],
             "window": [clean[0], clean[-1]],
             "voided_steps": [{"brand": b, "day": d, **v}
                              for (b, d), v in sorted(voided.items(), key=lambda kv: kv[0][1])],
@@ -1660,6 +1660,10 @@ def brand_payload(d, slug):
             "markdown_pct": pd_["cut_pct"],
             "full_price_houses": pd_["brands_never"],
             "brands_measured": pd_["brands_measured"],
+            # Storefronts READ daily, vs brands_measured which is those with
+            # enough tracked shelf to benchmark against. Both are quoted in the
+            # outreach email and they are not the same number.
+            "labels_read": d["coverage"]["brands_now"],
         },
     }
 

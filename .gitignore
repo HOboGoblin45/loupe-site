@@ -12,3 +12,9 @@ tools/data/keys.json
 # tokens and new links.
 tools/data/index_keys.json
 tools/data/index_links.txt
+
+# Index outreach working files. index_drafts.json and index_outreach.json carry
+# brand contact emails AND live card tokens; a token in a public repo is the
+# card, so these never get committed. Regenerate with build_index_outreach.py.
+tools/data/index_outreach.json
+tools/data/index_drafts.json
