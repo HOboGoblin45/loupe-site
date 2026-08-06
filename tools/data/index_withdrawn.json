@@ -1,0 +1,6 @@
+{
+ "ganni": {
+  "withdrawn": "2026-08-06",
+  "reason": "Currency unverifiable: curated source, not a Shopify storefront, so /cart.js cannot confirm presentment currency. An unverified brand must not carry a published price figure."
+ }
+}
