@@ -18,3 +18,16 @@ tools/data/index_links.txt
 # card, so these never get committed. Regenerate with build_index_outreach.py.
 tools/data/index_outreach.json
 tools/data/index_drafts.json
+
+# build_brand_briefs.py imports build_loupe_index.py as a module, which makes
+# CPython leave bytecode behind next to the tools.
+tools/__pycache__/
+
+# Per-brand positioning briefs (build_brand_briefs.py). STAGED, NOT LIVE, and
+# not a route on the site — each page carries one label's own numbers under its
+# own name and is meant to be sent to that label, not published. This repo is
+# PUBLIC, so committing them would put every brief in front of every brand's
+# competitors; if they are ever served from useloupe.shop they need the same
+# AES-GCM-under-the-token treatment /index/d/ already has. The directory name
+# says "staging" so nobody has to read this comment to know.
+briefs-staging/

@@ -396,6 +396,290 @@ function run(search, envelope, shouldFetch) {
   ok('cluster refresh indices straddle 100',
      d.clusters.some((c) => c.new_index > 100) && d.clusters.some((c) => c.new_index < 100));
 
+  // ══ PER-BRAND POSITIONING BRIEFS (tools/build_brand_briefs.py) ═════════════
+  //
+  // These are the artifact a founder sends cold to twenty labels. They are
+  // STAGED, not live: briefs-staging/ is gitignored, so on a clean checkout it
+  // is absent and this block is skipped loudly rather than failing a deploy
+  // gate for a directory that is not supposed to be in the repo.
+  //
+  // What is checked here is not the numbers, it is the claim boundary. A brief
+  // may say three kinds of thing (flag / price-series / descriptive) and may
+  // not say any of the things this project has withdrawn — turnover and
+  // everything else built on a piece leaving a 60-item front, the price
+  // barbell, and above all a per-piece risk score, which was fitted, tested on
+  // a window it had never seen, scored 0.519 and does not exist.
+  console.log('\nBRAND BRIEFS');
+  const BRIEFS = path.join(ROOT, 'briefs-staging');
+  const BJSON = path.join(BRIEFS, 'briefs.json');
+  if (!fs.existsSync(BJSON)) {
+    console.log('  SKIP  briefs-staging/ is absent (gitignored). ' +
+                'Run: python tools/build_brand_briefs.py');
+  } else {
+    const bj = JSON.parse(fs.readFileSync(BJSON, 'utf8'));
+    const BASES = ['flag', 'price-series', 'descriptive'];
+    const esc2 = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    ok('the briefs declare themselves staging, not published',
+       bj.staging === true && bj.published === false);
+    ok('the briefs declare exactly three bases',
+       JSON.stringify(bj.bases) === JSON.stringify(BASES), JSON.stringify(bj.bases));
+    ok('briefs-staging is gitignored',
+       /^briefs-staging\/$/m.test(fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8')));
+    ok('the window does not straddle the sampling-epoch change',
+       bj.tier.window_start < '2026-08-06' === bj.tier.window_end < '2026-08-06',
+       bj.tier.window_start + ' .. ' + bj.tier.window_end);
+    ok('the sampling depth is read off the archive, not off brands.json',
+       bj.tier.observed_cap === 60,
+       'archive was walked at 60/label/day; brands.json now says ' +
+       (d.coverage.cap || '?'));
+
+    const pages = {};
+    bj.briefs.forEach((b) => {
+      pages[b.slug] = fs.readFileSync(path.join(BRIEFS, b.file), 'utf8');
+    });
+    ok('every brief in the record exists on disk', Object.keys(pages).length === bj.briefs.length);
+    ok('no brief file is orphaned',
+       fs.readdirSync(BRIEFS).filter((f) => /^brief-.*\.html$/.test(f)).length ===
+       bj.briefs.length);
+
+    const allPages = Object.entries(pages);
+    const bad = (name, pred) => {
+      const hits = allPages.filter(([, h]) => pred(h)).map(([s]) => s);
+      ok(name, hits.length === 0, hits.slice(0, 4).join(', ') + (hits.length > 4 ? ' …' : ''));
+    };
+
+    // The live roster walk, if the briefs were built with one. Two probe files
+    // exist from 2026-08-06 twelve minutes apart and only the later one is
+    // usable: the earlier got HTTP 429 from 151 of 162 stores and reports a
+    // median off ten shops. A build that quoted the wrong one would look
+    // completely normal, so the shape of the answer is pinned here.
+    if (bj.tier.walk) {
+      const w = bj.tier.walk;
+      ok('the roster walk is the exhaustive one, not the rate-limited one',
+         w.stores >= 100 && w.eligible > 20000, JSON.stringify(w));
+      ok('the walk figures reach every brief',
+         allPages.every(([, h]) => h.includes(w.eligible.toLocaleString('en-US')) &&
+                                   h.includes('median store of ' + w.median)));
+      ok('the share of stores fitting the cap agrees with the walk',
+         (w.median > bj.tier.observed_cap) === (w.fits < 50),
+         'median ' + w.median + ' vs cap ' + bj.tier.observed_cap + ', fits ' + w.fits + '%');
+    } else {
+      console.log('  SKIP  no roster walk in the record (build with --probe)');
+    }
+
+    // ── the bytes, read as bytes ─────────────────────────────────────────────
+    // DémodéMODÉ, SIEDRÉS, Pärlemor and With Jéan are the reason. A page that
+    // renders "DÃ©modÃ©MODÃ‰" to the founder it was written for is worse than
+    // no page, and it passes every check that looks at the Python instead.
+    bad('no replacement characters', (h) => h.includes('\uFFFD'));
+    bad('no double-encoded UTF-8 (Ã©, Â…)', (h) => /[\u00C2-\u00C3][\u0080-\u00BF]/.test(h));
+    bad('no entity that got escaped twice', (h) => /&amp;(nbsp|ndash|mdash|#)/.test(h));
+    // "nan%" has to be anchored: a brand called Hernan Herdez percent-encodes
+    // into "...Hernan%20Herdez" inside a mailto subject, and an unanchored
+    // substring check fails on a page that is entirely correct.
+    ['None', 'undefined', 'NaN', 'Infinity', '{}'].forEach((s) =>
+      bad('no "' + s + '" leaked in', (h) => h.includes(s)));
+    bad('no "nan%" leaked in', (h) => /\bnan%/i.test(h));
+    bad('no unrendered format braces',
+        (h) => /\{[a-z_]+\}/.test(h.replace(/<style[\s\S]*?<\/style>/g, '')));
+    bad('no gradients anywhere', (h) => /gradient/i.test(h));
+    bad('every brief is noindex', (h) => !/name="robots"[^>]*noindex/.test(h));
+    bad('no brief claims a canonical URL it does not have', (h) => /rel="canonical"/.test(h));
+    bad('every brief carries its limits section', (h) => !/<section id="limits">/.test(h));
+    bad('every brief carries a real route to disputing a number',
+        (h) => !/looks wrong to you/.test(h) ||
+               !/mailto:tryloupeapp@gmail\.com\?subject=This%20number%20looks%20wrong/.test(h));
+    bad('no brief asks for a call, a meeting or a decision',
+        (h) => /book a call|schedule a|jump on a call|let's chat|limited time|act now/i.test(h));
+    bj.briefs.filter((b) => /[^\x00-\x7F]/.test(b.brand)).forEach((b) =>
+      ok('accented name survives to the page: ' + b.brand,
+         pages[b.slug].includes(b.brand)));
+
+    // ── the claim boundary ───────────────────────────────────────────────────
+    // Everything outside <section id="limits"> is a CLAIM. Inside it is a
+    // disclaimer, where naming the thing we cannot see is the whole point — so
+    // the banned vocabulary is checked against the page with that block cut out
+    // rather than against the page, which would make the disclaimer illegal.
+    const body = (h) => h.replace(/<section id="limits">[\s\S]*?<\/section>/, ' ')
+                         .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    const BANNED = [
+      // withdrawn: ~48% of any absence-based figure was our own sampler
+      [/turnover/i, 'turnover'], [/turned over/i, 'turned over'],
+      [/sell[- ]through/i, 'sell-through'], [/sold through/i, 'sold through'],
+      [/selling through/i, 'selling through'], [/refresh rate/i, 'refresh rate'],
+      [/refreshing fastest/i, 'refreshing fastest'], [/clearing fastest/i, 'clearing fastest'],
+      [/\bchurn/i, 'churn'], [/disappear/i, 'disappear'], [/delist/i, 'delist'],
+      // withdrawn: the barbell and the dead band did not survive the correction
+      [/barbell/i, 'barbell'], [/dead band/i, 'dead band'],
+      // never supportable from a public catalogue
+      [/units sold/i, 'units sold'], [/your revenue/i, 'your revenue'],
+      [/how much you sold/i, 'how much you sold'], [/stock depth/i, 'stock depth'],
+      // PER-PRODUCT RISK. AUC 0.519 out of time, 0.92x in the top decile.
+      [/at risk\b/i, 'at risk'], [/risk score/i, 'risk score'],
+      [/risk model/i, 'risk model'], [/most likely to sell/i, 'most likely to sell'],
+      [/will sell out/i, 'will sell out'], [/we predict/i, 'we predict'],
+      [/\bpredicted\b/i, 'predicted'], [/\bforecast/i, 'forecast'],
+      [/this piece is/i, 'this piece is'],
+    ];
+    BANNED.forEach(([re, label]) => {
+      const hits = allPages.filter(([, h]) => re.test(body(h))).map(([s]) => s);
+      ok('no brief says "' + label + '" as a claim', hits.length === 0,
+         hits.slice(0, 3).join(', '));
+    });
+    ok('the limits block is where the disclaimers actually live',
+       allPages.every(([, h]) => /Units, revenue, margin/.test(h) === false) ||
+       allPages.every(([, h]) => /not units, not revenue/.test(h)));
+    ok('every brief states that a per-piece model was tried and failed',
+       allPages.every(([, h]) => /0\.519/.test(h) && /coin flip/.test(h)));
+
+    // ── every figure carries n, its basis, and actually renders ──────────────
+    // The failure this guards against has happened in this codebase: a value
+    // computed, threaded through a prop chain, and rendered on zero screens,
+    // with tsc and a full green suite. Reading the produced bytes is the check.
+    const figs = [].concat(...bj.briefs.map((b) => b.figures.map((f) => [b, f])));
+    ok('every figure declares one of the three bases',
+       figs.every(([, f]) => BASES.indexOf(f.basis) >= 0),
+       [...new Set(figs.filter(([, f]) => BASES.indexOf(f.basis) < 0)
+                       .map(([, f]) => f.basis))].join(', '));
+    ok('no figure is absence-based',
+       figs.every(([, f]) => f.basis !== 'absence' && !/absence/i.test(f.id)));
+    ok('every figure carries a sample size', figs.every(([, f]) => f.n > 0),
+       figs.filter(([, f]) => !(f.n > 0)).slice(0, 3).map(([, f]) => f.id).join(', '));
+    ok('every rate carries a 95% interval that contains it',
+       figs.filter(([, f]) => f.kind === 'rate')
+           .every(([, f]) => f.ci && f.lo <= f.pct && f.pct <= f.hi),
+       figs.filter(([, f]) => f.kind === 'rate' && !(f.lo <= f.pct && f.pct <= f.hi))
+           .slice(0, 3).map(([b, f]) => b.brand + '/' + f.id).join(', '));
+    ok('every rate clears the sample floor it was published under',
+       figs.filter(([, f]) => f.kind === 'rate').every(([, f]) => f.n >= 8),
+       figs.filter(([, f]) => f.kind === 'rate' && f.n < 8).slice(0, 3)
+           .map(([b, f]) => b.brand + '/' + f.id + '=' + f.n).join(', '));
+    // ANCHORED, not substring. Deleting "84%" from Paris Georgia's price table
+    // left a bare-substring version of this check passing, because the headline
+    // also says "above 84% of the tier". The renderer emits
+    // <span data-f="price.bottoms.percentile">84%</span> so a figure that stops
+    // rendering cannot be covered for by a collision somewhere else on the page.
+    const anchor = (f) => '<span data-f="' + f.id + '">' + f.display + '</span>';
+    const anchorCi = (f) => '<span data-c="' + f.id + '">' + f.ci + '</span>';
+    const missing = figs.filter(([b, f]) => !pages[b.slug].includes(anchor(f)));
+    ok('every figure renders, anchored to its own id',
+       missing.length === 0,
+       missing.slice(0, 4).map(([b, f]) => b.brand + '/' + f.id + '="' + f.display + '"')
+              .join(', '));
+    const missingCi = figs.filter(([b, f]) => f.ci && !pages[b.slug].includes(anchorCi(f)));
+    ok('every interval renders beside its own figure',
+       missingCi.length === 0,
+       missingCi.slice(0, 4).map(([b, f]) => b.brand + '/' + f.id).join(', '));
+    ok('no page carries an anchor for a figure that is not in the record',
+       allPages.every(([slug, h]) => {
+         const rec = new Set(bj.briefs.find((b) => b.slug === slug).figures.map((f) => f.id));
+         return (h.match(/data-[fc]="([^"]+)"/g) || [])
+           .every((m) => rec.has(m.replace(/data-[fc]="/, '').replace(/"$/, '')));
+       }));
+
+    // ── one label's numbers are one label's business ─────────────────────────
+    const names = bj.briefs.map((b) => b.brand)
+      .concat(bj.skipped.map((s) => s.brand))
+      .filter((n) => n.length >= 5);
+    const leaks = [];
+    bj.briefs.forEach((b) => {
+      const txt = body(pages[b.slug]);
+      names.forEach((n) => {
+        if (n === b.brand) return;
+        if (new RegExp('(^|[^A-Za-z0-9])' + esc2(n) + '([^A-Za-z0-9]|$)').test(txt)) {
+          leaks.push(b.brand + ' names ' + n);
+        }
+      });
+    });
+    ok('no brief names any label except the one it is for', leaks.length === 0,
+       leaks.slice(0, 5).join('; '));
+    ok('no brief carries a brand-card token',
+       Object.values(keys).every((k) => allPages.every(([, h]) => !h.includes(k))));
+    // The TLD is required: without it "wght@9..144" out of the Google Fonts
+    // URL reads as an address and the check fails on every page.
+    ok('the only address on a brief is the one that answers',
+       allPages.every(([, h]) =>
+         (h.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g) || [])
+           .every((a) => a === 'tryloupeapp@gmail.com')));
+
+    // No per-product row of any kind: not a name, not an id, not an image.
+    const feed = process.env.LOUPE_FEED_REPO || 'C:\\loupe-feed';
+    const catPath = path.join(feed, 'loupe-feed', 'catalog.json');
+    if (fs.existsSync(catPath)) {
+      const cat = JSON.parse(fs.readFileSync(catPath, 'utf8')).products || [];
+      const byBrand = {};
+      cat.forEach((p) => { (byBrand[p.brand] = byBrand[p.brand] || []).push(p); });
+      const prod = [];
+      bj.briefs.forEach((b) => {
+        (byBrand[b.brand] || []).forEach((p) => {
+          if (p.id && pages[b.slug].includes(p.id)) prod.push(b.brand + ' / id ' + p.id);
+          if (p.name && p.name.length >= 12 && pages[b.slug].includes(p.name)) {
+            prod.push(b.brand + ' / "' + p.name + '"');
+          }
+        });
+      });
+      ok('no brief names an individual product', prod.length === 0, prod.slice(0, 3).join('; '));
+      ok('no brief carries a product image', allPages.every(([, h]) => !/<img/i.test(h)));
+    } else {
+      console.log('  SKIP  per-product check needs the feed clone at ' + catPath);
+    }
+
+    // ── contrast, from the brief's own CSS variables ─────────────────────────
+    const one = allPages[0][1];
+    const W = {};
+    (one.match(/--[a-z-]+:#[0-9A-Fa-f]{6}/g) || []).forEach((m) => {
+      const [k, v] = m.split(':'); W[k.replace('--', '')] = v;
+    });
+    [['ink', 'paper'], ['ink', 'white'], ['ink', 'pink-soft'],
+     ['muted', 'paper'], ['muted', 'white'], ['muted', 'pink-soft'],
+     ['accent', 'paper'], ['accent', 'white'], ['accent', 'pink-soft']].forEach(([f, b]) => {
+      const r = contrast(W[f], W[b]);
+      ok('brief: ' + f + ' on ' + b + ' clears AA (' + r.toFixed(2) + ':1)', r >= 4.5,
+         W[f] + ' on ' + W[b]);
+    });
+    // The basis chip is muted on an explicit white fill, so it never inherits
+    // the surface it happens to sit on. Pin both facts.
+    ok('the basis chip sets its own background rather than inheriting one',
+       /\.basis\{[^}]*background:var\(--white\)/.test(one));
+    ok('basis-chip text clears AA on that fill (' +
+       contrast(W.muted, W.white).toFixed(2) + ':1)', contrast(W.muted, W.white) >= 4.5);
+    // The assortment pills are the only surfaces on a brief whose background is
+    // a hex literal rather than a token, so they are the ones a variable sweep
+    // silently misses. .pill.down is muted-on-#F1F1F1 and lands at 4.53:1 —
+    // above AA, but close enough that nobody should be eyeballing it.
+    const pillBg = (one.match(/\.pill\{[^}]*background:(#[0-9A-Fa-f]{6})/) || [])[1];
+    const downBg = (one.match(/\.pill\.down\{[^}]*background:(#[0-9A-Fa-f]{6})/) || [])[1];
+    ok('pill text clears AA on the neutral pill (' +
+       contrast(W.ink, pillBg || '#FFFFFF').toFixed(2) + ':1)',
+       contrast(W.ink, pillBg || '#FFFFFF') >= 4.5, String(pillBg));
+    ok('muted pill text clears AA on the down pill (' +
+       contrast(W.muted, downBg || '#FFFFFF').toFixed(2) + ':1)',
+       contrast(W.muted, downBg || '#FFFFFF') >= 4.5, String(downBg));
+
+    // ── the briefs and the Index must not quote two different tiers ──────────
+    if (bj.tier.window_end === d.windowEnd && bj.tier.window_start === d.windowStart) {
+      ok('brief and Index agree on the tier full-price rate',
+         Math.abs(bj.tier.md_held[0] - d.headline.full_price_pct) < 0.11,
+         bj.tier.md_held[0] + ' vs ' + d.headline.full_price_pct);
+      ok('brief and Index agree on the tier sold-out rate',
+         Math.abs(bj.tier.oos_now[0] - d.soldOut.tier.pct) < 0.11,
+         bj.tier.oos_now[0] + ' vs ' + d.soldOut.tier.pct);
+      ok('brief and Index agree on how many pieces the tier holds',
+         bj.tier.pieces === d.coverage.pieces_now,
+         bj.tier.pieces + ' vs ' + d.coverage.pieces_now);
+      ok('brief and Index agree on how many labels are read',
+         bj.tier.labels === d.coverage.brands_now,
+         bj.tier.labels + ' vs ' + d.coverage.brands_now);
+    } else {
+      console.log('  SKIP  tier cross-check: briefs cover ' + bj.tier.window_start + '..' +
+                  bj.tier.window_end + ', Index covers ' + d.windowStart + '..' + d.windowEnd);
+    }
+
+    console.log('  ' + bj.briefs.length + ' briefs, ' + figs.length +
+                ' figures, ' + bj.skipped.length + ' labels with too little shelf');
+  }
+
   console.log(failures ? '\n' + failures + ' FAILED\n' : '\nAll checks passed.\n');
   process.exit(failures ? 1 : 0);
 })();

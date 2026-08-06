@@ -122,6 +122,24 @@ def compute(partner_id, catalog, ph):
     if not mine:
         sys.exit(f"No products in the live catalog for retailer '{partner_id}'.")
 
+    # A price we cannot vouch for does not go in a document we hand a business
+    # partner. `currencyUnverified` is stamped by build_catalog.py on any row
+    # whose shop has never once answered the /cart.js?country=US currency probe,
+    # so its `price` was converted on an annotation nobody has checked. Rare by
+    # construction; loud when it happens, because a partner shelf quietly losing
+    # pieces would be read as the shelf shrinking.
+    _unverified = [p for p in mine if p.get("currencyUnverified")]
+    if _unverified:
+        print(f"  WARNING: {len(_unverified)} of {len(mine)} pieces have an "
+              f"unverified currency and are excluded from every price figure "
+              f"({', '.join(sorted({p['brand'] for p in _unverified})[:6])})",
+              file=sys.stderr)
+        mine = [p for p in mine if not p.get("currencyUnverified")]
+        if not mine:
+            sys.exit(f"Every '{partner_id}' piece has an unverified currency — "
+                     f"refusing to publish a price figure. Re-run "
+                     f"loupe-feed/probe_currency.py --apply.")
+
     # Which of the partner's labels are theirs ALONE in our catalog. Engagement
     # for those brands is the partner's engagement with nothing else mixed in,
     # which is how we can report a rate before retailer-level telemetry (shipped

@@ -22,16 +22,37 @@ WHAT WE ACTUALLY SEE — say this before saying anything else
 
 build_catalog.py pulls each brand's public /products.json, which every store
 tested (thefrankieshop, susamusa, stinegoya, fashionbrandcompany, mirchibykim)
-returns sorted by published_at DESCENDING. The walk takes one page of 180 and
-keeps at most 60 items after junk/variant filtering. So the tracked set is a
-brand's PUBLISHING FRONT: up to 60 pieces drawn from its 180 most recent
-listings. For a small store that is the whole store. For The Frankie Shop it is
-the last few weeks.
+returns sorted by published_at DESCENDING.
 
-Everything below is therefore "of what we track", and the phrase is not a hedge:
-a piece leaving a brand at the 60 cap may have been delisted OR pushed off the
-front by newer arrivals. The metrics are chosen so that the ones which cannot
-survive that ambiguity are not published as sell-through.
+UNTIL 2026-08-06 the walk took one page of 180 and kept at most 60 items after
+junk/variant filtering. So the tracked set was a brand's PUBLISHING FRONT: up to
+60 pieces drawn from its 180 most recent listings. The hedge above — "of what we
+track" — was correct and was not enough, because it did not say how big the
+ambiguity was. It has now been measured, from both ends:
+
+  • A live walk of the whole roster to exhaustion on 2026-08-06 (157 of 161
+    stores answered) found the MEDIAN store publishes 157 eligible pieces
+    (p75 324, p90 638, max 3,104; 45,718 in total, against the ~8,000 we held).
+    Only 19% of stores fitted inside 60; 81% were bigger, and for those the
+    tracked shelf ROTATED.
+  • Over 2026-07-16 -> 2026-08-01, whole-brand rotation accounted for 981 of
+    2,041 disappearances. 48%. Bec + Bridge "lost" 60 of 60 pieces and finished
+    the window holding 60. Nothing sold out; the sampler turned over.
+
+So roughly half of every ABSENCE-based figure on this page — the turnover
+headline, its category/band/colour cuts, "refreshing fastest", "selling through
+fastest" — was our own scraper, for every window that ends before 2026-08-06.
+That cannot be repaired retroactively: the pieces the cap hid were never
+observed, and no amount of re-analysis conjures them.
+
+What survives untouched is anything read off the store's own `available` flag
+for a piece present at BOTH endpoints. The sampler cannot flip a flag on a piece
+it is still holding. The sell-out figures are that; the turnover figures are not,
+and `basis` in data.json now says which is which rather than leaving it to prose.
+
+From 2026-08-06 the scrape walks 750 deep (three Shopify pages) with a separate
+60-item display cap for the app, and SAMPLING_EPOCHS below makes the boundary
+un-crossable rather than merely documented.
 
 THE FIVE TRAPS, AND WHAT EACH ONE COST
 
@@ -75,6 +96,20 @@ THE FIVE TRAPS, AND WHAT EACH ONE COST
 5. AVAILABILITY ONLY EXISTS FROM 2026-07-16. The `available` flag shipped in
    f9c0658. Nothing before that date can be asked whether it was in stock, so
    sell-out is reported on the current shelf and on that window only.
+
+6. A CHANGE IN WHAT WE LOOK AT LOOKS LIKE THE MARKET MOVING. Trap 1 is about the
+   price axis and trap 4 is about the roster; this one is about the sampler
+   itself. On 2026-08-06 the per-brand walk went from 60 items to 750, which
+   makes tens of thousands of pieces that had been on sale for months visible in
+   one morning. Counted naively that is an arrival spike, a tier that quadrupled
+   overnight, and a refresh rate in the hundreds of percent for labels that
+   published nothing — the same shape The Frankie Shop already showed at 510%
+   against a 60-piece shelf, but for every label at once.
+
+   SAMPLING_EPOCHS marks it. Arrivals inside the settle window are dropped, and
+   a longitudinal window that straddles the boundary is CLAMPED to one side
+   rather than averaged across it, because unlike a price move there is no
+   subset of the comparison that stays valid.
 
 WHAT IS PUBLISHED WHERE, AND WHY
 
@@ -156,8 +191,40 @@ ERA_START = "2026-07-01"
 PRICE_EPOCHS = ["2026-07-15"]
 EPOCH_SETTLE_DAYS = 3
 
+# Lifted verbatim from loupe-feed/build_price_history.py, same as the line above
+# and for the same reason. SAMPLING epochs are days on which WHICH PRODUCTS WE
+# LOOK AT changed, as opposed to what we recorded about the ones we had.
+#
+# 2026-08-06 — perBrand went from a flat 60 to a 750-deep walk with a separate
+# 60-item display cap. Until that day the tracked shelf was a brand's PUBLISHING
+# FRONT (products.json is published_at DESC), and for the 88-of-173 brands at the
+# cap it rotated: 981 of 2,041 disappearances between 2026-07-16 and 2026-08-01
+# were whole-brand rotation, 48%. Every absence-based figure on this page — the
+# turnover headline, the turnover cuts, "selling through fastest" — is roughly
+# half our own scraper for windows before this date, and cannot be repaired
+# retroactively. On the date itself, thousands of always-for-sale pieces become
+# visible at once, which must never read as arrivals.
+SAMPLING_EPOCHS = ["2026-08-06"]
+
 # `available` first appears in the 2026-07-16 catalog (f9c0658).
 AVAIL_START = "2026-07-16"
+
+# ── FX corrections (2026-08-06) ──────────────────────────────────────────────
+# Until 2026-08-06 build_catalog.py converted every price using the per-brand
+# `currency` ANNOTATION in brands.json, while a live /cart.js?country=US probe
+# that knew better ran alongside it and only printed a warning. Eight stores were
+# annotated wrong, so 422 rows a day — 5.3% of the tier — carried a price out by
+# the FX factor, up to 3.7x for a single label.
+#
+# The snapshots are the record and the record is not rewritten. The correction
+# lives in loupe-feed/price_corrections.json and is applied HERE, at the single
+# point where the archive is read, so the Index and the brand briefs (which
+# import load_history from this module) cannot disagree about it.
+#
+# It applies only to rows with NO `currency` field. From 2026-08-06 every row
+# carries `priceRaw` + `currency` and was priced from the observed value, so a
+# corrected row can never be corrected twice.
+CORRECTIONS_REL = "loupe-feed/price_corrections.json"
 
 # A price that moves by less than this is FX rounding, not a decision.
 MIN_MEANINGFUL_MOVE = 0.02
@@ -237,10 +304,18 @@ def history_is_truncated():
     return (FEED_REPO / git_dir / "shallow").exists() or pathlib.Path(git_dir, "shallow").exists()
 
 
-def daily_snapshots():
-    """(day, sha) for the LAST commit of each day that touched the catalog."""
+def daily_snapshots(ref=None):
+    """(day, sha) for the LAST commit of each day that touched the catalog.
+
+    `ref` defaults to the checked-out HEAD. It is a parameter because a local
+    branch that is merely BEHIND the remote is a shorter archive, and the
+    shallow-clone guard does not catch that: the clone is complete, the branch
+    is just older, and the result is a well-formed answer covering fewer days.
+    """
+    args = ["log", "--format=%H|%ad", "--date=short"] + ([ref] if ref else []) \
+        + ["--", CATALOG_REL]
     out = {}
-    for line in git("log", "--format=%H|%ad", "--date=short", "--", CATALOG_REL).splitlines():
+    for line in git(*args).splitlines():
         if "|" not in line:
             continue
         sha, day = line.split("|", 1)
@@ -254,9 +329,75 @@ def daily_snapshots():
 BRAND, PRICE, CAT, AVAIL, COLOURS, NAME, RETAILER, NSIZES = range(8)
 
 
-def load_history(verbose=True):
+def direct(rows):
+    """Brand-direct rows only. Partner-retailer shelves (Gemini, from
+    2026-07-29) are ingested with inStockOnly=True, so a sold-out partner
+    piece is never in the catalog at all — including them would drag the
+    tier's sell-out rate toward zero for a reason that is about our ingest
+    rule, not their stockroom.
+
+    Module level rather than a closure inside compute() because
+    build_brand_briefs.py has to apply the identical rule; a second copy of
+    "what counts as the tier" is how two pages start quoting two tiers.
+    """
+    return {k: v for k, v in rows.items() if not v[RETAILER]}
+
+
+def load_corrections(feed_repo=None):
+    """(corrections_by_brand, unverified_brands) — the FX repair table.
+
+    A MISSING file is a hard stop, not a quiet zero. This page states prices to
+    the brands they are about; silently publishing uncorrected numbers because a
+    path was wrong is precisely the failure this table exists to end. A gate that
+    can fail invisibly is worse than no gate — see the junk-filter fixture that
+    blocked every catalog rebuild for four days without anyone noticing.
+    """
+    repo = pathlib.Path(feed_repo or FEED_REPO)
+    path = repo / CORRECTIONS_REL
+    if not path.exists():
+        sys.exit(f"REFUSING TO BUILD: {path} is missing.\n"
+                 "  It records the FX errors this page must correct before quoting\n"
+                 "  a price. Without it the Index would republish 8 brands' prices\n"
+                 "  wrong by up to 3.7x. Point LOUPE_FEED_REPO at the feed repo.")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    corr = {}
+    for c in doc.get("corrections", []):
+        corr[c["brand"]] = (c["fromDay"], c.get("toDay"), float(c["factor"]))
+    unver = set()
+    bpath = repo / "loupe-feed" / "brands.json"
+    if bpath.exists():
+        bcfg = json.loads(bpath.read_text(encoding="utf-8"))
+        # currencyVerified is False only where a live probe has NEVER answered.
+        # Absent (an older brands.json) is not a claim either way, so it does not
+        # exclude — the flag has to be an explicit negative to remove a brand.
+        unver = {e["brand"] for e in bcfg.get("brands", [])
+                 if e.get("currencyVerified") is False}
+    return corr, unver
+
+
+def correct_price(price, brand, day, has_currency, corrections):
+    """The archived price restated in USD, or None where it cannot be trusted.
+
+    `has_currency` is the self-terminating guard: a row that carries its own
+    observed currency was priced from that observation, so it is already right
+    and must not be multiplied a second time.
+    """
+    if price is None or has_currency:
+        return price
+    hit = corrections.get(brand)
+    if not hit:
+        return price
+    lo, hi, factor = hit
+    if day < lo or (hi and day > hi):
+        return price
+    return round(price * factor)
+
+
+def load_history(verbose=True, ref=None, feed_repo=None):
+    corrections, unverified = load_corrections(feed_repo)
     days = {}
-    for day, sha in daily_snapshots():
+    n_corrected = n_dropped = 0
+    for day, sha in daily_snapshots(ref):
         raw = git("show", f"{sha}:{CATALOG_REL}")
         if not raw.strip():
             continue
@@ -271,9 +412,22 @@ def load_history(verbose=True):
             pid = p.get("id")
             if not pid:
                 continue
+            brand = p.get("brand") or "?"
+            # A brand whose presentment currency no probe has ever confirmed
+            # cannot reach a published price figure. Dropping the ROW rather than
+            # blanking the price is deliberate: a row with price=None still
+            # counts toward sell-out, turnover and assortment, and a brand we
+            # cannot price is still a brand we cannot describe honestly.
+            if brand in unverified:
+                n_dropped += 1
+                continue
+            price = p.get("price") if isinstance(p.get("price"), (int, float)) else None
+            fixed = correct_price(price, brand, day, bool(p.get("currency")), corrections)
+            if fixed != price:
+                n_corrected += 1
             rows[pid] = (
-                p.get("brand") or "?",
-                p.get("price") if isinstance(p.get("price"), (int, float)) else None,
+                brand,
+                fixed,
                 p.get("category") or "other",
                 p.get("available"),
                 tuple(p.get("colorTags") or ()),
@@ -284,6 +438,13 @@ def load_history(verbose=True):
         days[day] = rows
         if verbose:
             print(f"  {day}  {len(rows):>5} products", file=sys.stderr)
+    if verbose:
+        # Say it out loud every run. A repair that happens silently is one nobody
+        # notices has stopped happening.
+        print(f"  FX: {n_corrected:,} archived prices re-derived from "
+              f"price_corrections.json ({len(corrections)} brands); "
+              f"{n_dropped:,} rows dropped from {len(unverified)} unverified brand(s)",
+              file=sys.stderr)
     return days
 
 
@@ -347,6 +508,24 @@ def in_settle_window(day):
     return any(e <= day < plus(e, EPOCH_SETTLE_DAYS) for e in PRICE_EPOCHS)
 
 
+def sampling_epoch_of(day):
+    """Which SAMPLING regime a day belongs to. A price epoch voids price
+    comparisons; a sampling epoch voids ARRIVAL, DISAPPEARANCE and TENURE ones,
+    because the population changed rather than the market."""
+    return sum(1 for e in SAMPLING_EPOCHS if day >= e)
+
+
+def in_sampling_settle_window(day):
+    def plus(d, n):
+        return (dt.date.fromisoformat(d) + dt.timedelta(days=n)).isoformat()
+    return any(e <= day < plus(e, EPOCH_SETTLE_DAYS) for e in SAMPLING_EPOCHS)
+
+
+def crosses_sampling_epoch(day_a, day_b):
+    lo, hi = sorted((day_a, day_b))
+    return sampling_epoch_of(lo) != sampling_epoch_of(hi)
+
+
 # ── trap 2: per-brand methodology steps ──────────────────────────────────────
 
 def fx_ratios(feed_repo):
@@ -407,6 +586,107 @@ def detect_uniform_steps(days, order, fx=()):
                 "fx": any(abs(m / f - 1) < 0.015 for f in fx if f > 0),
             }
     return voided
+
+
+def price_runs(days, order, feed_repo):
+    """Every markdown figure anywhere in this project comes from here.
+
+    A piece's price history is only readable inside ONE clean epoch (trap 1) and
+    never across one of its own brand's uniform methodology steps (trap 2). That
+    produces, per piece, a set of segments; the longest one is the run we can
+    honestly read. Returns:
+
+        clean        the comparable days, oldest first
+        voided       {(brand, day): {...}} from detect_uniform_steps
+        voided_days  {brand: {day, ...}}
+        runs         {pid: [(day, price), ...]}  the longest clean segment
+        prow         {pid: row}  the last row seen for that piece
+
+    This lived inline in compute() until build_brand_briefs.py needed the same
+    runs to put a confidence interval on one label's own markdown rate and to
+    check whether the pieces our cap drops are discounted differently from the
+    ones it keeps. Two copies of this loop would diverge on the first threshold
+    anyone tuned, and the number they disagreed about would be one we had
+    already emailed to a brand.
+    """
+    voided = detect_uniform_steps(days, order, fx_ratios(feed_repo))
+    clean = [d for d in order
+             if epoch_of(d) == epoch_of(order[-1]) and not in_settle_window(d)]
+    voided_days = collections.defaultdict(set)
+    for (b, d) in voided:
+        voided_days[b].add(d)
+
+    series, prow = collections.defaultdict(list), {}
+    for d in clean:
+        for pid, r in direct(days[d]).items():
+            if r[PRICE] and r[PRICE] > 0:
+                series[pid].append((d, r[PRICE]))
+                prow[pid] = r
+
+    runs = {}
+    for pid, pts in series.items():
+        b = prow[pid][BRAND]
+        # Split the run at any brand-day the detector voided, and keep the
+        # longest clean segment. A brand whose currency was fixed mid-window
+        # still gets measured — just never across the fix.
+        segs, cur = [], []
+        for d, p in pts:
+            if d in voided_days.get(b, ()):
+                segs.append(cur)
+                cur = []
+            cur.append((d, p))
+        segs.append(cur)
+        runs[pid] = max(segs, key=len)
+
+    return {"clean": clean, "voided": voided, "voided_days": voided_days,
+            "runs": runs, "prow": prow}
+
+
+def run_verdict(seg):
+    """What one clean run says: 'cut', 'up', 'flat', or None if it never moved.
+
+    Lifted out of compute() alongside price_runs so that the definition of a
+    markdown — ends below where it started by more than FX rounding, having
+    moved at all — is written once.
+    """
+    if len(seg) < 2:
+        return None
+    lo, hi = min(p for _, p in seg), max(p for _, p in seg)
+    if hi <= lo * (1 + MIN_MEANINGFUL_MOVE):
+        return None
+    if seg[-1][1] < seg[0][1] * (1 - MIN_MEANINGFUL_MOVE):
+        return "cut"
+    if seg[-1][1] > seg[0][1] * (1 + MIN_MEANINGFUL_MOVE):
+        return "up"
+    return "flat"
+
+
+def flip_incidence(days, base_day, end_day):
+    """Sell-out INCIDENCE: of the pieces a store said were in stock on
+    `base_day`, the share its own feed said were out of stock by `end_day`,
+    counted only on pieces present in BOTH snapshots.
+
+    This is the one sell-out number the rotating-window flaw cannot touch. Our
+    sampler could push a piece off the tracked front and fake a disappearance;
+    it cannot flip an availability flag on a piece it is still holding. Every
+    other movement figure in this project is a prevalence (a stock of sold-out
+    pieces at one instant) rather than an incidence (a flow), and the two answer
+    different questions — a brand asking "how fast does this tier clear?" wants
+    this one, and nobody publishes it.
+
+    Returns (n_at_risk, n_that_sold_out).
+    """
+    B, E = direct(days[base_day]), days[end_day]
+    n = k = 0
+    for pid, r in B.items():
+        if r[AVAIL] is not True:
+            continue
+        e = E.get(pid)
+        if e is None or e[AVAIL] is None:
+            continue
+        n += 1
+        k += (e[AVAIL] is False)
+    return n, k
 
 
 # ── visual clustering ────────────────────────────────────────────────────────
@@ -478,7 +758,30 @@ def compute(days, feed_repo, verbose=True):
     order = sorted(days)
     if len(order) < 8:
         sys.exit("Need at least eight daily catalog snapshots.")
+
+    # The sampling regime, read from the feed rather than restated here. Until
+    # 2026-08-06 there was one number (perBrand=60) doing both jobs; a copy of
+    # it hardcoded on this side is exactly how a page keeps describing a
+    # measurement that has changed underneath it.
+    walk_depth, display_cap = 60, 60
+    try:
+        _bcfg = json.loads((pathlib.Path(feed_repo) / "loupe-feed" / "brands.json")
+                           .read_text(encoding="utf-8"))
+        walk_depth = int(_bcfg.get("perBrand", 60))
+        display_cap = int(_bcfg.get("perBrandDisplay", walk_depth))
+    except (OSError, ValueError, TypeError):
+        pass
     era = [d for d in order if d >= ERA_START]
+    # THE CAP THAT APPLIES IS THE ONE IN FORCE WHEN THE SNAPSHOT WAS TAKEN.
+    # brands.json holds TODAY's perBrand (750 since 2026-08-06); every snapshot in
+    # this archive was taken at 60. Reading today's number and printing "we keep up
+    # to 750 pieces per label" over data collected at 60 would be a false statement
+    # about the measurement, made by the very line that exists to describe it —
+    # and it is the reason this page had not been rebuilt. The era is clamped to
+    # one side of the sampling change a few lines below, so the regime is
+    # unambiguous: if the measured era ends before the change, the cap was 60.
+    # Resolved AFTER the clamp, immediately below.
+    _cap_today = walk_depth
     avail_days = [d for d in order if d >= AVAIL_START]
     d_start, d_end = era[0], era[-1]
     first, last = days[d_start], days[d_end]
@@ -489,19 +792,60 @@ def compute(days, feed_repo, verbose=True):
         if n > 1:
             gaps.append({"after": a, "before": b, "days": n - 1})
 
+    # ── trap 6: does this window span a change in WHAT WE LOOK AT? ───────────
+    # Turnover, "selling through fastest" and refresh rate are all counted on a
+    # piece being ABSENT at the second endpoint. That is only a market fact if
+    # the two endpoints sampled the same way. Across 2026-08-06 they do not:
+    # before it we took the 60 most recently published pieces per store, after
+    # it we walk 750 deep. Every piece the old cap hid would read as an ARRIVAL
+    # and — worse, in the other direction — a window straddling the boundary
+    # makes the tier look like it grew several-fold overnight.
+    #
+    # A price epoch voids a price comparison for the pieces that moved. This
+    # voids the whole longitudinal frame, so it CLAMPS the era to one side of
+    # the change instead of silently averaging across it. It runs before the
+    # roster is fixed, because the roster is itself read off the two endpoints.
+    sampling_note = None
+    if crosses_sampling_epoch(era[0], era[-1]):
+        _before = [d for d in era if sampling_epoch_of(d) == sampling_epoch_of(era[0])]
+        _after = [d for d in era if sampling_epoch_of(d) == sampling_epoch_of(era[-1])
+                  and not in_sampling_settle_window(d)]
+        # Prefer the newer regime once it has run a week: that is the side that
+        # is not measuring a rotating window. Until then, keep the old side and
+        # keep saying so, rather than publishing a two-day trend.
+        chosen = _after if len(_after) >= 7 else _before
+        sampling_note = {
+            "epochs": SAMPLING_EPOCHS,
+            "clampedTo": [chosen[0], chosen[-1]],
+            "droppedDays": len(era) - len(chosen),
+            "side": "after" if chosen is _after else "before",
+            "why": ("The scrape's per-brand walk depth changed on "
+                    f"{SAMPLING_EPOCHS[-1]} (60 -> 750). Absence and arrival "
+                    "cannot be compared across it, so this window is measured "
+                    "on one side of the change only."),
+        }
+        era = chosen
+        d_start, d_end = era[0], era[-1]
+        first, last = days[d_start], days[d_end]
+        if verbose:
+            print(f"  SAMPLING EPOCH in window — era clamped to "
+                  f"{d_start}..{d_end} ({sampling_note['droppedDays']} days dropped)",
+                  file=sys.stderr)
+
+    # Now that the era is fixed, resolve the walk depth that was actually in force
+    # across it. sampling_epoch_of() is the same function that defines the regimes,
+    # so this cannot drift from the clamp above: epoch 0 is the flat-60 era, and
+    # every later epoch is the current brands.json value.
+    walk_depth = _cap_today if sampling_epoch_of(d_end) > 0 else 60
+    if walk_depth != _cap_today and verbose:
+        print(f"  coverage cap reported as {walk_depth} (in force across "
+              f"{d_start}..{d_end}), not today's {_cap_today}", file=sys.stderr)
+
     # ── roster: brands present at BOTH endpoints (trap 4) ────────────────────
     b_first = {r[BRAND] for r in first.values()}
     b_last = {r[BRAND] for r in last.values()}
     roster = b_first & b_last
     left_roster = sorted(b_first - b_last)
-
-    def direct(rows):
-        """Brand-direct rows only. Partner-retailer shelves (Gemini, from
-        2026-07-29) are ingested with inStockOnly=True, so a sold-out partner
-        piece is never in the catalog at all — including them would drag the
-        tier's sell-out rate toward zero for a reason that is about our ingest
-        rule, not their stockroom."""
-        return {k: v for k, v in rows.items() if not v[RETAILER]}
 
     # ── 1. turnover, measured once between two endpoints (trap 3) ────────────
     coh_tot, coh_surv = collections.Counter(), collections.Counter()
@@ -563,14 +907,29 @@ def compute(days, feed_repo, verbose=True):
                 oos_band[band(r[PRICE])] += 1
 
     # ── 3. arrivals ──────────────────────────────────────────────────────────
+    # A piece first seen inside a SAMPLING settle window is not an arrival. On
+    # 2026-08-06 the walk depth went from 60 to 750 and tens of thousands of
+    # pieces that had been on sale for months became visible in one morning.
+    # Counting those would print a several-hundred-percent "refresh rate" for
+    # brands that published nothing — the same shape as the 510% The Frankie
+    # Shop already showed against a 60-piece shelf, but for every label at once.
     first_seen = {}
     for d in era:
         for pid, r in days[d].items():
             first_seen.setdefault(piece_key(r), d)
     arrivals_by_brand = collections.Counter()
+    n_blackout = 0
     for k, d in first_seen.items():
-        if d > d_start:
-            arrivals_by_brand[k[0]] += 1
+        if d <= d_start:
+            continue
+        if in_sampling_settle_window(d):
+            n_blackout += 1
+            continue
+        arrivals_by_brand[k[0]] += 1
+    if n_blackout and verbose:
+        print(f"  sampling epoch: {n_blackout:,} first-sightings inside "
+              f"{SAMPLING_EPOCHS} excluded from arrivals (not new listings — "
+              f"pieces the old 60-item cap hid)", file=sys.stderr)
 
     arrived_now, standing_now = set(), set()
     for pid, r in direct(last).items():
@@ -582,50 +941,26 @@ def compute(days, feed_repo, verbose=True):
         return rate(k, n, MIN_N_PUBLIC)
 
     # ── 4. price discipline, inside one clean epoch (traps 1 + 2) ────────────
-    voided = detect_uniform_steps(days, order, fx_ratios(feed_repo))
-    clean = [d for d in order
-             if epoch_of(d) == epoch_of(order[-1]) and not in_settle_window(d)]
-    voided_days = collections.defaultdict(set)
-    for (b, d) in voided:
-        voided_days[b].add(d)
-
-    series, prow = collections.defaultdict(list), {}
-    for d in clean:
-        for pid, r in direct(days[d]).items():
-            if r[PRICE] and r[PRICE] > 0:
-                series[pid].append((d, r[PRICE]))
-                prow[pid] = r
+    pr = price_runs(days, order, feed_repo)
+    voided, clean, prow = pr["voided"], pr["clean"], pr["prow"]
     disc_tot, disc_cut, disc_depth = collections.Counter(), collections.Counter(), \
         collections.defaultdict(list)
     n_tracked = n_cut = n_up = 0
     depths = []
-    for pid, pts in series.items():
+    for pid, seg in pr["runs"].items():
         b = prow[pid][BRAND]
-        # Split the run at any brand-day the detector voided, and keep the
-        # longest clean segment. A brand whose currency was fixed mid-window
-        # still gets measured — just never across the fix.
-        segs, cur = [], []
-        for d, p in pts:
-            if d in voided_days.get(b, ()):
-                segs.append(cur)
-                cur = []
-            cur.append((d, p))
-        segs.append(cur)
-        seg = max(segs, key=len)
         if len(seg) < 5:
             continue
         n_tracked += 1
         disc_tot[b] += 1
-        lo, hi = min(p for _, p in seg), max(p for _, p in seg)
-        if hi <= lo * (1 + MIN_MEANINGFUL_MOVE):
-            continue
-        if seg[-1][1] < seg[0][1] * (1 - MIN_MEANINGFUL_MOVE):
+        v = run_verdict(seg)
+        if v == "cut":
             n_cut += 1
             disc_cut[b] += 1
             dep = 100 * (1 - seg[-1][1] / seg[0][1])
             depths.append(dep)
             disc_depth[b].append(dep)
-        elif seg[-1][1] > seg[0][1] * (1 + MIN_MEANINGFUL_MOVE):
+        elif v == "up":
             n_up += 1
 
     disc_brands = [
@@ -831,8 +1166,39 @@ def compute(days, feed_repo, verbose=True):
             "brands_roster": len(roster),
             "left_roster": left_roster,
             "founder_removed": FOUNDER_REMOVED,
-            "cap": 60,
-            "page": 180,
+            # Read from the feed rather than hardcoded, because these two numbers
+            # ARE the sampling regime and a stale copy of them here is how a page
+            # ends up describing a measurement it is no longer making.
+            "cap": walk_depth,
+            "displayCap": display_cap,
+            "page": 250,
+        },
+        # Present whenever the archive spans a change in what we look at. The
+        # page must say so, and a consumer of data.json must be able to see it
+        # without reading this file.
+        "samplingEpoch": sampling_note,
+        # Which headline figures survive the rotating-window flaw and which do
+        # not, stated in the data rather than only in prose. `absence` figures
+        # counted a piece as gone from the market when it may only have been
+        # pushed off a 60-item publishing front; measured 2026-07-16 -> 08-01,
+        # 981 of 2,041 disappearances (48%) were whole-brand rotation. `flag`
+        # figures come from the store's own `available` field and are immune.
+        "basis": {
+            "turnover": "absence",
+            "turnover_by_name": "absence",
+            "selling_through": "absence",
+            "newness": "absence",
+            "soldout": "flag",
+            "full_price_pct": "price-series",
+            "rotationContaminated": ["turnover", "turnover_by_name",
+                                     "selling_through", "newness"],
+            "note": ("Anything marked `absence` is measured on a piece no longer "
+                     "being in the tracked set. Before 2026-08-06 the tracked set "
+                     "was a brand's 60 most recently published pieces, so for a "
+                     "store larger than that, absence and rotation are the same "
+                     "observation. Anything marked `flag` is the store's own "
+                     "availability field on a piece present at both endpoints, "
+                     "which no amount of resampling can fake."),
         },
         "headline": {
             "turnover": tier_turn,
