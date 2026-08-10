@@ -1145,6 +1145,20 @@ def compute(days, feed_repo, verbose=True):
             "voided": sorted(d for (bb, d) in voided if bb == b),
         }
 
+    # A label may be named on the public page for holding full price, refreshing
+    # fastest or selling through fastest, and for nothing else. But a label that
+    # is discounting harder than anyone in the tier should not be put on a public
+    # page at all, even under a compliment: it never asked to be there, and its
+    # worst number is one lookup away on a card it did not publish. So the
+    # heaviest discounters are withheld from every public list, including the
+    # flattering ones. Derived from the same cards the test suite reads, so the
+    # page and the guarantee cannot drift apart.
+    HIDE_WORST_N = 5
+    no_public_name = {
+        r["brand"] for r in sorted(
+            (x for x in brands.values() if x["markdown"] and x["markdown"]["cut"] > 0),
+            key=lambda x: -x["markdown"]["pct"])[:HIDE_WORST_N]}
+
     return {
         "generatedAt": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "generatedLabel": dt.datetime.now(dt.timezone.utc).strftime("%B %d, %Y").replace(" 0", " "),
@@ -1260,7 +1274,7 @@ def compute(days, feed_repo, verbose=True):
             "brands_measured": len(news),
             "dormant": len(dormant),
             "dormant_pct": round(100 * len(dormant) / max(len(news), 1)),
-            "fastest": news[:12],
+            "fastest": [r for r in news if r["brand"] not in no_public_name][:12],
             "median_pct": round(statistics.median([r["pct"] for r in news])) if news else 0,
         },
         # Selling through fast only means demand if the shelf is LIVE. A label
@@ -1272,7 +1286,8 @@ def compute(days, feed_repo, verbose=True):
         "sellingThrough": sorted(
             ({"brand": b, "n": all_brand[b], "pct": round(100 * oos_brand[b] / all_brand[b])}
              for b in all_brand
-             if all_brand[b] >= MIN_N_BRAND and arrivals_by_brand.get(b.lower(), 0) > 0),
+             if all_brand[b] >= MIN_N_BRAND and arrivals_by_brand.get(b.lower(), 0) > 0
+             and b not in no_public_name),
             key=lambda r: -r["pct"])[:10],
         "brands": brands,
     }
