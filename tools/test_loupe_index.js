@@ -129,9 +129,15 @@ ok('every rate on the page is printed next to its CI',
 
 // ── longitudinal claims stay inside the stable roster ───────────────────────
 console.log('\nOUR OWN DECISIONS ARE NOT THE MARKET MOVING');
-ok('the roster is smaller than today\'s label count',
-   d.coverage.brands_roster < d.coverage.brands_now,
-   d.coverage.brands_roster + ' vs ' + d.coverage.brands_now);
+// The roster is the intersection of the two endpoints, so it is bounded by the
+// labels carrying stock on the last day (brands_all) — NOT by brands_now, which
+// counts only the directly-tracked shelf and is the narrower number. Comparing
+// against brands_now held while the two happened to be close and broke the week
+// the scrape cap lifted; the invariant that actually matters is that no
+// longitudinal claim spans more labels than exist on the closing snapshot.
+ok('the roster is no larger than the closing snapshot\'s label count',
+   d.coverage.brands_roster <= d.coverage.brands_all,
+   d.coverage.brands_roster + ' vs ' + d.coverage.brands_all);
 ok('labels that left the roster are named on the page',
    d.coverage.left_roster.every((b) => html.includes(b)),
    d.coverage.left_roster.filter((b) => !html.includes(b)).join(', '));
@@ -167,7 +173,10 @@ ok('the page admits the exclusion biases markdowns downward',
 
 // ── the caveats that make the numbers readable ──────────────────────────────
 console.log('\nTHE PAGE SAYS WHAT IT CANNOT SEE');
-[['the capped shelf', /up to 60 pieces per label/],
+// Pin the disclosure to the cap the build actually ran under, not to a literal.
+// A hardcoded 60 asserted the wrong thing after the cap moved to 750: it would
+// have passed only if the page LIED about its own sampling regime.
+[['the capped shelf', new RegExp('up to ' + d.coverage.cap + ' pieces per label')],
  ['"of what we track"', /of what we track/],
  ['the snapshot gap', d.gaps.length ? /did not run between/ : /window/],
  ['when stock data starts', /Stock data starts 2026-07-16/],
@@ -290,10 +299,16 @@ function run(search, envelope, shouldFetch) {
      worst.filter((b) => new RegExp('>' + esc(b.brand) + '<').test(html))
           .map((b) => b.brand + ' ' + b.markdown.pct + '%').join(', '));
   const dormant = Object.values(brands).filter((b) => b.arrivals === 0);
+  // Dormancy itself is never published. But a label can be dormant AND have cut
+  // no prices, and the full-price roster is a flattering list the page is
+  // allowed to print (see the comment above). So the guard is: a dormant label
+  // appears nowhere on the page EXCEPT that roster — anywhere else and we are
+  // publishing dormancy under another name.
+  const fullPrice = new Set(pd.full_price_houses);
+  const leaked = dormant.filter((b) => !fullPrice.has(b.brand) &&
+                                       new RegExp('>' + esc(b.brand) + '<').test(html));
   ok('labels that published nothing are not named on the public page',
-     dormant.every((b) => !new RegExp('>' + esc(b.brand) + '<').test(html)),
-     dormant.filter((b) => new RegExp('>' + esc(b.brand) + '<').test(html))
-            .map((b) => b.brand).join(', '));
+     leaked.length === 0, leaked.map((b) => b.brand).join(', '));
   ok('every named full-price house really cut nothing',
      pd.full_price_houses.every((name) => {
        const c = Object.values(brands).find((b) => b.brand === name);
@@ -378,12 +393,26 @@ function run(search, envelope, shouldFetch) {
 
   console.log('\nARITHMETIC (recomputed, not trusted)');
   const sd = d.soldOut;
-  ok('arrivals sell out faster than standing stock, outside both CIs',
-     sd.arrivals.lo > sd.standing.hi,
-     sd.arrivals.pct + ' [' + sd.arrivals.lo + '-' + sd.arrivals.hi + '] vs ' +
-     sd.standing.pct + ' [' + sd.standing.lo + '-' + sd.standing.hi + ']');
+  // This used to assert the finding itself (arrivals.lo > standing.hi), which
+  // makes a change in the MARKET fail the build and puts pressure on whoever is
+  // on the rebuild to explain the number away. The finding is allowed to
+  // reverse. What is not allowed is for the page to go on claiming it after it
+  // does — and that is exactly what the next check enforces. Here we only
+  // require both rates to be well-formed and adequately powered.
+  ok('the arrivals/standing comparison is well-formed',
+     [sd.arrivals, sd.standing].every((r) => r.n >= 20 && r.lo <= r.pct && r.pct <= r.hi),
+     sd.arrivals.pct + ' [' + sd.arrivals.lo + '-' + sd.arrivals.hi + '] n=' + sd.arrivals.n +
+     ' vs ' + sd.standing.pct + ' [' + sd.standing.lo + '-' + sd.standing.hi + '] n=' + sd.standing.n);
+  // Ran against `html` until 2026-08-19 and therefore never fired: the
+  // generator wraps at 100 columns, so the sentence reaches the file as "New
+  // product sells\n      out faster" and the regex never matched. The page
+  // carried the claim for a full window after the data reversed. Prose, not
+  // html — the same trap the header comment warns about.
   ok('the page only claims that gap while it holds',
-     !/New product sells out faster/.test(html) || sd.arrivals.lo > sd.standing.hi);
+     !/New product sells out faster/.test(prose) || sd.arrivals.lo > sd.standing.hi,
+     'page claims arrivals lead, data says ' + sd.arrivals.pct + ' vs ' + sd.standing.pct);
+  ok('the page says so when the two are not comparable',
+     sd.arrivals.lo > sd.standing.hi || /not comparable on a \d+-day window/.test(prose));
   const catN = d.soldOut.category.reduce((a, r) => a + r.n, 0);
   ok('category sell-out denominators sum to the tier denominator',
      Math.abs(catN - d.soldOut.tier.n) <= 5, catN + ' vs ' + d.soldOut.tier.n);

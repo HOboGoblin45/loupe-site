@@ -1497,6 +1497,24 @@ def render_public(d):
         f'<tr><td>{E(r["key"])}</td><td class="n">{r["n"]:,}</td>'
         f'<td class="n"><b>{r["pct"]}%</b></td><td>{ci(r)}</td>{bar(r["pct"], scale, "pink")}</tr>'
         for r in sd["band"])
+    # The arrivals-vs-standing sentence was written as a fact and stayed on the
+    # page after the fact stopped being one: on 2026-08-19 arrivals came in at
+    # 11.0% against standing stock's 13.3% and the page still read "new product
+    # sells out faster". It is claimed now only while it holds.
+    #
+    # And it is not simply inverted when it does not, because the two rates are
+    # not comparable on a short window: an arrival has had at most eraDays of
+    # exposure while standing stock has had months, so a short window depresses
+    # the arrivals rate for a reason that has nothing to do with demand. Saying
+    # "standing stock sells out faster" would be a second false claim, not a
+    # correction of the first.
+    if sd["arrivals"]["lo"] > sd["standing"]["hi"]:
+        arr_note = ("<b>New product sells out faster than standing stock</b> &mdash; "
+                    "the gap is well outside both confidence intervals.")
+    else:
+        arr_note = (f"These two are <b>not comparable on a {d['eraDays']}-day window</b>: "
+                    f"an arrival has had at most {d['eraDays']} days to sell, standing stock "
+                    f"has had months. Read each on its own.")
     out.append(f"""
 <div class="wrap"><section>
   <div class="rule"></div>
@@ -1510,8 +1528,7 @@ def render_public(d):
       <div class="sub">sold out, off {sd['arrivals']['n']:,} arrivals.</div></div>
     <div class="card"><div class="eyebrow">On the shelf since {E(d['eraStart'])}</div>
       <div class="big serif">{sd['standing']['pct']}%</div>
-      <div class="sub">sold out, off {sd['standing']['n']:,} pieces. <b>New product sells
-      out faster than standing stock</b> — the gap is well outside both confidence intervals.</div></div>
+      <div class="sub">sold out, off {sd['standing']['n']:,} pieces. {arr_note}</div></div>
   </div>
   <table><thead><tr><th>Category</th><th>Tracked</th><th>Sold out</th><th>95% CI</th><th></th></tr></thead>
   <tbody>{rows}</tbody></table>
@@ -2159,6 +2176,12 @@ def main():
     for stale in dd.glob("*.json"):
         if stale.stem not in live:
             stale.unlink()
+    # ...and it must lose its token with it. Keeping the entry leaves the map
+    # pointing at a file we just deleted, so an outreach link that looks valid
+    # 404s, and every consumer that walks this map (the test suite does) breaks
+    # on a label that legitimately dropped out. A label that comes back is
+    # re-minted; its old link was already dead the moment the card was removed.
+    keys = {s: t for s, t in keys.items() if s in d["brands"]}
     keys_path.write_text(json.dumps(keys, indent=1), encoding="utf-8")
 
     links = "\n".join(
