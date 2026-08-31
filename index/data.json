@@ -1,12 +1,12 @@
 {
- "generatedAt": "2026-08-26T19:43:11Z",
- "generatedLabel": "August 26, 2026",
+ "generatedAt": "2026-08-31T12:05:03Z",
+ "generatedLabel": "August 31, 2026",
  "windowStart": "2026-06-17",
  "eraStart": "2026-08-09",
- "windowEnd": "2026-08-26",
- "snapshots": 67,
- "eraSnapshots": 18,
- "eraDays": 17,
+ "windowEnd": "2026-08-30",
+ "snapshots": 71,
+ "eraSnapshots": 22,
+ "eraDays": 21,
  "gaps": [
   {
    "after": "2026-07-24",
@@ -15,12 +15,11 @@
   }
  ],
  "coverage": {
-  "brands_now": 194,
-  "brands_all": 227,
-  "pieces_now": 8813,
-  "brands_roster": 217,
+  "brands_now": 195,
+  "brands_all": 228,
+  "pieces_now": 8814,
+  "brands_roster": 218,
   "left_roster": [
-   "Andrea Kader",
    "Battlo",
    "CHINI",
    "Campbell and Kramer",
@@ -48,7 +47,7 @@
   ],
   "clampedTo": [
    "2026-08-09",
-   "2026-08-26"
+   "2026-08-30"
   ],
   "droppedDays": 35,
   "side": "after",
@@ -71,361 +70,361 @@
  },
  "headline": {
   "turnover": {
-   "n": 8799,
-   "k": 2166,
-   "pct": 24.6,
-   "lo": 23.7,
-   "hi": 25.5
+   "n": 8803,
+   "k": 2575,
+   "pct": 29.3,
+   "lo": 28.3,
+   "hi": 30.2
   },
-  "turnover_by_name": 22.2,
+  "turnover_by_name": 27.0,
   "soldout": {
-   "n": 8813,
-   "k": 1172,
-   "pct": 13.3,
-   "lo": 12.6,
-   "hi": 14.0
+   "n": 8814,
+   "k": 1317,
+   "pct": 14.9,
+   "lo": 14.2,
+   "hi": 15.7
   },
-  "full_price_pct": 97.3,
-  "new_pct": 22.3
+  "full_price_pct": 96.5,
+  "new_pct": 27.0
  },
  "turnover": {
   "category": [
    {
     "key": "tops",
     "n": 3096,
-    "k": 723,
-    "pct": 23.4,
-    "lo": 21.9,
-    "hi": 24.9
+    "k": 854,
+    "pct": 27.6,
+    "lo": 26.0,
+    "hi": 29.2
    },
    {
     "key": "accessories",
     "n": 2019,
-    "k": 433,
-    "pct": 21.4,
-    "lo": 19.7,
-    "hi": 23.3
+    "k": 533,
+    "pct": 26.4,
+    "lo": 24.5,
+    "hi": 28.4
    },
    {
     "key": "bottoms",
-    "n": 1688,
-    "k": 426,
-    "pct": 25.2,
-    "lo": 23.2,
-    "hi": 27.4
+    "n": 1689,
+    "k": 506,
+    "pct": 30.0,
+    "lo": 27.8,
+    "hi": 32.2
    },
    {
     "key": "dresses",
     "n": 1282,
-    "k": 338,
-    "pct": 26.4,
-    "lo": 24.0,
-    "hi": 28.8
+    "k": 385,
+    "pct": 30.0,
+    "lo": 27.6,
+    "hi": 32.6
    },
    {
     "key": "outerwear",
-    "n": 365,
-    "k": 117,
-    "pct": 32.1,
-    "lo": 27.5,
-    "hi": 37.0
+    "n": 368,
+    "k": 142,
+    "pct": 38.6,
+    "lo": 33.8,
+    "hi": 43.7
    },
    {
     "key": "shoes",
     "n": 349,
-    "k": 129,
-    "pct": 37.0,
-    "lo": 32.1,
-    "hi": 42.1
+    "k": 155,
+    "pct": 44.4,
+    "lo": 39.3,
+    "hi": 49.7
    }
   ],
   "band": [
    {
     "key": "under $60",
     "n": 526,
-    "k": 119,
-    "pct": 22.6,
-    "lo": 19.3,
-    "hi": 26.4
+    "k": 147,
+    "pct": 27.9,
+    "lo": 24.3,
+    "hi": 31.9
    },
    {
     "key": "$60–119",
     "n": 2067,
-    "k": 415,
-    "pct": 20.1,
-    "lo": 18.4,
-    "hi": 21.9
+    "k": 497,
+    "pct": 24.0,
+    "lo": 22.3,
+    "hi": 25.9
    },
    {
     "key": "$120–199",
-    "n": 2359,
-    "k": 538,
-    "pct": 22.8,
-    "lo": 21.2,
-    "hi": 24.5
+    "n": 2360,
+    "k": 679,
+    "pct": 28.8,
+    "lo": 27.0,
+    "hi": 30.6
    },
    {
     "key": "$200–349",
-    "n": 1935,
-    "k": 552,
-    "pct": 28.5,
-    "lo": 26.6,
-    "hi": 30.6
+    "n": 1938,
+    "k": 660,
+    "pct": 34.1,
+    "lo": 32.0,
+    "hi": 36.2
    },
    {
     "key": "$350–599",
     "n": 1153,
-    "k": 289,
-    "pct": 25.1,
-    "lo": 22.6,
-    "hi": 27.6
+    "k": 319,
+    "pct": 27.7,
+    "lo": 25.2,
+    "hi": 30.3
    },
    {
     "key": "$600+",
     "n": 759,
-    "k": 253,
-    "pct": 33.3,
-    "lo": 30.1,
-    "hi": 36.8
+    "k": 273,
+    "pct": 36.0,
+    "lo": 32.6,
+    "hi": 39.4
    }
   ],
   "colour": [
    {
     "key": "neutral",
-    "n": 4352,
-    "k": 869,
-    "pct": 20.0,
-    "lo": 18.8,
-    "hi": 21.2
+    "n": 4356,
+    "k": 1084,
+    "pct": 24.9,
+    "lo": 23.6,
+    "hi": 26.2
    },
    {
     "key": "black",
     "n": 1332,
-    "k": 354,
-    "pct": 26.6,
-    "lo": 24.3,
-    "hi": 29.0
+    "k": 397,
+    "pct": 29.8,
+    "lo": 27.4,
+    "hi": 32.3
    },
    {
     "key": "white",
     "n": 890,
-    "k": 261,
-    "pct": 29.3,
-    "lo": 26.4,
-    "hi": 32.4
+    "k": 307,
+    "pct": 34.5,
+    "lo": 31.4,
+    "hi": 37.7
    },
    {
     "key": "blue",
     "n": 850,
-    "k": 272,
-    "pct": 32.0,
-    "lo": 29.0,
-    "hi": 35.2
+    "k": 323,
+    "pct": 38.0,
+    "lo": 34.8,
+    "hi": 41.3
    },
    {
     "key": "multicolor",
     "n": 751,
-    "k": 291,
-    "pct": 38.7,
-    "lo": 35.3,
-    "hi": 42.3
+    "k": 320,
+    "pct": 42.6,
+    "lo": 39.1,
+    "hi": 46.2
    },
    {
     "key": "brown",
     "n": 507,
-    "k": 119,
-    "pct": 23.5,
-    "lo": 20.0,
-    "hi": 27.4
+    "k": 144,
+    "pct": 28.4,
+    "lo": 24.7,
+    "hi": 32.5
    },
    {
     "key": "green",
     "n": 424,
-    "k": 126,
-    "pct": 29.7,
-    "lo": 25.6,
-    "hi": 34.2
+    "k": 134,
+    "pct": 31.6,
+    "lo": 27.4,
+    "hi": 36.2
    },
    {
     "key": "pink",
     "n": 421,
-    "k": 85,
-    "pct": 20.2,
-    "lo": 16.6,
-    "hi": 24.3
+    "k": 108,
+    "pct": 25.7,
+    "lo": 21.7,
+    "hi": 30.0
    },
    {
     "key": "red",
     "n": 296,
-    "k": 86,
-    "pct": 29.1,
-    "lo": 24.2,
-    "hi": 34.5
+    "k": 98,
+    "pct": 33.1,
+    "lo": 28.0,
+    "hi": 38.7
    }
   ]
  },
  "soldOut": {
   "tier": {
-   "n": 8813,
-   "k": 1172,
-   "pct": 13.3,
-   "lo": 12.6,
-   "hi": 14.0
+   "n": 8814,
+   "k": 1317,
+   "pct": 14.9,
+   "lo": 14.2,
+   "hi": 15.7
   },
   "category": [
    {
     "key": "tops",
-    "n": 3120,
-    "k": 488,
-    "pct": 15.6,
-    "lo": 14.4,
-    "hi": 17.0
+    "n": 3144,
+    "k": 555,
+    "pct": 17.7,
+    "lo": 16.4,
+    "hi": 19.0
    },
    {
     "key": "accessories",
-    "n": 2028,
-    "k": 247,
-    "pct": 12.2,
-    "lo": 10.8,
-    "hi": 13.7
+    "n": 2041,
+    "k": 259,
+    "pct": 12.7,
+    "lo": 11.3,
+    "hi": 14.2
    },
    {
     "key": "bottoms",
-    "n": 1669,
-    "k": 191,
-    "pct": 11.4,
-    "lo": 10.0,
-    "hi": 13.1
-   },
-   {
-    "key": "dresses",
-    "n": 1279,
-    "k": 167,
-    "pct": 13.1,
-    "lo": 11.3,
+    "n": 1649,
+    "k": 219,
+    "pct": 13.3,
+    "lo": 11.7,
     "hi": 15.0
    },
    {
+    "key": "dresses",
+    "n": 1266,
+    "k": 176,
+    "pct": 13.9,
+    "lo": 12.1,
+    "hi": 15.9
+   },
+   {
     "key": "outerwear",
-    "n": 405,
-    "k": 38,
-    "pct": 9.4,
-    "lo": 6.9,
-    "hi": 12.6
+    "n": 401,
+    "k": 56,
+    "pct": 14.0,
+    "lo": 10.9,
+    "hi": 17.7
    },
    {
     "key": "shoes",
-    "n": 312,
-    "k": 41,
-    "pct": 13.1,
-    "lo": 9.8,
-    "hi": 17.3
+    "n": 313,
+    "k": 52,
+    "pct": 16.6,
+    "lo": 12.9,
+    "hi": 21.1
    }
   ],
   "band": [
    {
     "key": "under $60",
-    "n": 485,
-    "k": 122,
-    "pct": 25.2,
-    "lo": 21.5,
-    "hi": 29.2
+    "n": 534,
+    "k": 148,
+    "pct": 27.7,
+    "lo": 24.1,
+    "hi": 31.7
    },
    {
     "key": "$60–119",
-    "n": 2050,
-    "k": 294,
-    "pct": 14.3,
-    "lo": 12.9,
-    "hi": 15.9
+    "n": 2055,
+    "k": 300,
+    "pct": 14.6,
+    "lo": 13.1,
+    "hi": 16.2
    },
    {
     "key": "$120–199",
-    "n": 2353,
-    "k": 286,
-    "pct": 12.2,
-    "lo": 10.9,
-    "hi": 13.5
+    "n": 2337,
+    "k": 321,
+    "pct": 13.7,
+    "lo": 12.4,
+    "hi": 15.2
    },
    {
     "key": "$200–349",
-    "n": 1954,
-    "k": 262,
-    "pct": 13.4,
-    "lo": 12.0,
-    "hi": 15.0
+    "n": 1908,
+    "k": 297,
+    "pct": 15.6,
+    "lo": 14.0,
+    "hi": 17.3
    },
    {
     "key": "$350–599",
-    "n": 1200,
-    "k": 129,
-    "pct": 10.8,
-    "lo": 9.1,
-    "hi": 12.6
+    "n": 1225,
+    "k": 153,
+    "pct": 12.5,
+    "lo": 10.8,
+    "hi": 14.5
    },
    {
     "key": "$600+",
-    "n": 771,
-    "k": 79,
-    "pct": 10.2,
-    "lo": 8.3,
-    "hi": 12.6
+    "n": 755,
+    "k": 98,
+    "pct": 13.0,
+    "lo": 10.8,
+    "hi": 15.6
    }
   ],
   "arrivals": {
-   "n": 1968,
-   "k": 292,
-   "pct": 14.8,
-   "lo": 13.3,
-   "hi": 16.5
+   "n": 2384,
+   "k": 404,
+   "pct": 16.9,
+   "lo": 15.5,
+   "hi": 18.5
   },
   "standing": {
-   "n": 6845,
-   "k": 880,
-   "pct": 12.9,
-   "lo": 12.1,
-   "hi": 13.7
+   "n": 6430,
+   "k": 913,
+   "pct": 14.2,
+   "lo": 13.4,
+   "hi": 15.1
   }
  },
  "priceDiscipline": {
-  "tracked": 13435,
-  "cut": 359,
-  "cut_pct": 2.7,
-  "up": 735,
+  "tracked": 13865,
+  "cut": 482,
+  "cut_pct": 3.5,
+  "up": 532,
   "depth_median": 20,
-  "depth_p25": 13,
-  "depth_p75": 30,
+  "depth_p25": 15,
+  "depth_p75": 31,
   "brands_measured": 170,
-  "brands_never": 109,
+  "brands_never": 105,
   "full_price_houses": [
    "The Frankie Shop",
    "Anni Lu",
-   "Collina Strada",
+   "Bec + Bridge",
+   "Jeanerica",
    "ALEXIS",
+   "Collina Strada",
    "6397",
    "St. Agni",
    "Agmes",
-   "Sophie Buhai",
    "Emily Dawn Long",
    "Aeyde",
+   "Sophie Buhai",
+   "Niihai",
    "Paris Georgia",
-   "Jeanerica",
    "Buci NYC",
-   "Bec + Bridge",
    "Belle Anna",
    "Sir the Label",
    "Wolf Circus",
+   "Dana Foley",
    "Flattered",
    "RLT",
    "Kernemilk",
-   "Dana Foley",
-   "Sentaler",
-   "Niihai",
-   "Entremains"
+   "Charlie Beads",
+   "Sentaler"
   ],
   "window": [
    "2026-07-18",
-   "2026-08-26"
+   "2026-08-30"
   ],
   "voided_steps": [
    {
@@ -996,57 +995,57 @@
  "architecture": [
   {
    "category": "tops",
-   "n": 3120,
-   "p10": 65,
-   "p25": 87,
-   "median": 132,
-   "p75": 215,
+   "n": 3144,
+   "p10": 62,
+   "p25": 85,
+   "median": 130,
+   "p75": 210,
    "p90": 395
   },
   {
    "category": "accessories",
-   "n": 2028,
+   "n": 2041,
    "p10": 60,
    "p25": 105,
-   "median": 193,
+   "median": 194,
    "p75": 340,
-   "p90": 530
+   "p90": 529
   },
   {
    "category": "bottoms",
-   "n": 1669,
-   "p10": 88,
-   "p25": 119,
-   "median": 169,
+   "n": 1649,
+   "p10": 86,
+   "p25": 118,
+   "median": 165,
    "p75": 270,
-   "p90": 430
+   "p90": 450
   },
   {
    "category": "dresses",
-   "n": 1279,
-   "p10": 122,
-   "p25": 168,
+   "n": 1266,
+   "p10": 120,
+   "p25": 169,
    "median": 265,
-   "p75": 461,
+   "p75": 475,
    "p90": 783
   },
   {
    "category": "outerwear",
-   "n": 405,
+   "n": 401,
    "p10": 147,
    "p25": 220,
-   "median": 385,
+   "median": 389,
    "p75": 742,
-   "p90": 1950
+   "p90": 2090
   },
   {
    "category": "shoes",
-   "n": 312,
+   "n": 313,
    "p10": 142,
-   "p25": 195,
-   "median": 262,
-   "p75": 475,
-   "p90": 640
+   "p25": 193,
+   "median": 276,
+   "p75": 510,
+   "p90": 645
   }
  ],
  "assortment": {
@@ -1054,302 +1053,301 @@
    {
     "key": "tops",
     "then": 35.2,
-    "now": 35.2,
-    "shift": 0.0,
-    "n": 3085
+    "now": 35.5,
+    "shift": 0.3,
+    "n": 3109
    },
    {
     "key": "accessories",
     "then": 22.9,
-    "now": 23.1,
-    "shift": 0.2,
-    "n": 2028
+    "now": 23.3,
+    "shift": 0.3,
+    "n": 2041
    },
    {
     "key": "bottoms",
     "then": 19.2,
-    "now": 18.9,
-    "shift": -0.2,
-    "n": 1660
+    "now": 18.7,
+    "shift": -0.5,
+    "n": 1641
    },
    {
     "key": "dresses",
     "then": 14.6,
-    "now": 14.5,
-    "shift": -0.0,
-    "n": 1275
+    "now": 14.4,
+    "shift": -0.2,
+    "n": 1263
    },
    {
     "key": "outerwear",
-    "then": 4.1,
+    "then": 4.2,
     "now": 4.6,
-    "shift": 0.5,
-    "n": 405
+    "shift": 0.4,
+    "n": 401
    },
    {
     "key": "shoes",
     "then": 4.0,
     "now": 3.6,
     "shift": -0.4,
-    "n": 312
+    "n": 313
    }
   ],
   "colour": [
    {
     "key": "neutral",
     "then": 44.3,
-    "now": 44.3,
-    "shift": 0.0,
-    "n": 4365
+    "now": 44.1,
+    "shift": -0.2,
+    "n": 4345
    },
    {
     "key": "black",
     "then": 13.6,
-    "now": 14.1,
-    "shift": 0.5,
-    "n": 1386
+    "now": 14.3,
+    "shift": 0.7,
+    "n": 1404
    },
    {
     "key": "blue",
-    "then": 8.7,
-    "now": 8.9,
-    "shift": 0.2,
-    "n": 872
+    "then": 8.6,
+    "now": 8.4,
+    "shift": -0.2,
+    "n": 831
    },
    {
     "key": "white",
     "then": 9.1,
-    "now": 8.3,
-    "shift": -0.7,
-    "n": 821
+    "now": 8.4,
+    "shift": -0.6,
+    "n": 830
    },
    {
     "key": "multicolor",
     "then": 7.6,
     "now": 7.0,
-    "shift": -0.6,
-    "n": 694
+    "shift": -0.7,
+    "n": 685
    },
    {
     "key": "brown",
     "then": 5.2,
-    "now": 5.8,
-    "shift": 0.6,
-    "n": 567
+    "now": 6.0,
+    "shift": 0.8,
+    "n": 591
    },
    {
     "key": "green",
     "then": 4.3,
-    "now": 4.6,
-    "shift": 0.3,
-    "n": 452
+    "now": 4.8,
+    "shift": 0.5,
+    "n": 472
    },
    {
     "key": "pink",
     "then": 4.3,
-    "now": 4.1,
+    "now": 4.0,
     "shift": -0.2,
-    "n": 405
+    "n": 399
    },
    {
     "key": "red",
     "then": 3.0,
-    "now": 2.9,
-    "shift": -0.1,
-    "n": 282
+    "now": 3.0,
+    "shift": -0.0,
+    "n": 295
    }
   ],
   "band": [
    {
     "key": "under $60",
     "then": 6.0,
-    "now": 5.5,
-    "shift": -0.4,
-    "n": 485
+    "now": 6.1,
+    "shift": 0.1,
+    "n": 534
    },
    {
     "key": "$60–119",
     "then": 23.5,
-    "now": 23.2,
-    "shift": -0.3,
-    "n": 2034
+    "now": 23.3,
+    "shift": -0.2,
+    "n": 2039
    },
    {
     "key": "$120–199",
     "then": 26.8,
-    "now": 26.7,
-    "shift": -0.1,
-    "n": 2339
+    "now": 26.5,
+    "shift": -0.3,
+    "n": 2324
    },
    {
     "key": "$200–349",
     "then": 22.0,
-    "now": 22.1,
-    "shift": 0.1,
-    "n": 1939
+    "now": 21.6,
+    "shift": -0.4,
+    "n": 1894
    },
    {
     "key": "$350–599",
     "then": 13.1,
-    "now": 13.7,
-    "shift": 0.6,
-    "n": 1197
+    "now": 13.9,
+    "shift": 0.8,
+    "n": 1222
    },
    {
     "key": "$600+",
     "then": 8.6,
-    "now": 8.8,
-    "shift": 0.2,
-    "n": 771
+    "now": 8.6,
+    "shift": -0.0,
+    "n": 755
    }
   ],
   "median_then": 178,
-  "median_now": 180,
+  "median_now": 179.0,
   "arriving_category": [
    {
     "key": "tops",
-    "standing": 35.9,
-    "arriving": 33.6,
-    "shift": -2.3
+    "standing": 36.2,
+    "arriving": 34.3,
+    "shift": -1.9
    },
    {
     "key": "accessories",
-    "standing": 23.7,
-    "arriving": 20.8,
-    "shift": -2.9
+    "standing": 23.6,
+    "arriving": 22.0,
+    "shift": -1.6
    },
    {
     "key": "bottoms",
     "standing": 19.0,
-    "arriving": 18.9,
-    "shift": -0.1
+    "arriving": 18.0,
+    "shift": -1.0
    },
    {
     "key": "dresses",
-    "standing": 14.2,
-    "arriving": 15.5,
-    "shift": 1.3
+    "standing": 14.4,
+    "arriving": 14.3,
+    "shift": -0.1
    },
    {
     "key": "outerwear",
-    "standing": 3.8,
-    "arriving": 7.3,
-    "shift": 3.4
+    "standing": 3.7,
+    "arriving": 6.9,
+    "shift": 3.3
    },
    {
     "key": "shoes",
-    "standing": 3.4,
-    "arriving": 4.0,
-    "shift": 0.5
+    "standing": 3.2,
+    "arriving": 4.5,
+    "shift": 1.3
    }
   ],
   "arriving_colour": [
    {
     "key": "neutral",
-    "standing": 47.6,
-    "arriving": 34.0,
-    "shift": -13.5
+    "standing": 47.5,
+    "arriving": 35.6,
+    "shift": -11.9
    },
    {
     "key": "black",
-    "standing": 13.2,
-    "arriving": 17.0,
-    "shift": 3.8
+    "standing": 13.4,
+    "arriving": 16.6,
+    "shift": 3.1
    },
    {
     "key": "blue",
-    "standing": 7.8,
-    "arriving": 12.1,
-    "shift": 4.3
+    "standing": 7.7,
+    "arriving": 10.3,
+    "shift": 2.7
    },
    {
     "key": "multicolor",
     "standing": 6.2,
-    "arriving": 9.8,
-    "shift": 3.6
+    "arriving": 8.7,
+    "shift": 2.5
    },
    {
     "key": "white",
-    "standing": 8.5,
-    "arriving": 7.9,
-    "shift": -0.6
+    "standing": 8.4,
+    "arriving": 8.7,
+    "shift": 0.3
    },
    {
     "key": "brown",
     "standing": 5.3,
-    "arriving": 7.1,
-    "shift": 1.8
-   },
-   {
-    "key": "green",
-    "standing": 4.0,
-    "arriving": 6.3,
+    "arriving": 7.6,
     "shift": 2.3
    },
    {
-    "key": "pink",
-    "standing": 4.5,
-    "arriving": 2.9,
-    "shift": -1.6
+    "key": "green",
+    "standing": 4.2,
+    "arriving": 6.2,
+    "shift": 2.0
    },
    {
     "key": "red",
     "standing": 2.9,
-    "arriving": 2.8,
-    "shift": -0.1
+    "arriving": 3.3,
+    "shift": 0.4
+   },
+   {
+    "key": "pink",
+    "standing": 4.5,
+    "arriving": 3.0,
+    "shift": -1.5
    }
   ],
   "arriving_band": [
    {
     "key": "under $60",
-    "standing": 6.0,
-    "arriving": 3.7,
-    "shift": -2.3
+    "standing": 6.1,
+    "arriving": 5.9,
+    "shift": -0.3
    },
    {
     "key": "$60–119",
-    "standing": 25.1,
-    "arriving": 16.9,
+    "standing": 25.5,
+    "arriving": 17.4,
     "shift": -8.2
    },
    {
     "key": "$120–199",
-    "standing": 26.9,
-    "arriving": 25.9,
-    "shift": -1.1
+    "standing": 26.5,
+    "arriving": 26.5,
+    "shift": -0.0
    },
    {
     "key": "$200–349",
-    "standing": 21.1,
-    "arriving": 26.0,
-    "shift": 4.9
+    "standing": 20.9,
+    "arriving": 23.7,
+    "shift": 2.9
    },
    {
     "key": "$350–599",
-    "standing": 13.0,
-    "arriving": 15.6,
-    "shift": 2.6
+    "standing": 13.1,
+    "arriving": 16.0,
+    "shift": 2.9
    },
    {
     "key": "$600+",
     "standing": 7.8,
-    "arriving": 12.0,
-    "shift": 4.2
+    "arriving": 10.5,
+    "shift": 2.7
    }
   ],
   "arriving_median": 200.0,
-  "standing_median": 172
+  "standing_median": 170.0
  },
  "clusters": [
   {
-   "n": 561,
+   "n": 711,
    "words": [
     "coat",
     "jacket",
-    "cardigan",
     "shirt",
     "brown",
-    "blue"
+    "top"
    ],
    "categories": [
     "outerwear",
@@ -1357,66 +1355,101 @@
    ],
    "colours": [
     "neutral",
-    "blue"
+    "black"
    ],
-   "median": 269,
-   "share": 6.7,
-   "new_pct": 42.2,
-   "new_index": 201,
+   "median": 280,
+   "share": 8.1,
+   "new_pct": 48.5,
+   "new_index": 179,
    "soldout": {
-    "n": 561,
-    "k": 39,
-    "pct": 7.0,
-    "lo": 5.1,
-    "hi": 9.4
+    "n": 711,
+    "k": 88,
+    "pct": 12.4,
+    "lo": 10.2,
+    "hi": 15.0
    },
    "images": [
-    "https://cdn.shopify.com/s/files/1/0601/6981/4121/files/FN2631332302-16.webp?v=1785729949",
-    "https://cdn.shopify.com/s/files/1/0601/6981/4121/files/FN2631391902_1.webp?v=1784524700",
-    "https://cdn.shopify.com/s/files/1/1287/7907/files/260107_DEIJI_32_KNIT_TEE_RED_GREY_STRIPE_FLOUNCE_FRILL_MIDI_SKIRT_BLACK_JACKET_BROWN_10097.jpg?v=1785978989"
+    "https://cdn.shopify.com/s/files/1/1605/4515/files/anonieisabella11.jpg?v=1709685366",
+    "https://cdn.shopify.com/s/files/1/0650/4529/9378/files/1_02228909-d1d0-4f3d-a20c-d52414583fa7.jpg?v=1725353816",
+    "https://cdn.shopify.com/s/files/1/0601/6981/4121/files/FN2631332302-16.webp?v=1785729949"
    ]
   },
   {
-   "n": 328,
+   "n": 172,
    "words": [
-    "baggy",
-    "trousers",
-    "unisex",
-    "jean",
-    "jeans",
-    "wash"
+    "sneakers",
+    "loafer",
+    "loafers",
+    "flats",
+    "ballerina",
+    "uma"
    ],
    "categories": [
-    "bottoms",
+    "shoes",
+    "accessories"
+   ],
+   "colours": [
+    "neutral",
+    "black"
+   ],
+   "median": 248,
+   "share": 2.0,
+   "new_pct": 35.5,
+   "new_index": 131,
+   "soldout": {
+    "n": 172,
+    "k": 29,
+    "pct": 16.9,
+    "lo": 12.0,
+    "hi": 23.2
+   },
+   "images": [
+    "https://cdn.shopify.com/s/files/1/0762/7039/files/aven-brown-vegan-leather-loafers-1.jpg?v=1785492530",
+    "https://cdn.shopify.com/s/files/1/0762/7039/files/aven-vegan-burgundy-leather-loafers-1.jpg?v=1785492633",
+    "https://cdn.shopify.com/s/files/1/1439/9726/files/Ecom-Aveiro-Black-Side_f0e5b173-07e0-467d-879f-cca79754607f.jpg?v=1768425124"
+   ]
+  },
+  {
+   "n": 152,
+   "words": [
+    "pump",
+    "creased",
+    "ankle",
+    "sandal",
+    "pumps",
+    "heel"
+   ],
+   "categories": [
+    "shoes",
     "tops"
    ],
    "colours": [
     "neutral",
-    "blue"
+    "black"
    ],
-   "median": 228,
-   "share": 3.9,
-   "new_pct": 31.4,
-   "new_index": 150,
+   "median": 345,
+   "share": 1.7,
+   "new_pct": 32.2,
+   "new_index": 119,
    "soldout": {
-    "n": 328,
-    "k": 53,
-    "pct": 16.2,
-    "lo": 12.6,
-    "hi": 20.5
+    "n": 152,
+    "k": 24,
+    "pct": 15.8,
+    "lo": 10.8,
+    "hi": 22.4
    },
    "images": [
-    "https://cdn.shopify.com/s/files/1/1739/5773/files/260426Bella-65.jpg?v=1777247745",
-    "https://cdn.shopify.com/s/files/1/0570/3503/0699/files/JaggerTrousers_MoonlightNew1.jpg?v=1787328035",
-    "https://cdn.shopify.com/s/files/1/0899/5150/2652/files/pants_black_f134.jpg?v=1772831315"
+    "https://cdn.shopify.com/s/files/1/0900/6910/7037/files/HAZE-SANDAL-BLACK-LEATHER---1.jpg?v=1762268544",
+    "https://cdn.shopify.com/s/files/1/0900/6910/7037/files/ICON-PUMP-BAROLO-CREASED-LEATHER---1web.jpg?v=1784279421",
+    "https://cdn.shopify.com/s/files/1/0900/6910/7037/files/HAZE-SANDAL-MOCHA-LEATHER-1.jpg?v=1762268626"
    ]
   },
   {
-   "n": 378,
+   "n": 390,
    "words": [
     "bracelet",
-    "necklace",
     "pendant",
+    "necklace",
     "choker",
     "charm",
     "gold"
@@ -1429,95 +1462,95 @@
     "neutral",
     "blue"
    ],
-   "median": 209,
-   "share": 4.5,
-   "new_pct": 31.5,
-   "new_index": 150,
+   "median": 212,
+   "share": 4.4,
+   "new_pct": 30.8,
+   "new_index": 114,
    "soldout": {
-    "n": 378,
-    "k": 32,
-    "pct": 8.5,
-    "lo": 6.1,
-    "hi": 11.7
+    "n": 390,
+    "k": 28,
+    "pct": 7.2,
+    "lo": 5.0,
+    "hi": 10.2
    },
    "images": [
     "https://cdn.shopify.com/s/files/1/1738/9681/files/262-20-32-sandy-harmony-necklace-gold-pack_WEB.jpg?v=1783068251",
-    "https://cdn.shopify.com/s/files/1/1738/9681/products/221-20-26ShellyEldoradoNecklace.jpg?v=1751890100",
-    "https://cdn.shopify.com/s/files/1/1575/5131/files/Alighieri_The_Ball_of_Curiosity_Choker.png?v=1746200573"
+    "https://cdn.shopify.com/s/files/1/1575/5131/files/Alighieri_The_Ball_of_Curiosity_Choker.png?v=1746200573",
+    "https://cdn.shopify.com/s/files/1/1738/9681/products/221-20-26ShellyEldoradoNecklace.jpg?v=1751890100"
    ]
   },
   {
-   "n": 515,
+   "n": 733,
+   "words": [
+    "tee",
+    "shirt",
+    "tank",
+    "navy",
+    "sleeve",
+    "top"
+   ],
+   "categories": [
+    "tops",
+    "dresses"
+   ],
+   "colours": [
+    "neutral",
+    "blue"
+   ],
+   "median": 135,
+   "share": 8.3,
+   "new_pct": 30.8,
+   "new_index": 114,
+   "soldout": {
+    "n": 733,
+    "k": 178,
+    "pct": 24.3,
+    "lo": 21.3,
+    "hi": 27.5
+   },
+   "images": [
+    "https://cdn.shopify.com/s/files/1/0505/4129/7855/files/WLS.jpg?v=1744169278",
+    "https://cdn.shopify.com/s/files/1/2075/5101/files/JESSE_KAMM_BOWERY_TEE_BLACK.jpg?v=1787682282",
+    "https://cdn.shopify.com/s/files/1/0574/1474/6297/files/FLORE-FLORE_Esme-Tank-LW_Black_Front_e0852b82-b847-49ea-82b1-9cf19c779a0a.jpg?v=1781257340"
+   ]
+  },
+  {
+   "n": 645,
    "words": [
     "jean",
     "pant",
+    "trousers",
     "pants",
-    "tee",
     "grey",
     "blue"
    ],
    "categories": [
-    "tops",
-    "bottoms"
-   ],
-   "colours": [
-    "neutral",
-    "black"
-   ],
-   "median": 190,
-   "share": 6.1,
-   "new_pct": 30.7,
-   "new_index": 146,
-   "soldout": {
-    "n": 515,
-    "k": 31,
-    "pct": 6.0,
-    "lo": 4.3,
-    "hi": 8.4
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0291/1243/4748/files/260327_SUSAMUSA_Hali_Top_1.jpg?v=1775986140",
-    "https://cdn.shopify.com/s/files/1/1139/4362/files/20251201_StAgni_W26_Ecom_SH_29_W26-21356CHM-W26-27257BLK_1228_00591fda-4c89-4cfb-90bb-7a0fbada2a06.jpg?v=1785473920",
-    "https://cdn.shopify.com/s/files/1/0561/0055/2876/files/KERNEMILK_-_22-05-265245.jpg?v=1786471011"
-   ]
-  },
-  {
-   "n": 320,
-   "words": [
-    "spoiled",
-    "boys",
-    "lavender",
-    "pillow",
-    "tee",
-    "shirt"
-   ],
-   "categories": [
-    "tops",
-    "accessories"
+    "bottoms",
+    "tops"
    ],
    "colours": [
     "neutral",
     "blue"
    ],
-   "median": 118,
-   "share": 3.8,
-   "new_pct": 30.0,
-   "new_index": 143,
+   "median": 180,
+   "share": 7.3,
+   "new_pct": 30.9,
+   "new_index": 114,
    "soldout": {
-    "n": 320,
-    "k": 141,
-    "pct": 44.1,
-    "lo": 38.7,
-    "hi": 49.5
+    "n": 645,
+    "k": 58,
+    "pct": 9.0,
+    "lo": 7.0,
+    "hi": 11.4
    },
    "images": [
-    "https://cdn.shopify.com/s/files/1/0893/1472/2131/files/tee2_przod.jpg?v=1779279066",
-    "https://cdn.shopify.com/s/files/1/0893/1472/2131/files/miraz1_metka_1.jpg?v=1781106251",
-    "https://cdn.shopify.com/s/files/1/0770/1132/1145/files/2CB8F64B-75D4-4A2D-8851-0F399D8A2DE6.jpg?v=1777975287"
+    "https://cdn.shopify.com/s/files/1/0899/5150/2652/files/croptop_brown_f18.jpg?v=1773892430",
+    "https://cdn.shopify.com/s/files/1/1287/7907/files/260107_DEIJI_32_KNIT_TEE_RED_GREY_STRIPE_FLOUNCE_FRILL_MIDI_SKIRT_BLACK_JACKET_BROWN_10097.jpg?v=1785978989",
+    "https://cdn.shopify.com/s/files/1/0523/2561/3759/files/DSCF4281.jpg?v=1784822440"
    ]
   },
   {
-   "n": 569,
+   "n": 656,
    "words": [
     "gown",
     "dress",
@@ -1532,32 +1565,98 @@
     "neutral",
     "black"
    ],
-   "median": 300,
-   "share": 6.8,
-   "new_pct": 28.1,
-   "new_index": 134,
+   "median": 325,
+   "share": 7.4,
+   "new_pct": 29.9,
+   "new_index": 110,
    "soldout": {
-    "n": 569,
-    "k": 70,
-    "pct": 12.3,
-    "lo": 9.9,
-    "hi": 15.3
+    "n": 656,
+    "k": 86,
+    "pct": 13.1,
+    "lo": 10.7,
+    "hi": 15.9
    },
    "images": [
     "https://cdn.shopify.com/s/files/1/0063/7173/7684/files/front_0a45df26-da7d-4856-882b-ab68249deddc.jpg?v=1783717439",
-    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/blackdress.pdf_2_4133fac8-17af-4945-a3d4-26f7ed747cf0.jpg?v=1782171128",
-    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/blackdress.pdf_1.jpg?v=1781218206"
+    "https://cdn.shopify.com/s/files/1/0562/2749/6098/files/IMG_7907_Gran.jpg?v=1775575170",
+    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/blackdress.pdf_2_4133fac8-17af-4945-a3d4-26f7ed747cf0.jpg?v=1782171128"
    ]
   },
   {
-   "n": 515,
+   "n": 1012,
+   "words": [
+    "top",
+    "tank",
+    "sleeve",
+    "skirt"
+   ],
+   "categories": [
+    "tops",
+    "bottoms"
+   ],
+   "colours": [
+    "neutral",
+    "black"
+   ],
+   "median": 128,
+   "share": 11.5,
+   "new_pct": 28.3,
+   "new_index": 104,
+   "soldout": {
+    "n": 1012,
+    "k": 152,
+    "pct": 15.0,
+    "lo": 13.0,
+    "hi": 17.4
+   },
+   "images": [
+    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/2761779687384_.pic_hd.jpg?v=1779687497",
+    "https://cdn.shopify.com/s/files/1/0649/8136/8892/files/gemmawebsite2.jpg?v=1769575305",
+    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/Woodrosedeli9951.jpg?v=1778105886"
+   ]
+  },
+  {
+   "n": 591,
+   "words": [
+    "shorts",
+    "skirt",
+    "pant",
+    "pants"
+   ],
+   "categories": [
+    "bottoms",
+    "accessories"
+   ],
+   "colours": [
+    "neutral",
+    "black"
+   ],
+   "median": 145,
+   "share": 6.7,
+   "new_pct": 27.1,
+   "new_index": 100,
+   "soldout": {
+    "n": 591,
+    "k": 102,
+    "pct": 17.3,
+    "lo": 14.4,
+    "hi": 20.5
+   },
+   "images": [
+    "https://cdn.shopify.com/s/files/1/0645/7451/files/Maman_Pant_FLAT.jpg?v=1785956310",
+    "https://cdn.shopify.com/s/files/1/0515/3662/5860/files/GAUCHOS_BLACK.jpg?v=1774895787",
+    "https://cdn.shopify.com/s/files/1/0515/3662/5860/files/3_7fdfb042-4269-431e-b307-a1b685497e2e.png?v=1779306195"
+   ]
+  },
+  {
+   "n": 529,
    "words": [
     "ring",
     "hoops",
     "earrings",
-    "cuff",
     "sterling",
-    "gold"
+    "gold",
+    "silver"
    ],
    "categories": [
     "accessories",
@@ -1567,230 +1666,27 @@
     "neutral",
     "pink"
    ],
-   "median": 170,
-   "share": 6.1,
-   "new_pct": 19.2,
-   "new_index": 92,
+   "median": 175,
+   "share": 6.0,
+   "new_pct": 23.8,
+   "new_index": 88,
    "soldout": {
-    "n": 515,
-    "k": 25,
-    "pct": 4.9,
-    "lo": 3.3,
-    "hi": 7.1
+    "n": 529,
+    "k": 35,
+    "pct": 6.6,
+    "lo": 4.8,
+    "hi": 9.1
    },
    "images": [
-    "https://cdn.shopify.com/s/files/1/0245/9089/files/WC-R-PIERCEDHRT-G_ecab8508-8d20-40ab-adaf-0663ed77d229.jpg?v=1769809416",
     "https://cdn.shopify.com/s/files/1/0245/9089/files/WC-E-BOWEN-G_c0d627a9-c0f9-4ec6-84b3-7d15bccf5b0c.jpg?v=1769809885",
-    "https://cdn.shopify.com/s/files/1/0245/9089/files/WC-R-PIERCEDHRT-S_35de4ce6-9b34-4ba6-8cb0-86ab6f3f4f80.jpg?v=1769809392"
+    "https://cdn.shopify.com/s/files/1/0245/9089/files/WC-R-PIERCEDHRT-G_ecab8508-8d20-40ab-adaf-0663ed77d229.jpg?v=1769809416",
+    "https://cdn.shopify.com/s/files/1/0104/8854/5338/files/Chico-Hoop_gold_Hernan-Herdez_Elements-2.jpg?v=1764697525"
    ]
   },
   {
-   "n": 740,
-   "words": [
-    "halter",
-    "tank",
-    "top",
-    "sleeve"
-   ],
-   "categories": [
-    "tops",
-    "bottoms"
-   ],
-   "colours": [
-    "neutral",
-    "black"
-   ],
-   "median": 117,
-   "share": 8.8,
-   "new_pct": 19.2,
-   "new_index": 91,
-   "soldout": {
-    "n": 740,
-    "k": 107,
-    "pct": 14.5,
-    "lo": 12.1,
-    "hi": 17.2
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/2761779687384_.pic_hd.jpg?v=1779687497",
-    "https://cdn.shopify.com/s/files/1/0457/5477/7752/files/IMG_7266.jpg?v=1779901170",
-    "https://cdn.shopify.com/s/files/1/0529/1861/6264/files/Woodrosedeli9951.jpg?v=1778105886"
-   ]
-  },
-  {
-   "n": 788,
-   "words": [
-    "tank",
-    "skirt",
-    "top",
-    "dress"
-   ],
-   "categories": [
-    "tops",
-    "bottoms"
-   ],
-   "colours": [
-    "neutral",
-    "black"
-   ],
-   "median": 145,
-   "share": 9.4,
-   "new_pct": 18.7,
-   "new_index": 89,
-   "soldout": {
-    "n": 788,
-    "k": 94,
-    "pct": 11.9,
-    "lo": 9.8,
-    "hi": 14.4
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0515/3662/5860/files/BASICS_TANK_BLACK.jpg?v=1757735368",
-    "https://cdn.shopify.com/s/files/1/0615/0442/2060/files/47.png?v=1772581796",
-    "https://cdn.shopify.com/s/files/1/0505/4129/7855/files/WLS.jpg?v=1744169278"
-   ]
-  },
-  {
-   "n": 378,
-   "words": [
-    "grained",
-    "tote",
-    "bag",
-    "suede",
-    "leather",
-    "brown"
-   ],
-   "categories": [
-    "accessories",
-    "tops"
-   ],
-   "colours": [
-    "neutral",
-    "black"
-   ],
-   "median": 283,
-   "share": 4.5,
-   "new_pct": 16.1,
-   "new_index": 77,
-   "soldout": {
-    "n": 378,
-    "k": 60,
-    "pct": 15.9,
-    "lo": 12.5,
-    "hi": 19.9
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0691/7057/files/SS26_THE-CRESCENT_BLACK_-29_d6e5287c-13af-45c9-b1e1-15f3ca03c6ad.jpg?v=1786398065",
-    "https://cdn.shopify.com/s/files/1/0615/0442/2060/files/23.png?v=1759514551",
-    "https://cdn.shopify.com/s/files/1/0308/7056/9019/files/PetitGondol_Darkbrown_1_b760ed77-5df5-498f-a8d8-7bb83c13a361.jpg?v=1762365383"
-   ]
-  },
-  {
-   "n": 605,
-   "words": [
-    "acetate",
-    "sunglasses",
-    "flats",
-    "lens",
-    "leather",
-    "brown"
-   ],
-   "categories": [
-    "shoes",
-    "accessories"
-   ],
-   "colours": [
-    "neutral",
-    "black"
-   ],
-   "median": 225,
-   "share": 7.2,
-   "new_pct": 14.9,
-   "new_index": 71,
-   "soldout": {
-    "n": 605,
-    "k": 100,
-    "pct": 16.5,
-    "lo": 13.8,
-    "hi": 19.7
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0251/6906/8131/files/UPDATED_LexxolaPackshot.jpg?v=1768489214",
-    "https://cdn.shopify.com/s/files/1/0598/4265/8484/files/DMYSUN21SB_1.jpg?v=1773331019",
-    "https://cdn.shopify.com/s/files/1/0251/6906/8131/files/SAMI_3.jpg?v=1761735501"
-   ]
-  },
-  {
-   "n": 543,
-   "words": [
-    "skirt",
-    "dress",
-    "top"
-   ],
-   "categories": [
-    "tops",
-    "bottoms"
-   ],
-   "colours": [
-    "neutral",
-    "black"
-   ],
-   "median": 216,
-   "share": 6.5,
-   "new_pct": 14.5,
-   "new_index": 69,
-   "soldout": {
-    "n": 543,
-    "k": 68,
-    "pct": 12.5,
-    "lo": 10.0,
-    "hi": 15.6
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0710/9512/4251/files/UntitledSession10857_60e2e5d0-175d-4d64-b9db-82c92fe2eda4.jpg?v=1777715434",
-    "https://cdn.shopify.com/s/files/1/0770/1132/1145/files/IMG_97792.jpg?v=1780556593",
-    "https://cdn.shopify.com/s/files/1/0932/7732/3511/files/p_14732f52-b201-461a-bbe5-709250cb8b68.jpg?v=1777365086"
-   ]
-  },
-  {
-   "n": 421,
-   "words": [
-    "bottom",
-    "bikini",
-    "triangle",
-    "thong",
-    "top"
-   ],
-   "categories": [
-    "tops",
-    "bottoms"
-   ],
-   "colours": [
-    "neutral",
-    "multicolor"
-   ],
-   "median": 80,
-   "share": 5.0,
-   "new_pct": 14.3,
-   "new_index": 68,
-   "soldout": {
-    "n": 421,
-    "k": 44,
-    "pct": 10.5,
-    "lo": 7.9,
-    "hi": 13.7
-   },
-   "images": [
-    "https://cdn.shopify.com/s/files/1/0532/3486/0213/files/estelle-top-stone-polka-front.jpg?v=1782452785",
-    "https://cdn.shopify.com/s/files/1/0532/3486/0213/files/estelle-bottom-stone-polka-side.jpg?v=1782454062",
-    "https://cdn.shopify.com/s/files/1/0562/2749/6098/files/IMG_5455Gran.jpg?v=1777371204"
-   ]
-  },
-  {
-   "n": 660,
+   "n": 709,
    "words": [
     "dress",
-    "skirt",
     "top"
    ],
    "categories": [
@@ -1801,32 +1697,32 @@
     "neutral",
     "white"
    ],
-   "median": 209,
-   "share": 7.8,
-   "new_pct": 13.8,
-   "new_index": 66,
+   "median": 229,
+   "share": 8.0,
+   "new_pct": 22.1,
+   "new_index": 82,
    "soldout": {
-    "n": 660,
-    "k": 103,
-    "pct": 15.6,
-    "lo": 13.0,
-    "hi": 18.6
+    "n": 709,
+    "k": 95,
+    "pct": 13.4,
+    "lo": 11.1,
+    "hi": 16.1
    },
    "images": [
-    "https://cdn.shopify.com/s/files/1/0535/0673/6305/files/PhotoMay072024_32603PM.jpg?v=1715967389",
     "https://cdn.shopify.com/s/files/1/0781/3228/1621/files/IMG_2730.heic?v=1783334243",
-    "https://cdn.shopify.com/s/files/1/0669/6776/5147/files/844BD5F7-3613-4C5A-A7B8-68F3FD646148_1_102_o.jpg?v=1757025595"
+    "https://cdn.shopify.com/s/files/1/0505/6374/3914/files/IMG_7144.jpg?v=1782997703",
+    "https://cdn.shopify.com/s/files/1/0891/6798/6935/files/ED92264D-B3F6-4A96-B2FC-326330DFB8FA.jpg?v=1773875894"
    ]
   },
   {
-   "n": 400,
+   "n": 713,
    "words": [
-    "sphere",
-    "agate",
-    "hoop",
-    "charm",
-    "necklace",
-    "earrings"
+    "acetate",
+    "sunglasses",
+    "lens",
+    "tote",
+    "bag",
+    "leather"
    ],
    "categories": [
     "accessories",
@@ -1836,16 +1732,85 @@
     "neutral",
     "black"
    ],
-   "median": 145,
-   "share": 4.8,
-   "new_pct": 13.8,
-   "new_index": 65,
+   "median": 258,
+   "share": 8.1,
+   "new_pct": 21.2,
+   "new_index": 78,
    "soldout": {
-    "n": 400,
-    "k": 69,
-    "pct": 17.2,
-    "lo": 13.9,
-    "hi": 21.3
+    "n": 713,
+    "k": 131,
+    "pct": 18.4,
+    "lo": 15.7,
+    "hi": 21.4
+   },
+   "images": [
+    "https://cdn.shopify.com/s/files/1/0598/4265/8484/files/Juno_Transparent_Brown_Sunglasses___DMYSUN10TBR___01_5b30c076-930a-4206-9f46-922af96e373f.jpg?v=1787835625",
+    "https://cdn.shopify.com/s/files/1/0598/4265/8484/files/Sylvia_Black_Sunglasses___DMYSUN21SB___01_1.jpg?v=1787754159",
+    "https://cdn.shopify.com/s/files/1/0598/4265/8484/files/Margot_Transparent_Olive_Sunglasses___DMYSUN13TO___01.jpg?v=1787754160"
+   ]
+  },
+  {
+   "n": 416,
+   "words": [
+    "bottom",
+    "triangle",
+    "bikini",
+    "polka",
+    "top"
+   ],
+   "categories": [
+    "tops",
+    "bottoms"
+   ],
+   "colours": [
+    "neutral",
+    "multicolor"
+   ],
+   "median": 84,
+   "share": 4.7,
+   "new_pct": 19.0,
+   "new_index": 70,
+   "soldout": {
+    "n": 416,
+    "k": 45,
+    "pct": 10.8,
+    "lo": 8.2,
+    "hi": 14.2
+   },
+   "images": [
+    "https://cdn.shopify.com/s/files/1/0532/3486/0213/files/estelle-top-stone-polka-front.jpg?v=1782452785",
+    "https://cdn.shopify.com/s/files/1/0532/3486/0213/files/estelle-bottom-stone-polka-side.jpg?v=1782454062",
+    "https://cdn.shopify.com/s/files/1/0806/6370/7978/files/GAUDIRLOOKBOOK1600.jpg?v=1784890106"
+   ]
+  },
+  {
+   "n": 406,
+   "words": [
+    "sphere",
+    "agate",
+    "hoop",
+    "necklace",
+    "earrings",
+    "ring"
+   ],
+   "categories": [
+    "accessories",
+    "tops"
+   ],
+   "colours": [
+    "neutral",
+    "black"
+   ],
+   "median": 165,
+   "share": 4.6,
+   "new_pct": 17.7,
+   "new_index": 66,
+   "soldout": {
+    "n": 406,
+    "k": 81,
+    "pct": 20.0,
+    "lo": 16.4,
+    "hi": 24.1
    },
    "images": [
     "https://cdn.shopify.com/s/files/1/0245/9089/files/WC-N-IMOGEN-ONYX-S_53d3d63a-1a6a-47e4-83bd-57b15b04f96e.jpg?v=1776453833",
@@ -1854,84 +1819,83 @@
    ]
   },
   {
-   "n": 694,
+   "n": 951,
    "words": [
     "skirt",
-    "shorts",
     "top"
    ],
    "categories": [
-    "bottoms",
-    "tops"
+    "tops",
+    "bottoms"
    ],
    "colours": [
     "neutral",
     "white"
    ],
-   "median": 137,
-   "share": 8.2,
-   "new_pct": 10.1,
-   "new_index": 48,
+   "median": 138,
+   "share": 10.8,
+   "new_pct": 16.3,
+   "new_index": 60,
    "soldout": {
-    "n": 694,
-    "k": 95,
-    "pct": 13.7,
-    "lo": 11.3,
-    "hi": 16.4
+    "n": 951,
+    "k": 162,
+    "pct": 17.0,
+    "lo": 14.8,
+    "hi": 19.6
    },
    "images": [
-    "https://cdn.shopify.com/s/files/1/0640/5760/6403/files/IMG_8823.jpg?v=1784394579",
-    "https://cdn.shopify.com/s/files/1/0640/5760/6403/files/IMG_8797.jpg?v=1784394666",
-    "https://cdn.shopify.com/s/files/1/0523/2561/3759/files/DSCF2700.jpg?v=1778022474"
+    "https://cdn.shopify.com/s/files/1/0669/6776/5147/files/6013CF0D-9F02-4D77-9C3B-4DCD2D8AE986_1_201_a.jpg?v=1763958130",
+    "https://cdn.shopify.com/s/files/1/0457/5477/7752/files/IMG_7266.jpg?v=1779901170",
+    "https://cdn.shopify.com/s/files/1/0063/7173/7684/files/front_fddb78bf-4d46-4c0a-bfe7-568b2a23c62f.jpg?v=1778272869"
    ]
   }
  ],
  "newness": {
-  "brands_measured": 155,
-  "dormant": 50,
-  "dormant_pct": 32,
+  "brands_measured": 154,
+  "dormant": 41,
+  "dormant_pct": 27,
   "fastest": [
    {
     "brand": "The Frankie Shop",
     "shelf": 60,
-    "arrivals": 173,
-    "pct": 288.0
+    "arrivals": 226,
+    "pct": 377.0
    },
    {
     "brand": "Fashion Brand Company",
     "shelf": 60,
-    "arrivals": 171,
-    "pct": 285.0
+    "arrivals": 182,
+    "pct": 303.0
    },
    {
     "brand": "Chan Luu",
     "shelf": 60,
-    "arrivals": 124,
-    "pct": 207.0
+    "arrivals": 159,
+    "pct": 265.0
    },
    {
     "brand": "VESTIGE",
     "shelf": 60,
-    "arrivals": 116,
-    "pct": 193.0
+    "arrivals": 143,
+    "pct": 238.0
    },
    {
     "brand": "Bec + Bridge",
     "shelf": 60,
-    "arrivals": 111,
-    "pct": 185.0
+    "arrivals": 112,
+    "pct": 187.0
    },
    {
     "brand": "Baserange",
     "shelf": 51,
-    "arrivals": 93,
-    "pct": 182.0
+    "arrivals": 95,
+    "pct": 186.0
    },
    {
     "brand": "Emily Dawn Long",
     "shelf": 60,
-    "arrivals": 99,
-    "pct": 165.0
+    "arrivals": 101,
+    "pct": 168.0
    },
    {
     "brand": "Jeanerica",
@@ -1941,41 +1905,46 @@
    },
    {
     "brand": "Christopher Esber",
-    "shelf": 51,
-    "arrivals": 58,
-    "pct": 114.0
+    "shelf": 52,
+    "arrivals": 66,
+    "pct": 127.0
    },
    {
-    "brand": "Paloma Wool",
-    "shelf": 50,
-    "arrivals": 56,
-    "pct": 112.0
+    "brand": "Dana Foley",
+    "shelf": 60,
+    "arrivals": 71,
+    "pct": 118.0
    },
    {
     "brand": "A Bronze Age",
     "shelf": 60,
-    "arrivals": 67,
-    "pct": 112.0
+    "arrivals": 69,
+    "pct": 115.0
    },
    {
-    "brand": "Collina Strada",
+    "brand": "Marge Sherwood",
     "shelf": 60,
-    "arrivals": 65,
-    "pct": 108.0
+    "arrivals": 66,
+    "pct": 110.0
    }
   ],
-  "median_pct": 8
+  "median_pct": 12
  },
  "sellingThrough": [
   {
+   "brand": "Martine Rose",
+   "n": 60,
+   "pct": 100
+  },
+  {
    "brand": "Emily Dawn Long",
    "n": 60,
-   "pct": 93
+   "pct": 88
   },
   {
    "brand": "Bec + Bridge",
    "n": 60,
-   "pct": 78
+   "pct": 82
   },
   {
    "brand": "Little Yarn",
@@ -1983,39 +1952,34 @@
    "pct": 70
   },
   {
-   "brand": "Mali Marea",
-   "n": 60,
-   "pct": 58
-  },
-  {
    "brand": "Cowboys of Habit",
    "n": 56,
-   "pct": 52
+   "pct": 55
   },
   {
    "brand": "Addy Knits",
    "n": 58,
-   "pct": 52
+   "pct": 53
+  },
+  {
+   "brand": "Gil Rodriguez",
+   "n": 60,
+   "pct": 50
   },
   {
    "brand": "Dana Foley",
    "n": 60,
-   "pct": 43
+   "pct": 50
   },
   {
-   "brand": "Woodrose Deli",
-   "n": 41,
-   "pct": 37
+   "brand": "Mali Marea",
+   "n": 60,
+   "pct": 47
   },
   {
    "brand": "Flattered",
    "n": 60,
-   "pct": 37
-  },
-  {
-   "brand": "Romontio",
-   "n": 40,
-   "pct": 35
+   "pct": 42
   }
  ],
  "brandDetail": "withheld — per-label figures are shown only to that label, on its own private card"
