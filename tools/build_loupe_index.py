@@ -148,6 +148,24 @@ it is. The URL is the key in the literal sense. Lose tools/data/index_keys.json
 and every card is unreadable by anyone including us, which is the correct
 failure mode; rebuild mints new ones.
 
+AND WHY THE FILE IS NOT NAMED AFTER THE TOKEN (2026-09-04)
+
+The paragraph above was true from 2026-08-01 and protected nothing, because the
+file was still CALLED <token>.json. In a public repository the file list is
+public, so a listing of /index/d/ was a list of every key, each labelled with
+the file it opens. The audit decrypted three brand cards and the Gemini report
+from filenames alone; tools/test_token_leak.js opens all 155.
+
+The token now derives two unrelated strings — see tools/card_crypto.py:
+
+    path = base64url(SHA-256("loupe-card-path:" + token))[:22]   the filename
+    key  =           SHA-256("loupe-card-key:"  + token)         the AES key
+
+A listing yields path-hashes, and a path-hash reverses into neither the token
+nor the key. Every token minted before this change is burned (they were
+listable for a month) and was re-minted with it. tools/test_token_leak.js is
+the attack, kept as a test: it must open zero files, forever.
+
 USAGE
   python tools/build_loupe_index.py                    # full build
   python tools/build_loupe_index.py --report           # numbers only, writes nothing
@@ -165,12 +183,18 @@ import math
 import os
 import pathlib
 import re
-import secrets
 import statistics
 import subprocess
 import sys
 
 import numpy as np
+
+# Card naming + encryption live in ONE module shared with the partner reports
+# and the outreach reader, so the path/key derivation cannot drift between the
+# thing that writes a card and the things that open it.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from card_crypto import CARD_JS, card_path, mint_token   # noqa: E402
+from card_crypto import encrypt as encrypt_card          # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "tools" / "data"
@@ -1379,12 +1403,18 @@ footer{padding:30px 0 64px;font-size:13px;color:var(--muted);border-top:1px soli
 
 
 def head(title, desc, canonical, noindex=False):
+    # noindex marks the private pages, whose URL carries the card token. Those
+    # also get referrer: no-referrer, so a click out of a card (to /index/, to a
+    # font host, to anything) never ships ?k= in a Referer header. Modern
+    # browsers already trim cross-origin referrers to the origin; this makes it
+    # a property of the page rather than of the visitor's browser.
     return f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{E(title)}</title>
 <meta name="description" content="{E(desc)}">
 {'<meta name="robots" content="noindex, nofollow, noarchive">' if noindex else
  f'<link rel="canonical" href="{canonical}">'}
+{'<meta name="referrer" content="no-referrer">' if noindex else ''}
 <link rel="icon" type="image/png" href="/icon.png">
 <meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(desc)}">
@@ -1817,8 +1847,10 @@ def render_public(d):
 
 def render_brand_shell():
     """A shell with no numbers in it. Same model as the partner reports: the page
-    reads ?k=<token> and fetches /index/d/<token>.json. Without the token there is
-    nothing to read — not hidden, absent."""
+    reads ?k=<token>, derives the card's PATH from it with one hash and the card's
+    KEY with another, fetches /index/d/<path>.json and decrypts it. Without the
+    token there is nothing to read — not hidden, absent — and without the token
+    the filename on the server is nothing either."""
     return head("Your label on the Loupe Index", "Private brand card.",
                 "https://useloupe.shop/index/brand/", noindex=True) + """
 <div id="gate" style="max-width:520px;margin:16vh auto;text-align:center;padding:0 22px">
@@ -1879,26 +1911,12 @@ def render_brand_shell():
 (function(){
   var k = new URLSearchParams(location.search).get('k') || '';
   if (!/^[A-Za-z0-9_-]{10,64}$/.test(k)) return;          // no key, no fetch
-
-  // The file on the server is AES-256-GCM ciphertext and the token in this URL
-  // is the only key to it. loupe-site is a public repository, so "nobody can
-  // guess the filename" is not privacy — anyone can read the file list. This
-  // makes the file itself useless without the link.
-  function bytes(b64){
-    var s = atob(b64), a = new Uint8Array(s.length);
-    for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
-    return a;
-  }
-  function decrypt(env){
-    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(k))
-      .then(function(kb){ return crypto.subtle.importKey('raw', kb, 'AES-GCM', false, ['decrypt']); })
-      .then(function(key){
-        return crypto.subtle.decrypt({name:'AES-GCM', iv: bytes(env.iv)}, key, bytes(env.ct));
-      })
-      .then(function(buf){ return JSON.parse(new TextDecoder().decode(buf)); });
-  }
-
-  fetch('/index/d/' + k + '.json', {cache:'no-store'})
+""" + CARD_JS + """
+  // The token never appears in a URL we request: the path is derived first. A
+  // link minted before 2026-09-04 derives a path that does not exist and stops
+  // at the 404 with the gate up — dead, not broken.
+  cardPath(k)
+    .then(function(p){ return fetch('/index/d/' + p + '.json', {cache:'no-store'}); })
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(decrypt)
     .then(render)
@@ -2004,38 +2022,11 @@ def render_brand_shell():
 </body></html>"""
 
 
-def encrypt_card(payload, token):
-    """AES-256-GCM under SHA-256(token). See the module docstring for why a
-    public repo makes unguessable-link privacy insufficient here.
-
-    The key is the token itself, hashed to 32 bytes — not stretched with a KDF,
-    deliberately: a 22-character token from secrets.token_urlsafe(16) is 128
-    bits of real entropy, so there is nothing to brute-force and nothing a
-    slow hash would protect. Stretching only matters for low-entropy secrets.
-    """
-    try:
-        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-    except ImportError:
-        sys.exit("Brand cards need `cryptography` (pip install cryptography).\n"
-                 "  It is what keeps 139 labels' private figures out of a PUBLIC repo.\n"
-                 "  There is no unencrypted fallback on purpose.")
-    import hashlib
-    import hmac
-    key = hashlib.sha256(token.encode()).digest()
-    plain = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()
-    # DETERMINISTIC nonce, derived from the key and the plaintext, so the build
-    # is reproducible: re-running it after a wording tweak leaves the 139 card
-    # files byte-identical instead of showing 139 spurious diffs that have to be
-    # eyeballed before every commit. (Week to week they all change regardless —
-    # the reporting window itself is inside the payload.) Key+nonce reuse is
-    # only unsafe when the PLAINTEXT differs; here an identical nonce implies an
-    # identical plaintext by construction, so there is nothing to leak.
-    iv = hmac.new(key, plain, hashlib.sha256).digest()[:12]
-    ct = AESGCM(key).encrypt(iv, plain, None)
-    # No brand, no slug, no plaintext length hint beyond the ciphertext's own.
-    return json.dumps({"v": 1,
-                       "iv": base64.b64encode(iv).decode(),
-                       "ct": base64.b64encode(ct).decode()}, separators=(",", ":"))
+# encrypt_card(payload, token) is card_crypto.encrypt — AES-256-GCM under
+# SHA-256("loupe-card-key:" + token), written to <card_path(token)>.json. The
+# derivation, the envelope and the browser-side inverse all live in
+# tools/card_crypto.py so that this file cannot name a card one way while the
+# shell looks for it another.
 
 
 def brand_payload(d, slug):
@@ -2167,12 +2158,20 @@ def main():
 
     live = set()
     for slug in d["brands"]:
-        keys.setdefault(slug, secrets.token_urlsafe(16))
-        live.add(keys[slug])
-        (dd / f"{keys[slug]}.json").write_text(
-            encrypt_card(brand_payload(d, slug), keys[slug]), encoding="utf-8")
+        keys.setdefault(slug, mint_token())
+        token = keys[slug]
+        # The file is named by card_path(token), NOT by the token. The repo is
+        # public and its file list is public; a file named after its own key is
+        # the hole that was reported on 2026-08-01 and again on 2026-09-04.
+        name = card_path(token)
+        if token in name or name in token:
+            sys.exit(f"REFUSING TO WRITE: card path for {slug} collides with its token")
+        live.add(name)
+        (dd / f"{name}.json").write_text(
+            encrypt_card(brand_payload(d, slug), token), encoding="utf-8")
     # A label that drops below the measurement floor must lose its card, not keep
-    # serving last month's numbers forever.
+    # serving last month's numbers forever. The same sweep removes any file still
+    # named under the pre-2026-09-04 scheme, on every build, without being asked.
     for stale in dd.glob("*.json"):
         if stale.stem not in live:
             stale.unlink()

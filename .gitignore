@@ -1,15 +1,20 @@
 # Partner report access tokens. The token IS the password for a partner's
-# private report URL, so it stays on this machine. Losing this file just means
-# the next build mints new tokens and you re-send the links.
+# private report URL, so it stays on this machine. The report file in
+# /partners/d/ is AES-GCM ciphertext keyed on ONE hash of the token and NAMED
+# by a DIFFERENT hash of it (tools/card_crypto.py), so this file is the only
+# way to read it. Losing it means the next build mints a new token and you
+# re-send the link.
 tools/data/keys.json
 
-# Loupe Index brand-card tokens, and the outreach list built from them. These
-# are stronger than the partner tokens: the card files in /index/d/ are AES-GCM
-# ciphertext keyed on the token, so this file is the ONLY way to read any of
-# them. That is deliberate — loupe-site is a public repository, so an
-# unguessable filename protects nothing on its own. Losing this file makes 139
-# cards permanently unreadable by anyone including us; rebuilding mints new
-# tokens and new links.
+# Loupe Index brand-card tokens, and the outreach list built from them. Same
+# scheme as the partner reports: the card files in /index/d/ are AES-GCM
+# ciphertext under SHA-256("loupe-card-key:" + token), stored at
+# base64url(SHA-256("loupe-card-path:" + token))[:22].json, so this file is the
+# ONLY way to read any of them. That is deliberate — loupe-site is a public
+# repository, so an unguessable filename protects nothing on its own, and (the
+# 2026-09-04 lesson) a filename that IS the key is a published key. Losing this
+# file makes every card permanently unreadable by anyone including us;
+# rebuilding mints new tokens and new links.
 tools/data/index_keys.json
 tools/data/index_links.txt
 

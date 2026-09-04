@@ -12,12 +12,19 @@
 // Here it does one more thing: the card is AES-GCM ciphertext on disk (the repo
 // is public), so running the script proves the browser can actually open it.
 //
+// And since 2026-09-04 it does the thing the 2026-08-01 tests did not: it
+// attacks the directory. Every card used to be NAMED after its own token, and
+// the token was the key, so a public listing of /index/d/ was a key ring. The
+// tests decrypted every card with its token and passed, because they never
+// asked whether the filename was the token. Now they ask.
+//
 //   node tools/test_loupe_index.js
 //
 // Exits non-zero on any failure, so it can gate a deploy.
 
 const fs = require('fs');
 const path = require('path');
+const nodeCrypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
 const PAGE = path.join(ROOT, 'index', 'index.html');
@@ -25,6 +32,10 @@ const DATA = path.join(ROOT, 'index', 'data.json');
 const SHELL = path.join(ROOT, 'index', 'brand', 'index.html');
 const KEYS = path.join(ROOT, 'tools', 'data', 'index_keys.json');
 const CARDS = path.join(ROOT, 'index', 'd');
+const PARTNER_SHELL = path.join(ROOT, 'partners', 'gemini', 'index.html');
+const PARTNER_KEYS = path.join(ROOT, 'tools', 'data', 'keys.json');
+const PARTNER_CARDS = path.join(ROOT, 'partners', 'd');
+const CRYPTO_PY = path.join(ROOT, 'tools', 'card_crypto.py');
 
 let failures = 0;
 const ok = (name, cond, extra) => {
@@ -42,14 +53,44 @@ const d = JSON.parse(fs.readFileSync(DATA, 'utf8'));
 const shell = fs.readFileSync(SHELL, 'utf8');
 const keys = JSON.parse(fs.readFileSync(KEYS, 'utf8'));
 
-const cardPath = (slug) => path.join(CARDS, keys[slug] + '.json');
+// ── the scheme, restated here independently of the code under test ──────────
+// path = base64url(SHA-256("loupe-card-path:" + token))[:22]   the file's name
+// key  =           SHA-256("loupe-card-key:"  + token)         what opens it
+// These literals are the SPEC. Further down, the same literals are read back
+// out of card_crypto.py and out of both shipped shells and compared to these,
+// so a "harmless" rename in one place fails here.
+const PATH_DOMAIN = 'loupe-card-path:';
+const KEY_DOMAIN = 'loupe-card-key:';
+const PATH_CHARS = 22;
+const ENVELOPE_V = 2;
+const pathOf = (token) => nodeCrypto.createHash('sha256').update(PATH_DOMAIN + token)
+  .digest('base64url').slice(0, PATH_CHARS);
+const keyOf = (token) => nodeCrypto.createHash('sha256').update(KEY_DOMAIN + token).digest();
+
+const cardPath = (slug) => path.join(CARDS, pathOf(keys[slug]) + '.json');
 const b64 = (s) => Uint8Array.from(Buffer.from(s, 'base64'));
+
+// Open an envelope with a RAW 32-byte key. Returns the payload or null; never
+// throws, because the attack below calls it thousands of times expecting null.
+function openWith(envelopeText, rawKey) {
+  let env;
+  try { env = JSON.parse(envelopeText); } catch (e) { return null; }
+  if (!env || !env.iv || !env.ct) return null;
+  try {
+    const iv = Buffer.from(env.iv, 'base64');
+    const blob = Buffer.from(env.ct, 'base64');
+    const dec = nodeCrypto.createDecipheriv('aes-256-gcm', rawKey, iv);
+    dec.setAuthTag(blob.subarray(blob.length - 16));
+    return JSON.parse(Buffer.concat([dec.update(blob.subarray(0, blob.length - 16)), dec.final()]).toString('utf8'));
+  } catch (e) { return null; }
+}
 
 // Reading a card here performs exactly what the browser performs, which makes
 // the encryption path a tested one rather than a hoped-for one.
 async function readCard(slug) {
   const env = JSON.parse(fs.readFileSync(cardPath(slug), 'utf8'));
-  const kb = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(keys[slug]));
+  if (env.v !== ENVELOPE_V) throw new Error('envelope v' + env.v + ' for ' + slug);
+  const kb = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(KEY_DOMAIN + keys[slug]));
   const key = await crypto.subtle.importKey('raw', kb, 'AES-GCM', false, ['decrypt']);
   const buf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(env.iv) }, key, b64(env.ct));
   return JSON.parse(new TextDecoder().decode(buf));
@@ -197,7 +238,14 @@ console.log('\nBRAND CARD — THE SHELL IS INERT');
 const anyToken = Object.values(keys)[0];
 ok('shell carries no figures', !/\d{2}\.\d%/.test(shell));
 ok('shell is noindex', /name="robots"[^>]*noindex/.test(shell));
-ok('data lives at an unguessable path', /\/index\/d\/'\s*\+\s*k/.test(shell));
+// The token is in the URL, so the URL must never travel: no Referer on any
+// click out of a card, to any origin.
+ok('shell sends no referrer (the token is in its URL)',
+   /<meta name="referrer" content="no-referrer">/.test(shell));
+ok('the public Index page is NOT referrer-gagged (nothing secret in its URL)',
+   !/name="referrer"/.test(html));
+ok('the shell fetches a DERIVED path, never the token itself',
+   /\/index\/d\/'\s*\+\s*p\b/.test(shell) && !/\/index\/d\/'\s*\+\s*k\b/.test(shell));
 ok('no token is baked into the shell', !shell.includes(anyToken));
 ok('tokens carry real entropy',
    Object.values(keys).every((k) => k.length >= 20), 'shortest ' +
@@ -212,14 +260,95 @@ const raws = served.map((f) => fs.readFileSync(path.join(CARDS, f), 'utf8'));
 // one of these files is browsable by anyone; unguessable filenames protect
 // nothing. If a card ever ships as plaintext, a label's markdown rate is
 // readable by its competitors and the card's own promise becomes a lie.
-ok('every card is an AES-GCM envelope and nothing else',
+ok('every card is a v' + ENVELOPE_V + ' AES-GCM envelope and nothing else',
    raws.every((r) => { const e = JSON.parse(r);
-     return e.v === 1 && e.iv && e.ct && Object.keys(e).length === 3; }));
+     return e.v === ENVELOPE_V && e.iv && e.ct && Object.keys(e).length === 3; }));
 ok('no card file contains a brand name in the clear',
    raws.every((r) => !/[A-Za-z]{4,} [A-Za-z]{4,}/.test(r)));
 ok('no card file contains a percentage in the clear', raws.every((r) => !/%/.test(r)));
 ok('every envelope has its own nonce',
    new Set(raws.map((r) => JSON.parse(r).iv)).size === raws.length);
+
+// ── THE FILENAME IS NOT THE KEY ─────────────────────────────────────────────
+// The 2026-08-01 fix encrypted every card under SHA-256(token) and left it
+// named <token>.json. Every check above passed. A public listing of the
+// directory was therefore a list of keys, each labelled with the file it
+// opens; the 2026-09-04 audit decrypted Gemini's report and three brand cards
+// from filenames alone. Nothing below existed then. It is the attack, run
+// against the shipped bytes, and it must open nothing — forever.
+console.log('\nTHE FILENAME IS NOT THE KEY (2026-09-04)');
+const partnerKeys = fs.existsSync(PARTNER_KEYS) ? JSON.parse(fs.readFileSync(PARTNER_KEYS, 'utf8')) : {};
+const listing = [];
+for (const dir of [CARDS, PARTNER_CARDS]) {
+  if (!fs.existsSync(dir)) continue;
+  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.json'))) {
+    listing.push({ dir: path.relative(ROOT, dir).replace(/\\/g, '/'), name: f,
+                   stem: f.replace(/\.json$/, ''), body: fs.readFileSync(path.join(dir, f), 'utf8') });
+  }
+}
+ok('both private directories were enumerated', listing.length === served.length + Object.keys(partnerKeys).length,
+   listing.length + ' files');
+
+// (a) The attack. Every key an outsider can derive from a filename alone.
+const opened = [];
+for (const f of listing) {
+  const candidates = [
+    nodeCrypto.createHash('sha256').update(f.stem).digest(),               // the 2026-08-01 scheme
+    nodeCrypto.createHash('sha256').update(KEY_DOMAIN + f.stem).digest(),  // new derivation, fed the name
+    nodeCrypto.createHash('sha256').update(PATH_DOMAIN + f.stem).digest(), // the other prefix, fed the name
+    Buffer.concat([Buffer.from(f.stem), Buffer.alloc(32)]).subarray(0, 32), // the name as raw bytes
+  ];
+  for (const key of candidates) {
+    const pt = openWith(f.body, key);
+    if (pt) { opened.push(f.dir + '/' + f.name + ' -> ' + (pt.brand || pt.name)); break; }
+  }
+}
+ok('(a) no filename, hashed with SHA-256 alone or any way at all, decrypts any file',
+   opened.length === 0, opened.slice(0, 3).join('; '));
+ok('(a) …and no file is plaintext that needs no key',
+   listing.every((f) => { const e = JSON.parse(f.body); return !(e.brand || e.name || e.partner); }));
+
+// (b) The path derivation and the key derivation must use DISTINCT prefixes.
+// Without them, path == base64url(key) and the hole is back with one extra
+// step. Read the literals out of everything that ships or writes a card.
+const pyText = fs.readFileSync(CRYPTO_PY, 'utf8');
+const pyPath = (pyText.match(/^PATH_DOMAIN\s*=\s*"([^"]+)"/m) || [])[1];
+const pyKey = (pyText.match(/^KEY_DOMAIN\s*=\s*"([^"]+)"/m) || [])[1];
+ok('(b) card_crypto.py derives the path under "' + PATH_DOMAIN + '"', pyPath === PATH_DOMAIN, String(pyPath));
+ok('(b) card_crypto.py derives the key under "' + KEY_DOMAIN + '"', pyKey === KEY_DOMAIN, String(pyKey));
+ok('(b) the two prefixes are distinct and neither is a prefix of the other',
+   PATH_DOMAIN !== KEY_DOMAIN && !PATH_DOMAIN.startsWith(KEY_DOMAIN) && !KEY_DOMAIN.startsWith(PATH_DOMAIN));
+const shellPrefixes = (s) => ({
+  p: (s.match(/PATH_DOMAIN\s*=\s*'([^']+)'/) || [])[1],
+  k: (s.match(/KEY_DOMAIN\s*=\s*'([^']+)'/) || [])[1],
+});
+const sp = shellPrefixes(shell);
+ok('(b) the brand shell ships the same two prefixes', sp.p === PATH_DOMAIN && sp.k === KEY_DOMAIN,
+   JSON.stringify(sp));
+ok('(b) the brand shell hashes PATH_DOMAIN for the fetch path and KEY_DOMAIN for the AES key',
+   /sha256\(PATH_DOMAIN \+ k\)[\s\S]*?b64url/.test(shell) && /sha256\(KEY_DOMAIN \+ k\)[\s\S]*?importKey/.test(shell));
+ok('(b) the brand shell never hashes the bare token',
+   !/digest\('SHA-256',\s*new TextEncoder\(\)\.encode\(k\)\)/.test(shell) && !/sha256\(k\)/.test(shell));
+if (fs.existsSync(PARTNER_SHELL)) {
+  const ps = shellPrefixes(fs.readFileSync(PARTNER_SHELL, 'utf8'));
+  ok('(b) the partner shell ships the same two prefixes', ps.p === PATH_DOMAIN && ps.k === KEY_DOMAIN,
+     JSON.stringify(ps));
+}
+
+// (c) No committed filename equals or contains a token, and no token contains
+// a filename — the literal shape of the hole, in either direction.
+const allTokens = Object.values(keys).concat(Object.values(partnerKeys));
+const named = listing.filter((f) => allTokens.some((t) => f.stem === t || f.stem.includes(t) || t.includes(f.stem)));
+ok('(c) no committed file name equals or contains a token from the keys files', named.length === 0,
+   named.map((f) => f.dir + '/' + f.name).slice(0, 3).join(', '));
+ok('(c) every committed file name IS the path-hash of exactly one live token',
+   listing.every((f) => allTokens.filter((t) => pathOf(t) === f.stem).length === 1));
+ok('(c) every live token has its file at the path-hash and nowhere else',
+   Object.values(keys).every((t) => fs.existsSync(path.join(CARDS, pathOf(t) + '.json')) &&
+                                    !fs.existsSync(path.join(CARDS, t + '.json'))));
+ok('(c) the keys files are gitignored (a token in the repo is the card)',
+   /^tools\/data\/index_keys\.json$/m.test(fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8')) &&
+   /^tools\/data\/keys\.json$/m.test(fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8')));
 
 // ── run the shell's own script against a real encrypted card ────────────────
 const script = shell.slice(shell.lastIndexOf('<script>') + 8, shell.lastIndexOf('</script>'));
@@ -241,7 +370,7 @@ function run(search, envelope, shouldFetch) {
   Object.keys(els).forEach((k) => delete els[k]);
   fetched = null;
   const fn = new Function(
-    'location', 'URLSearchParams', 'document', 'fetch', 'crypto', 'atob',
+    'location', 'URLSearchParams', 'document', 'fetch', 'crypto', 'atob', 'btoa',
     'TextEncoder', 'TextDecoder', 'Uint8Array', 'Number', 'Math', 'String', 'JSON', 'console',
     script);
   fn({ search }, URLSearchParams, doc, (url) => {
@@ -249,10 +378,19 @@ function run(search, envelope, shouldFetch) {
     return shouldFetch
       ? Promise.resolve({ ok: true, json: () => Promise.resolve(envelope) })
       : Promise.resolve({ ok: false });
-  }, crypto, atob, TextEncoder, TextDecoder, Uint8Array, Number, Math, String, JSON, console);
-  // Decryption is two awaits deep inside the page's promise chain, so a single
-  // macrotask is not enough to see the render land.
-  return new Promise((r) => setTimeout(r, 40));
+  }, crypto, atob, btoa, TextEncoder, TextDecoder, Uint8Array, Number, Math, String, JSON, console);
+  // Path derivation, then decryption, are several awaits deep inside the page's
+  // promise chain, with crypto.subtle's work off the JS thread. Poll for the
+  // render under a wall-clock bound; "fetched is still null" only means "never
+  // fetched" once the path derivation has had time to run.
+  return (async () => {
+    const t0 = Date.now();
+    while (Date.now() - t0 < 600) {
+      await new Promise((r) => setTimeout(r, 5));
+      if (els.report && els.report.style.display === '') return;   // rendered
+      if (fetched === null && Date.now() - t0 > 60) return;        // never fetched
+    }
+  })();
 }
 
 (async () => {
@@ -341,6 +479,16 @@ function run(search, envelope, shouldFetch) {
   ok('missing file (404) -> card stays hidden',
      !els.report || els.report.style.display !== '');
 
+  // A link minted before 2026-09-04 — a well-formed token that no longer maps
+  // to a file. It must derive a path (never fetch the token itself), meet a
+  // 404, and stop with the gate up. Dead, not broken.
+  const legacy = nodeCrypto.randomBytes(16).toString('base64url');
+  await run('?k=' + legacy, envelope, false);
+  ok('a pre-rotation token derives a path and 404s cleanly',
+     fetched === '/index/d/' + pathOf(legacy) + '.json' && (!els.report || els.report.style.display !== ''),
+     String(fetched));
+  ok('a pre-rotation token is never fetched as a filename', !String(fetched).includes(legacy));
+
   // The real test of encryption at rest: a valid-looking token that is not THIS
   // card's token must fail to decrypt and leave the gate up.
   const other = Object.values(keys).find((k) => k !== token);
@@ -349,8 +497,27 @@ function run(search, envelope, shouldFetch) {
      !els.report || els.report.style.display !== '');
   ok('a wrong token renders nothing at all', !els.bname || els.bname._text === '');
 
+  // The old derivation must be dead in the client, not merely unused. Serve the
+  // right payload encrypted the 2026-08-01 way (SHA-256(token), v1) and again
+  // as a v2 envelope under SHA-256(token): the shell must open neither.
+  const sealOld = (v) => {
+    const key = nodeCrypto.createHash('sha256').update(token).digest();
+    const plain = Buffer.from(JSON.stringify(payload));
+    const iv = nodeCrypto.createHmac('sha256', key).update(plain).digest().subarray(0, 12);
+    const c = nodeCrypto.createCipheriv('aes-256-gcm', key, iv);
+    const ct = Buffer.concat([c.update(plain), c.final(), c.getAuthTag()]);
+    return { v, iv: iv.toString('base64'), ct: ct.toString('base64') };
+  };
+  await run('?k=' + token, sealOld(1), true);
+  ok('a v1 envelope (the old scheme) is refused even with the right token',
+     !els.report || els.report.style.display !== '');
+  await run('?k=' + token, sealOld(2), true);
+  ok('a card keyed on the bare token does not open — the client no longer speaks that derivation',
+     !els.report || els.report.style.display !== '');
+
   await run('?k=' + token, envelope, true);
-  ok('fetches the token path', fetched === '/index/d/' + token + '.json', String(fetched));
+  ok('fetches the DERIVED path', fetched === '/index/d/' + pathOf(token) + '.json', String(fetched));
+  ok('the token itself never appears in the request', !String(fetched).includes(token));
   ok('gate hidden, card shown',
      els.gate.style.display === 'none' && els.report.style.display === '');
   ok('brand name rendered', els.bname._text === payload.brand, els.bname._text);

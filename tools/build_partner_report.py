@@ -29,14 +29,32 @@ PRIVACY MODEL (this is a static site, so there is no server to check a password)
   password.
 
   So the payload is now encrypted at rest with AES-256-GCM under a key derived
-  from the token, exactly as the Loupe Index does for its 139 brand cards. What
-  is committed is {"v","iv","ct"} — no partner name, no numbers, nothing that
+  from the token, exactly as the Loupe Index does for its brand cards. What is
+  committed is {"v","iv","ct"} — no partner name, no numbers, nothing that
   says whose report it is. The URL is the key in the literal sense. Losing
   tools/data/keys.json makes every report permanently unreadable by anyone
   including us, which is the correct failure mode; --rotate-key mints a new one.
 
-  The generic lesson, worth more than the fix: "unguessable" is a property of
-  the whole system, not of the string. Ours was published in a directory index.
+  ⚠️ AND THAT FIX SHIPPED WITH THE SAME HOLE, FOR A MONTH (2026-09-04).
+  The file was encrypted under SHA-256(token) and still NAMED <token>.json. The
+  listing that used to hand a stranger the plaintext now handed them the key,
+  labelled with the file it opens. Verified again on 2026-09-04: Gemini's report
+  decrypted from its own filename, as did every brand card.
+
+  Now the token derives two unrelated strings (tools/card_crypto.py, shared
+  with the Index so the two cannot diverge):
+
+      path = base64url(SHA-256("loupe-card-path:" + token))[:22]   the filename
+      key  =           SHA-256("loupe-card-key:"  + token)         the AES key
+
+  A listing yields path-hashes that reverse into neither. The token minted on
+  2026-08-01 was listable for a month and is burned; this file re-mints on the
+  first build after the change. tools/test_token_leak.js is the audit's attack
+  kept as a test — it must open zero files.
+
+  The generic lesson, worth more than either fix: "unguessable" is a property
+  of the whole system, not of the string. Ours was published in a directory
+  index, twice — first as the file's contents, then as the file's name.
 
 DATA
   PostHog (HogQL) when POSTHOG_API_KEY is set; otherwise the committed snapshot
@@ -52,16 +70,20 @@ USAGE
 """
 
 import argparse
-import base64
 import datetime as dt
 import html
 import json
 import math
 import os
 import pathlib
-import secrets
 import sys
 import urllib.request
+
+# Card naming + encryption live in ONE module shared with the Loupe Index, so
+# the path/key derivation cannot drift between the two private surfaces.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from card_crypto import CARD_JS, card_path, mint_token   # noqa: E402
+from card_crypto import encrypt as encrypt_payload       # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "tools" / "data"
@@ -353,44 +375,19 @@ def pull(partner_id):
 E = lambda s: html.escape(str(s), quote=True)
 
 
-def encrypt_payload(payload, token):
-    """AES-256-GCM under SHA-256(token). See PRIVACY MODEL in the module docstring.
-
-    The key is the token hashed to 32 bytes, deliberately NOT stretched with a
-    KDF: a 22-character secrets.token_urlsafe(16) is 128 bits of real entropy,
-    so there is nothing to brute-force and a slow hash would protect nothing.
-    Stretching only matters for secrets a human chose.
-
-    The nonce is derived from key+plaintext so a rebuild with unchanged numbers
-    produces a byte-identical file, rather than a spurious diff to eyeball before
-    every commit. Key/nonce reuse is only unsafe when the PLAINTEXT differs, and
-    here an identical nonce implies identical plaintext by construction.
-    """
-    try:
-        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-    except ImportError:
-        sys.exit("Partner reports need `cryptography` (pip install cryptography).\n"
-                 "  It is what keeps a partner's private numbers out of a PUBLIC repo.\n"
-                 "  There is deliberately no unencrypted fallback.")
-    import hashlib
-    import hmac
-    key = hashlib.sha256(token.encode()).digest()
-    plain = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode()
-    iv = hmac.new(key, plain, hashlib.sha256).digest()[:12]
-    ct = AESGCM(key).encrypt(iv, plain, None)
-    return json.dumps({
-        "v": 1,
-        "iv": base64.b64encode(iv).decode(),
-        "ct": base64.b64encode(ct).decode(),
-    }, separators=(",", ":"))
+# encrypt_payload(payload, token) is card_crypto.encrypt — AES-256-GCM under
+# SHA-256("loupe-card-key:" + token), written to <card_path(token)>.json. See
+# PRIVACY MODEL above and tools/card_crypto.py for the derivation.
 
 
-def render_shell(d, token):
-    """The page. Deliberately contains no numbers — see PRIVACY MODEL above."""
+def render_shell(d):
+    """The page. Deliberately contains no numbers and no token — see PRIVACY
+    MODEL above. The token reaches this page only as ?k= at request time."""
     name = E(d["name"])
     return f"""<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
 <title>{name} on Loupe — engagement</title>
 <link rel="icon" type="image/png" href="/icon.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -507,25 +504,12 @@ footer{{padding:30px 0 60px;font-size:13px;color:var(--muted);border-top:1px sol
 (function(){{
   var k = new URLSearchParams(location.search).get('k') || '';
   if (!/^[A-Za-z0-9_-]{{10,64}}$/.test(k)) return;         // no key, no fetch
-  // The payload is AES-256-GCM ciphertext keyed on the token — see PRIVACY
-  // MODEL in build_partner_report.py. A public repo makes the filename readable,
-  // so the filename cannot be the secret. Requires a secure context (https),
-  // which useloupe.shop is.
-  function bytes(b64){{
-    var s = atob(b64), a = new Uint8Array(s.length);
-    for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
-    return a;
-  }}
-  function decrypt(env){{
-    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(k))
-      .then(function(kb){{ return crypto.subtle.importKey('raw', kb, 'AES-GCM', false, ['decrypt']); }})
-      .then(function(key){{
-        return crypto.subtle.decrypt({{name:'AES-GCM', iv: bytes(env.iv)}}, key, bytes(env.ct));
-      }})
-      .then(function(buf){{ return JSON.parse(new TextDecoder().decode(buf)); }});
-  }}
-
-  fetch('/partners/d/' + k + '.json', {{cache:'no-store'}})
+{CARD_JS}
+  // The token never appears in a URL we request: the path is derived first. A
+  // link minted before 2026-09-04 derives a path that does not exist and stops
+  // at the 404 with the gate up — dead, not broken.
+  cardPath(k)
+    .then(function(p){{ return fetch('/partners/d/' + p + '.json', {{cache:'no-store'}}); }})
     .then(function(r){{ if(!r.ok) throw 0; return r.json(); }})
     .then(decrypt)
     .then(render)
@@ -659,22 +643,39 @@ def main():
     # The token IS the password, so it is kept out of git.
     keys_path = DATA_DIR / "keys.json"
     keys = json.loads(keys_path.read_text(encoding="utf-8")) if keys_path.exists() else {}
+    data_dir = ROOT / "partners" / "d"
+    data_dir.mkdir(parents=True, exist_ok=True)
     if args.rotate_key or pid not in keys:
         old = keys.get(pid)
-        keys[pid] = secrets.token_urlsafe(16)
+        keys[pid] = mint_token()
         keys_path.write_text(json.dumps(keys, indent=1), encoding="utf-8")
         if old:
-            (ROOT / "partners" / "d" / f"{old}.json").unlink(missing_ok=True)
+            # Both the file the old token names under this scheme and the one it
+            # named under the pre-2026-09-04 scheme, where the name WAS the token.
+            (data_dir / f"{card_path(old)}.json").unlink(missing_ok=True)
+            (data_dir / f"{old}.json").unlink(missing_ok=True)
             print(f"rotated key — the old link is now dead")
     token = keys[pid]
 
     out_dir = ROOT / "partners" / pid
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "index.html").write_text(render_shell(d, token), encoding="utf-8")
+    (out_dir / "index.html").write_text(render_shell(d), encoding="utf-8")
 
-    data_dir = ROOT / "partners" / "d"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    (data_dir / f"{token}.json").write_text(encrypt_payload(d, token), encoding="utf-8")
+    # The file is named by card_path(token), NOT by the token. The repo is
+    # public and its file list is public; a file named after its own key is the
+    # hole that was reported on 2026-08-01 and again on 2026-09-04.
+    name = card_path(token)
+    if token in name or name in token:
+        sys.exit("REFUSING TO WRITE: report path collides with its token")
+    (data_dir / f"{name}.json").write_text(encrypt_payload(d, token), encoding="utf-8")
+    # Sweep anything that is not a live partner's card under THIS scheme — a
+    # legacy token-named file, a partner that left keys.json — on every build,
+    # so the directory can never carry a file the shells would not open.
+    live = {card_path(t) for t in keys.values()}
+    for stale in data_dir.glob("*.json"):
+        if stale.stem not in live:
+            stale.unlink()
+            print(f"removed stale {stale.name}")
 
     h = d["headline"]
     print(f"\n  {d['name']}: {d['pieces']} pieces / {d['labels']} labels")

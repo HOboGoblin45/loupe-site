@@ -39,12 +39,13 @@ USAGE
 """
 
 import argparse
-import base64
-import hashlib
 import io
 import json
 import pathlib
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import card_crypto   # noqa: E402  (the one place a card's path and key are derived)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 LINKS = ROOT / "tools" / "data" / "index_links.txt"
@@ -58,15 +59,13 @@ MIN_SHELF = 20
 
 
 def decrypt(token):
-    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-    f = CARDS / f"{token}.json"
+    """The card a token opens, read the way the browser reads it: the file is
+    at card_path(token) — never at <token>.json — and opens with card_key(token).
+    See tools/card_crypto.py for why those are two different hashes."""
+    f = CARDS / f"{card_crypto.card_path(token)}.json"
     if not f.exists():
         return None
-    env = json.loads(f.read_text(encoding="utf-8"))
-    key = hashlib.sha256(token.encode()).digest()
-    pt = AESGCM(key).decrypt(base64.b64decode(env["iv"]),
-                             base64.b64decode(env["ct"]), None)
-    return json.loads(pt)
+    return card_crypto.decrypt(f.read_text(encoding="utf-8"), token)
 
 
 def pick_fact(c):
@@ -175,13 +174,31 @@ def main():
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
 
-    tokens = {}
+    tokens, links = {}, {}
     for line in io.open(LINKS, encoding="utf-8"):
         if "\t" in line:
             b, u = line.rstrip("\n").split("\t", 1)
             tokens[b.strip()] = u.strip().rsplit("k=", 1)[1]
+            links[b.strip()] = u.strip()
 
+    # index_links.txt is the ONLY authority on a brand's card link: the Index
+    # build re-mints tokens (every one was re-minted on 2026-09-04 after a month
+    # of being listable), and a link copied into the targets file at some
+    # earlier date is a dead link waiting to be emailed. Refresh the targets'
+    # own `card` field from it here, on disk, so nothing downstream — this
+    # composer, a human reading the file, the weekly task — can pick up a
+    # burned one.
     targets = json.loads(TARGETS.read_text(encoding="utf-8"))
+    refreshed = 0
+    for tgt in targets:
+        fresh = links.get(tgt["brand"])
+        if fresh and tgt.get("card") != fresh:
+            tgt["card"] = fresh
+            refreshed += 1
+    if refreshed:
+        TARGETS.write_text(json.dumps(targets, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"{refreshed} target card link(s) refreshed from {LINKS.name}")
+
     drafts, skipped = [], []
     for tgt in targets:
         tok = tokens.get(tgt["brand"])

@@ -3,6 +3,7 @@
 <title>Your label on the Loupe Index</title>
 <meta name="description" content="Private brand card.">
 <meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
 <link rel="icon" type="image/png" href="/icon.png">
 <meta property="og:title" content="Your label on the Loupe Index">
 <meta property="og:description" content="Private brand card.">
@@ -140,25 +141,43 @@ footer{padding:30px 0 64px;font-size:13px;color:var(--muted);border-top:1px soli
   var k = new URLSearchParams(location.search).get('k') || '';
   if (!/^[A-Za-z0-9_-]{10,64}$/.test(k)) return;          // no key, no fetch
 
-  // The file on the server is AES-256-GCM ciphertext and the token in this URL
-  // is the only key to it. loupe-site is a public repository, so "nobody can
-  // guess the filename" is not privacy — anyone can read the file list. This
-  // makes the file itself useless without the link.
+  // The file on the server is AES-256-GCM ciphertext. Its NAME is one hash of
+  // the token in this URL and its KEY is a different hash of the same token,
+  // with distinct prefixes so neither can be turned into the other. loupe-site
+  // is a public repository, so the file list is public; until 2026-09-04 the
+  // file was named after the token itself and the list was a key ring. Now a
+  // listing yields path-hashes that derive nothing. Requires a secure context.
+  var PATH_DOMAIN = 'loupe-card-path:', KEY_DOMAIN = 'loupe-card-key:';
+  function sha256(s){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); }
+  function b64url(buf){
+    var a = new Uint8Array(buf), s = '';
+    for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]);
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
   function bytes(b64){
     var s = atob(b64), a = new Uint8Array(s.length);
     for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
     return a;
   }
+  function cardPath(k){
+    return sha256(PATH_DOMAIN + k).then(function(d){ return b64url(d).slice(0, 22); });
+  }
+  function cardKey(k){
+    return sha256(KEY_DOMAIN + k)
+      .then(function(d){ return crypto.subtle.importKey('raw', d, 'AES-GCM', false, ['decrypt']); });
+  }
   function decrypt(env){
-    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(k))
-      .then(function(kb){ return crypto.subtle.importKey('raw', kb, 'AES-GCM', false, ['decrypt']); })
-      .then(function(key){
-        return crypto.subtle.decrypt({name:'AES-GCM', iv: bytes(env.iv)}, key, bytes(env.ct));
-      })
+    if (!env || env.v !== 2) return Promise.reject(0);   // v1 = the old scheme; never open it
+    return cardKey(k)
+      .then(function(key){ return crypto.subtle.decrypt({name:'AES-GCM', iv: bytes(env.iv)}, key, bytes(env.ct)); })
       .then(function(buf){ return JSON.parse(new TextDecoder().decode(buf)); });
   }
 
-  fetch('/index/d/' + k + '.json', {cache:'no-store'})
+  // The token never appears in a URL we request: the path is derived first. A
+  // link minted before 2026-09-04 derives a path that does not exist and stops
+  // at the 404 with the gate up — dead, not broken.
+  cardPath(k)
+    .then(function(p){ return fetch('/index/d/' + p + '.json', {cache:'no-store'}); })
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(decrypt)
     .then(render)
