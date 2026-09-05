@@ -1,0 +1,10 @@
+# The generated trees are written by Python with newline='\n'. core.autocrlf is
+# true on the Windows machine this repo is built from, so without this a fresh
+# clone checks them out as CRLF and the next local build rewrites all ~8,000
+# files as LF — no git diff, but a very noisy "written/changed" count that hides
+# the real changes. Scoped to the generated output only, so nothing else in the
+# repo gets renormalized.
+/product/** text eol=lf
+/brands/** text eol=lf
+/look/** text eol=lf
+404.html text eol=lf

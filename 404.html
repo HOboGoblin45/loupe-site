@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-itunes-app" content="app-id=6781137336">
+<meta name="referrer" content="no-referrer">
+<title>Loupe</title>
+<meta name="description" content="Loupe — independent women's fashion, one swipe at a time.">
+<link rel="icon" type="image/png" href="/icon.png" />
+<link rel="apple-touch-icon" href="/icon.png" />
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Loupe">
+<meta property="og:description" content="Loupe — independent women's fashion, one swipe at a time.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://useloupe.shop/">
+<meta property="og:image" content="https://useloupe.shop/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://useloupe.shop/og.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Beth+Ellen&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#F3CBF0;--pink-soft:#FCEFF8;--ink:#141414;--muted:#6E6A6E;--line:#ECE7EC;--coral:#FE6F6F;--white:#FFFFFF;--paper:#FAF8F6;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
+.serif{font-family:"Fraunces",Georgia,serif;font-weight:500;letter-spacing:-.5px;}
+.script{font-family:"Beth Ellen",cursive;font-weight:400;}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--coral);font-weight:700;}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--white);padding:13px 24px;border-radius:999px;font-size:15px;font-weight:600;transition:transform .14s ease;}
+.btn:hover{transform:translateY(-2px);}
+.btn-pink{background:var(--pink);color:var(--ink);}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+header{border-bottom:1px solid var(--line);background:var(--paper);}
+.nav{display:flex;align-items:center;justify-content:space-between;height:66px;}
+.logo{font-size:23px;line-height:1.4;}
+.nav .btn{padding:10px 20px;font-size:14px;}
+main{min-height:56vh;display:flex;align-items:center;}
+.state{text-align:center;padding:64px 0 56px;width:100%;}
+.mark{width:82px;height:82px;border-radius:999px;background:var(--pink-soft);border:1px solid var(--line);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.mark span{font-family:"Fraunces",Georgia,serif;font-size:34px;color:var(--ink);font-weight:500;}
+.state h1{font-size:clamp(26px,4.6vw,40px);letter-spacing:-1.2px;margin-bottom:10px;}
+.state p{color:var(--muted);max-width:46ch;margin:0 auto 22px;font-size:16px;}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+footer{padding:36px 0 56px;border-top:1px solid var(--line);}
+.foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot .logo{font-size:28px;}
+.foot-links{display:flex;gap:20px;font-size:14px;color:var(--muted);flex-wrap:wrap;}
+.foot-links a:hover{color:var(--ink);}
+.copyright{font-size:13px;color:var(--muted);margin-top:18px;}
+</style></head><body>
+<header><div class="wrap nav"><a href="/" class="logo script">Loupe</a><a href="https://apps.apple.com/app/id6781137336" target="_blank" rel="noopener" class="btn btn-pink">Get the app</a></div></header>
+
+<main><div class="wrap"><div class="state" id="state">
+  <div class="mark"><span>L</span></div>
+  <h1 class="serif" id="h">This page has moved on</h1>
+  <p id="p">The link may be old, or the piece behind it may have left the shelf. Everything Loupe tracks lives in the app.</p>
+  <div class="cta-row" id="cta">
+    <a class="btn" href="https://apps.apple.com/app/id6781137336">Get Loupe on the App Store</a>
+    <a class="btn btn-ghost" href="/brands/">Browse the brands</a>
+  </div>
+</div></div></main>
+
+<footer><div class="wrap"><div class="foot"><a href="/" class="logo script">Loupe</a><nav class="foot-links"><a href="/brands/">All brands</a><a href="/#how">How it works</a><a href="https://apps.apple.com/app/id6781137336" target="_blank" rel="noopener">iPhone app</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="mailto:crescicharles@gmail.com">Contact</a></nav></div><p class="copyright">© 2026 Loupe. Independent fashion discovery.</p></div></footer>
+
+<script>
+/* Loupe — client-side router for GitHub Pages.
+   Pages serves this file (with an HTTP 404 status) for any path it has no file
+   for. Universal Links key off /.well-known/apple-app-site-association, not the
+   HTTP status, so a 404 status here still opens the app when it is installed —
+   this markup is only ever seen by someone WITHOUT the app.
+
+   Routes handled:
+     /look, /look/<anything>   -> /look/ keeping the #d= payload intact
+     /u/<username>             -> profile shell (see note below)
+     /product/<id>             -> "left the shelf" (a live piece has its own page)
+     /brand/<slug>             -> /brands/<slug>.html  (or /brands/)
+     /brands/<slug>.html       -> /brands/            (retired brand page)
+     anything else             -> the copy already in the markup above
+
+   /u/ note: useloupe.shop/u/?u=<name> is a real page, but the Supabase RPC it
+   reads (get_social_profile) had EXECUTE revoked from anon in the 2026-07-02
+   privacy lockdown, so no profile can be rendered to a logged-out visitor from
+   the web. We say so plainly and send them to the app rather than showing them
+   a "profile not found" that reads like the person doesn't exist. */
+(function(){
+  var APPSTORE = "https://apps.apple.com/app/id6781137336";
+  var path = location.pathname || '/';
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function decode(s){ try { return decodeURIComponent(s); } catch(e){ return s; } }
+
+  function set(mark, head, body, ctas, title){
+    document.getElementById('h').innerHTML = head;
+    document.getElementById('p').innerHTML = body;
+    document.getElementById('cta').innerHTML = ctas;
+    document.querySelector('.mark').innerHTML = '<span>' + mark + '</span>';
+    if(title) document.title = title;
+  }
+
+  var appBtn  = '<a class="btn" href="' + APPSTORE + '">Get Loupe on the App Store</a>';
+  var brandBtn = '<a class="btn btn-ghost" href="/brands/">Browse the brands</a>';
+
+  // ── /look → the decoder page, hash and query carried across ────────────────
+  if(/^\/look(\/|$)/i.test(path)){
+    location.replace('/look/' + (location.search || '') + (location.hash || ''));
+    return;
+  }
+
+  // ── /brand/<slug> → the directory page ────────────────────────────────────
+  var mb = /^\/brand\/([^\/?#]+)\/?$/i.exec(path);
+  if(mb){
+    var slug = decode(mb[1]).toLowerCase();
+    location.replace(/^[a-z0-9][a-z0-9-]*$/.test(slug) ? ('/brands/' + slug + '.html') : '/brands/');
+    return;
+  }
+
+  // ── a brand page that no longer exists → the directory ────────────────────
+  if(/^\/brands\/[^\/]+\.html$/i.test(path)){
+    location.replace('/brands/');
+    return;
+  }
+
+  // ── /u/<username> → the profile page, which owns the copy for this case ───
+  // One implementation, so that if EXECUTE on get_social_profile is ever granted
+  // back to anon, path links start rendering real profiles with no change here.
+  var mu = /^\/u\/([^\/?#]+)\/?$/i.exec(path);
+  if(mu){
+    var user = decode(mu[1]).replace(/^@/, '').slice(0, 40);
+    set('@',
+      'This is a Loupe profile',
+      'Loupe profiles are private to the app — open <strong>@' + esc(user) + '</strong> in Loupe to see what they\'ve saved.',
+      appBtn + brandBtn,
+      '@' + user + ' · Loupe');
+    location.replace('/u/?u=' + encodeURIComponent(user));
+    return;
+  }
+
+  // ── /product/<id> with no page → the piece is gone ────────────────────────
+  if(/^\/product\/[^\/]/i.test(path)){
+    set('L',
+      'This piece has sold out or left the shelf',
+      'Independent labels make small runs, so pieces come and go fast. Find more like it on Loupe.',
+      appBtn + brandBtn,
+      'Sold out · Loupe');
+    return;
+  }
+})();
+</script>
+</body></html>

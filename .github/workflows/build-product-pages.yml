@@ -1,0 +1,65 @@
+name: Build product pages
+
+# One static page per available piece at /product/<id>/. These pages are the
+# landing target for every product share the app sends and for the /product/<id>
+# Universal Link declared in .well-known/apple-app-site-association, so they have
+# to track the live catalog: a page must exist while the piece is on sale and
+# disappear when it is not (the site's 404.html router then says it left the
+# shelf).
+#
+# The feed refreshes at 08:00 UTC; this runs at 09:37 UTC so it always builds
+# from that morning's catalog. The builder is deterministic, so on a quiet day
+# there is nothing to commit and the job is a no-op.
+
+on:
+  schedule:
+    - cron: "37 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-product-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build product pages
+        run: python tools/build_product_pages.py
+
+      # Gate the daily rebuild on the share-link contract: the look decoder, the
+      # 404 router's routes, and the per-page banner/canonical/og:image.
+      - name: Test the share pages
+        run: node tools/test_share_pages.js
+
+      - name: Commit and push if changed
+        run: |
+          set -euo pipefail
+          git config user.name  "loupe-bot"
+          git config user.email "actions@users.noreply.github.com"
+          # Stage first: most changes are whole files added or deleted, which
+          # `git diff` alone does not see.
+          git add -A product
+          if git diff --cached --quiet -- product; then
+            echo "No product page changes."
+            exit 0
+          fi
+          n=$(git diff --cached --name-only -- product | wc -l)
+          git commit -m "product pages: rebuild from the live catalog ($n files changed)"
+          # Another job (or a human) may have pushed while this one was building.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            echo "push race, retrying ($i)…"
+            sleep $((i * 5))
+          done
+          echo "could not push after 5 attempts" >&2
+          exit 1

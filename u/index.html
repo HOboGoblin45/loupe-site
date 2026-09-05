@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" type="image/png" href="/icon.png" />
 <link rel="apple-touch-icon" href="/icon.png" />
+<meta name="apple-itunes-app" content="app-id=6781137336">
+<meta name="referrer" content="no-referrer">
 <title>Loupe profile</title>
 <meta name="description" content="A Loupe profile — independent fashion picks, curated and shoppable." />
 <meta name="robots" content="noindex" />
@@ -159,15 +161,33 @@
     document.title = (p.display_name||('@'+p.username)) + ' · Loupe';
   }
 
-  function notFound(){
-    document.getElementById('main').innerHTML =
-      '<div class="state"><div class="big">Profile not found</div>'
-      + '<div>This link may be inactive. Discover independent fashion on Loupe.</div>'
-      + '<div style="margin-top:18px"><a class="btn" href="'+APPSTORE+'" target="_blank" rel="noopener">Get Loupe</a></div></div>';
+  // Two different dead ends, and they should not read the same. A link with no
+  // username in it is broken; a link WITH one is almost always fine — the
+  // profile just cannot be rendered to a logged-out visitor, because the
+  // 2026-07-02 privacy lockdown revoked EXECUTE on get_social_profile from the
+  // anon role. Telling that person "profile not found" reads as "this person
+  // does not exist", which is both untrue and the opposite of an invitation.
+  function notFound(username){
+    var who = username ? '@' + esc(username) : '';
+    document.getElementById('main').innerHTML = username
+      ? '<div class="state"><div class="big serif">This is a Loupe profile</div>'
+        + '<div>Loupe profiles are private to the app — open ' + who + ' in Loupe to see what they’ve saved.</div>'
+        + '<div style="margin-top:18px"><a class="btn" href="'+APPSTORE+'">Get Loupe on the App Store</a></div></div>'
+      : '<div class="state"><div class="big serif">This link has moved on</div>'
+        + '<div>Discover independent fashion on Loupe.</div>'
+        + '<div style="margin-top:18px"><a class="btn" href="'+APPSTORE+'">Get Loupe</a></div></div>';
+    if(username) document.title = '@' + username + ' · Loupe';
   }
 
+  // Path form too: useloupe.shop/u/<name> is routed here by 404.html, and the
+  // app mints the ?u= form.
   var username = qs('u');
-  if(!username){ notFound(); return; }
+  if(!username){
+    var seg = /\/u\/([^\/?#]+)/.exec(location.pathname || '');
+    if(seg) { try { username = decodeURIComponent(seg[1]); } catch(e){ username = seg[1]; } }
+  }
+  username = (username || '').replace(/^@/, '').slice(0, 40);
+  if(!username){ notFound(''); return; }
 
   fetch(SB + '/rest/v1/rpc/get_social_profile', {
     method:'POST',
@@ -177,10 +197,10 @@
   .then(function(r){ return r.ok ? r.json() : []; })
   .then(function(rows){
     var p = Array.isArray(rows) ? rows[0] : rows;
-    if(!p || !p.username){ notFound(); return; }
+    if(!p || !p.username){ notFound(username); return; }
     render(p);
   })
-  .catch(notFound);
+  .catch(function(){ notFound(username); });
 })();
 </script>
 </body>
