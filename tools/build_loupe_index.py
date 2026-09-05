@@ -212,7 +212,10 @@ ERA_START = "2026-07-01"
 # Lifted verbatim from loupe-feed/build_price_history.py so the two files cannot
 # drift apart. A price move straddling one of these is our pipeline getting more
 # accurate, never a brand's decision.
-PRICE_EPOCHS = ["2026-07-15"]
+PRICE_EPOCHS = [
+    "2026-07-15",  # scrape pinned to country=US, 49 brands flipped to USD
+    "2026-09-05",  # fx-refresh: fx_to_usd re-fetched (ECB 2026-09-04) — 13 brands step upward by one ratio
+]
 EPOCH_SETTLE_DAYS = 3
 
 # Lifted verbatim from loupe-feed/build_price_history.py, same as the line above
