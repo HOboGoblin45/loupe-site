@@ -30,10 +30,18 @@ const path = require('path');
 
 const AASA = path.join(__dirname, '..', '.well-known', 'apple-app-site-association');
 const APP_ID = '52SKBHZK3L.com.crescicharles.loupe';
-// Every path family the app declares a linking route for. Kept here rather than
-// derived, so a path silently disappearing from the file is a failure and not a
-// tautology.
-const REQUIRED_PATHS = ['/u/*', '/product/*', '/brand/*', '/look/*'];
+// Every path family the app declares a linking route for (App.tsx `linking`).
+// Kept here rather than derived, so a path silently disappearing from the file
+// is a failure and not a tautology.
+//
+// /look/* is deliberately ABSENT. Claiming a path the app cannot route is worse
+// than not claiming it: iOS would hand the link to Loupe, the linking config
+// would find no match, and the visitor would land on Discover having been shown
+// nothing — where today Safari renders the entire look from the link and offers
+// a Get Loupe button. A claimed-but-unrouted path is a silent downgrade of the
+// one distribution channel Loupe has.
+const REQUIRED_PATHS = ['/u/*', '/product/*', '/brand/*'];
+const MUST_NOT_CLAIM = ['/look/*'];
 
 let failures = 0;
 function check(label, ok, detail) {
@@ -67,6 +75,13 @@ function checkBytes(label, buf) {
   const paths = detail?.paths ?? [];
   for (const p of REQUIRED_PATHS) {
     check(`${label}: links ${p}`, paths.includes(p), `paths = ${JSON.stringify(paths)}`);
+  }
+  for (const p of MUST_NOT_CLAIM) {
+    check(
+      `${label}: does NOT claim ${p} (no in-app screen routes it)`,
+      !paths.includes(p),
+      `paths = ${JSON.stringify(paths)} — a claimed path the app cannot route opens Loupe and shows nothing`,
+    );
   }
   return doc;
 }

@@ -9,9 +9,9 @@
           { "/": "/u/*", "comment": "shared profiles" },
           { "/": "/product/*", "comment": "shared products" },
           { "/": "/brand/*", "comment": "shared brand pages" },
-          { "/": "/look/*", "comment": "shared looks" }
+          { "/": "/look/*", "exclude": true, "comment": "NOT claimed: the app has no in-app look screen, so claiming this would open Loupe and dump the visitor on Discover with no look. The web page at /look/ renders the whole look from the link and carries a Get Loupe button, which is strictly better. Claim it the day an in-app look screen exists AND App.tsx routes 'look/'." }
         ],
-        "paths": ["/u/*", "/product/*", "/brand/*", "/look/*"]
+        "paths": ["/u/*", "/product/*", "/brand/*"]
       }
     ]
   }
