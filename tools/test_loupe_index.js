@@ -211,6 +211,18 @@ ok('the page names the voided days rather than hiding them',
    pd.voided_in_window.filter((v) => !html.includes(v.brand)).map((v) => v.brand).join(', '));
 ok('the page admits the exclusion biases markdowns downward',
    /floor: the tier discounts at least this little/.test(prose));
+// A price epoch truncates the full-price window and NOTHING else on the page,
+// so the headline can jump for a reason that is entirely ours. Declaring
+// 2026-09-05 an epoch took the window from 44 days to 6 and the figure from
+// 96.5% to 99.4% — a move a brand would read as the tier holding firmer, and a
+// number an outreach email would quote. The window length has to be on the card,
+// and under 21 days the card has to say the figure is not comparable.
+ok('the full-price card states how many days it looked at',
+   new RegExp('<b>' + pd.window_days + ' days</b>').test(html),
+   pd.window_days + ' days, ' + pd.window.join(' .. '));
+ok('a short price window is declared not comparable, not just dated',
+   pd.window_days >= 21 || /not comparable with an earlier Index/.test(prose),
+   pd.window_days + ' comparable days');
 
 // ── the caveats that make the numbers readable ──────────────────────────────
 console.log('\nTHE PAGE SAYS WHAT IT CANNOT SEE');

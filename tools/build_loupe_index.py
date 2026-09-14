@@ -218,6 +218,12 @@ PRICE_EPOCHS = [
 ]
 EPOCH_SETTLE_DAYS = 3
 
+# Below this many comparable days, the full-price headline is reporting the
+# length of its own window more than it is reporting the market, and the card
+# has to say so. Set at 21 because the figure it will be read against — every
+# Index published before 2026-09-05 — was measured over 44.
+SHORT_PRICE_WINDOW_DAYS = 21
+
 # Lifted verbatim from loupe-feed/build_price_history.py, same as the line above
 # and for the same reason. SAMPLING epochs are days on which WHICH PRODUCTS WE
 # LOOK AT changed, as opposed to what we recorded about the ones we had.
@@ -557,18 +563,114 @@ def crosses_sampling_epoch(day_a, day_b):
 
 def fx_ratios(feed_repo):
     """Every ratio one currency mis-tag could produce, from the feed's own FX
-    table. A voided step landing on one of these is near-certainly a config fix
-    (EUR->DKK is 0.145/1.08 = 0.1343, and Stine Goya moved x0.1342), which is
-    what lets the page assert the cause rather than just the pattern."""
-    path = feed_repo / "loupe-feed" / "brands.json"
+    table as it stands TODAY.
+
+    Retained for callers that only have the working tree. The Index itself uses
+    fx_tables() + fx_ratios_at() instead, because this function answers a
+    question about history using today's rates — see fx_tables() for what that
+    cost us.
+    """
+    path = pathlib.Path(feed_repo) / "loupe-feed" / "brands.json"
     if not path.exists():
         return []
     table = json.loads(path.read_text(encoding="utf-8")).get("fx_to_usd", {})
+    return sorted(_within_ratios(table))
+
+
+def _within_ratios(table):
+    """b/a for every ordered pair in one FX table: the ratios a brand's currency
+    being ANNOTATED WRONG could produce (EUR->DKK is 0.145/1.08 = 0.1343, and
+    Stine Goya moved x0.1342)."""
     out = set()
     for a in table.values():
         for b in table.values():
-            if a > 0 and b > 0:
+            if a and a > 0 and b and b > 0:
                 out.add(round(b / a, 4))
+    return out
+
+
+# A whole-table refresh lands in prices on the NEXT scrape, so a step may show up
+# a day or two after the commit that caused it.
+FX_TRANSITION_SETTLE_DAYS = 3
+
+
+def fx_tables(feed_repo):
+    """Every distinct fx_to_usd table this project has used, oldest first, as
+    (day, table) — read from brands.json's own git history, not from disk.
+
+    WHY THE HISTORY AND NOT THE FILE. The table is refreshed IN PLACE: on
+    2026-09-05 every rate was re-fetched (EUR 1.08 -> 1.1622, GBP 1.27 ->
+    1.3530, DKK 0.145 -> 0.1555, AUD 0.66 -> 0.7204, SEK 0.092 -> 0.1047). A
+    classifier reading only today's file therefore re-labels the whole archive
+    every time that happens: the 2026-09-14 build silently flipped 31 June/July
+    brand-days from "currency correction" to "unexplained" and 7 the other way,
+    without one of those prices changing. A step's explanation has to be pinned
+    to the rates that were in force when the step was observed, or the record
+    is not a record.
+    """
+    repo = pathlib.Path(feed_repo)
+
+    def _git(*args):
+        return subprocess.run(
+            ["git", "-C", str(repo), *args],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+        ).stdout
+
+    rows = []
+    for line in _git("log", "--format=%H|%ad", "--date=short",
+                     "--", "loupe-feed/brands.json").splitlines():
+        if "|" in line:
+            sha, day = line.split("|", 1)
+            rows.append((day.strip(), sha.strip()))
+
+    tables, seen = [], None
+    for day, sha in reversed(rows):                      # oldest first
+        try:
+            t = json.loads(_git("show", f"{sha}:loupe-feed/brands.json")).get("fx_to_usd", {})
+        except ValueError:
+            continue
+        if not t:
+            continue
+        key = json.dumps(t, sort_keys=True)
+        if key != seen:
+            tables.append((day, t))
+            seen = key
+    return tables
+
+
+def fx_ratios_at(tables, day):
+    """The ratios a currency change could produce for a step observed on `day`.
+
+    Two kinds, and the second was missing until 2026-09-14:
+
+      within   b/a inside the table IN FORCE that day — the brand's currency was
+               annotated wrong and someone corrected the annotation.
+      across   new[c]/old[c] for a currency whose RATE was re-fetched — the
+               annotation was right all along, the number behind it moved. The
+               2026-09-05 refresh stepped 12 labels by exactly this ratio and
+               not one of them was a sale.
+
+    `across` is admissible only for a few days either side of the commit that
+    changed the table, so it cannot quietly explain an ordinary markdown months
+    later.
+    """
+    cur, prev, changed_on = {}, {}, None
+    for d, t in tables:
+        if d > day:
+            break
+        prev, cur, changed_on = cur, t, d
+
+    out = _within_ratios(cur)
+    if prev and changed_on and changed_on <= day:
+        try:
+            lag = (dt.date.fromisoformat(day) - dt.date.fromisoformat(changed_on)).days
+        except ValueError:
+            lag = 0
+        if 0 <= lag <= FX_TRANSITION_SETTLE_DAYS:
+            for c, new in cur.items():
+                old = prev.get(c)
+                if old and old > 0 and new and new > 0:
+                    out.add(round(new / old, 4))
     return sorted(out)
 
 
@@ -585,10 +687,18 @@ def detect_uniform_steps(days, order, fx=()):
     markdown rate DOWNWARD — we understate discounting rather than invent it —
     and the page says so. `fx` marks the steps whose ratio matches a currency
     pair from the feed's own FX table, which is most of them.
+
+    `fx` is an ANNOTATION, never a gate: a step is voided on its shape alone, so
+    changing what we can explain never changes what we exclude, and no published
+    rate moves with it. `fx` may be a flat sequence of ratios (the same set for
+    every day) or a callable day -> ratios, which is what lets the explanation
+    be pinned to the rates in force on that day.
     """
+    at_day = fx if callable(fx) else (lambda _d, _f=tuple(fx): _f)
     voided = {}
     for i in range(1, len(order)):
         d0, d1 = order[i - 1], order[i]
+        fx_here = at_day(d1)
         ratios = collections.defaultdict(list)
         for pid, r0 in days[d0].items():
             r1 = days[d1].get(pid)
@@ -610,7 +720,7 @@ def detect_uniform_steps(days, order, fx=()):
             voided[(brand, d1)] = {
                 "ratio": round(m, 4),
                 "share": round(100 * share),
-                "fx": any(abs(m / f - 1) < 0.015 for f in fx if f > 0),
+                "fx": any(abs(m / f - 1) < 0.015 for f in fx_here if f > 0),
             }
     return voided
 
@@ -636,7 +746,9 @@ def price_runs(days, order, feed_repo):
     anyone tuned, and the number they disagreed about would be one we had
     already emailed to a brand.
     """
-    voided = detect_uniform_steps(days, order, fx_ratios(feed_repo))
+    _fx_tables = fx_tables(feed_repo)
+    voided = detect_uniform_steps(days, order,
+                                  lambda d: fx_ratios_at(_fx_tables, d))
     clean = [d for d in order
              if epoch_of(d) == epoch_of(order[-1]) and not in_settle_window(d)]
     voided_days = collections.defaultdict(set)
@@ -1276,6 +1388,15 @@ def compute(days, feed_repo, verbose=True):
             "brands_never": sum(1 for r in disc_brands if r["cut"] == 0),
                 "full_price_houses": [r["brand"] for r in disc_brands if r["cut"] == 0][:24],
             "window": [clean[0], clean[-1]],
+            # The full-price figure is the only headline whose window is set by
+            # a PRICE EPOCH rather than by the era, so it can collapse without
+            # any other number moving: declaring 2026-09-05 an epoch took it
+            # from 44 days (2026-07-18..2026-08-30) to 6, and a six-day window
+            # reads as 99.4% hold-price for the arithmetic reason that almost
+            # nobody marks down in six days. Published so the page can say how
+            # long it looked, and so the suite can refuse a bare headline over
+            # a window this short.
+            "window_days": len(clean),
             "voided_steps": [{"brand": b, "day": d, **v}
                              for (b, d), v in sorted(voided.items(), key=lambda kv: kv[0][1])],
             "voided_in_window": [{"brand": b, "day": d, **v}
@@ -1492,6 +1613,19 @@ def render_public(d):
   </div>
 </div></div>""")
 
+    # A price epoch truncates the full-price window without touching any other
+    # number on the page, so the figure can jump for a reason that is entirely
+    # ours. When that has happened, the card says so next to the number rather
+    # than leaving the dates to be read as a market statement.
+    short_price_window = ""
+    if pd_["window_days"] < SHORT_PRICE_WINDOW_DAYS:
+        short_price_window = (
+            f" That is a short window: our own price pipeline changed on "
+            f"{E(PRICE_EPOCHS[-1])} and prices either side of it are not comparable, "
+            f"so this figure is not comparable with an earlier Index either. Over "
+            f"six weeks before that change, the same measure read 96.5%."
+        )
+
     # headline dials
     out.append(f"""
 <div class="wrap"><section style="border-top:none;padding-top:6px">
@@ -1503,8 +1637,9 @@ def render_public(d):
     <div class="card lead"><div class="eyebrow">Full price</div>
       <div class="big serif">{h['full_price_pct']}%</div>
       <div class="sub">of {pd_['tracked']:,} tracked pieces held their price across
-      {E(pd_['window'][0])}&ndash;{E(pd_['window'][1])}. <b>{pd_['brands_never']} of
-      {pd_['brands_measured']}</b> labels did not mark down a single piece.</div></div>
+      <b>{pd_['window_days']} days</b>, {E(pd_['window'][0])}&ndash;{E(pd_['window'][1])}.
+      <b>{pd_['brands_never']} of {pd_['brands_measured']}</b> labels did not mark down a
+      single piece.{short_price_window}</div></div>
     <div class="card"><div class="eyebrow">Sold out now</div>
       <div class="big serif">{sd['tier']['pct']}%</div>
       <div class="sub">of tracked pieces have no size left in any variant
