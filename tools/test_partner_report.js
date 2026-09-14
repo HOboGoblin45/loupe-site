@@ -299,7 +299,7 @@ function run(search, payload, shouldFetch) {
   // The standout category is whatever the data says it is, so this must be
   // recomputed rather than pinned. It was pinned to "dresses" (index 468 on the
   // 2026-07-31 snapshot) and went red on 2026-09-14 when bottoms overtook them
-  // at 170 vs 145 — a correct page failing a stale test. What actually needs
+  // at 170 vs 145, i.e. a correct page failing a stale test. What actually needs
   // guarding is that the takeaway names the TOP-INDEX category and no other,
   // which is the bug that would really embarrass us in front of a partner.
   const ranked = data.categories.slice().sort((a, b) => b.index - a.index);

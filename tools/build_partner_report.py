@@ -331,7 +331,7 @@ def pull(partner_id):
     # ⚠️ EVERY GROUPED QUERY BELOW CARRIES AN EXPLICIT `LIMIT`, AND MUST.
     # Bare HogQL applies a default LIMIT of 100 rows. On 2026-09-14 this
     # silently truncated the per-brand pull to 100 of ~230 brands and took 18
-    # of Gemini's 32 exclusive labels with it — including Thinking Mu and Tiny
+    # of Gemini's 32 exclusive labels with it, including Thinking Mu and Tiny
     # Big Sister, their two best performers. The report published an approval
     # rate of 5.6% against a true 7.9%, and an app-wide denominator of 8,937
     # impressions against a true 30,543. Nothing errored; the JSON was valid and
@@ -385,7 +385,7 @@ def pull(partner_id):
     # so it cannot be row-truncated. If they disagree, the grouped pull lost rows
     # and every rate downstream is wrong in the direction of "your engagement
     # collapsed". Refuse to write a snapshot rather than publish that to a
-    # partner — this is the 2026-09-14 bug, turned into a tripwire.
+    # partner. This is the 2026-09-14 bug, turned into a tripwire.
     total_rows = hogql(f"""
         SELECT toInt(sum(arraySum(arrayMap(x -> toFloatOrZero(JSONExtractRaw(x.2,'impressions')),
                    JSONExtractKeysAndValuesRaw(assumeNotNull(toString(properties.brands))))))) AS imps
@@ -399,8 +399,8 @@ def pull(partner_id):
         sys.exit(
             f"REFUSING TO WRITE: per-brand impressions sum to {grouped:,} but the "
             f"ungrouped total for the same window is {ungrouped:,} "
-            f"({len(eng_rows)} brand rows returned). The grouped query lost rows — "
-            f"check for a row limit before trusting any rate built on it."
+            f"({len(eng_rows)} brand rows returned). The grouped query lost rows. "
+            f"Check for a row limit before trusting any rate built on it."
         )
     print(f"  reconciled: {len(eng_rows)} brands, {grouped:,} impressions")
 
