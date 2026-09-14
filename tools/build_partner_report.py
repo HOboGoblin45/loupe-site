@@ -328,6 +328,19 @@ def pull(partner_id):
     if not POSTHOG_KEY:
         return None
 
+    # ⚠️ EVERY GROUPED QUERY BELOW CARRIES AN EXPLICIT `LIMIT`, AND MUST.
+    # Bare HogQL applies a default LIMIT of 100 rows. On 2026-09-14 this
+    # silently truncated the per-brand pull to 100 of ~230 brands and took 18
+    # of Gemini's 32 exclusive labels with it — including Thinking Mu and Tiny
+    # Big Sister, their two best performers. The report published an approval
+    # rate of 5.6% against a true 7.9%, and an app-wide denominator of 8,937
+    # impressions against a true 30,543. Nothing errored; the JSON was valid and
+    # the page rendered. A truncated GROUP BY is indistinguishable from a quiet
+    # collapse in engagement, which is exactly the story the page would have
+    # told a partner. ORDER BY makes the truncation point deterministic if a
+    # limit is ever hit; ROW_CAP is set far above any plausible row count.
+    ROW_CAP = 50000
+
     eng_rows = hogql(f"""
         SELECT kv.1 AS brand,
                toInt(sum(toFloatOrZero(JSONExtractRaw(kv.2,'impressions')))) AS imps,
@@ -338,6 +351,8 @@ def pull(partner_id):
         WHERE event = 'brand_engagement'
           AND timestamp >= now() - INTERVAL {WINDOW_DAYS} DAY
         GROUP BY brand
+        ORDER BY imps DESC
+        LIMIT {ROW_CAP}
     """)
     prod_rows = hogql(f"""
         SELECT JSONExtractString(properties,'productId') AS pid, count() AS saves
@@ -346,6 +361,8 @@ def pull(partner_id):
           AND JSONExtractString(properties,'retailer') = '{partner_id}'
           AND timestamp >= now() - INTERVAL {WINDOW_DAYS} DAY
         GROUP BY pid
+        ORDER BY saves DESC
+        LIMIT {ROW_CAP}
     """)
     cat_rows = hogql(f"""
         SELECT JSONExtractString(properties,'category') AS c, count() AS saves
@@ -354,6 +371,8 @@ def pull(partner_id):
           AND JSONExtractString(properties,'retailer') = '{partner_id}'
           AND timestamp >= now() - INTERVAL {WINDOW_DAYS} DAY
         GROUP BY c
+        ORDER BY saves DESC
+        LIMIT {ROW_CAP}
     """)
     click_rows = hogql(f"""
         SELECT count() FROM events
@@ -361,6 +380,30 @@ def pull(partner_id):
           AND JSONExtractString(properties,'retailer') = '{partner_id}'
           AND timestamp >= now() - INTERVAL {WINDOW_DAYS} DAY
     """)
+
+    # RECONCILIATION GATE. The per-brand map above is grouped; this total is not,
+    # so it cannot be row-truncated. If they disagree, the grouped pull lost rows
+    # and every rate downstream is wrong in the direction of "your engagement
+    # collapsed". Refuse to write a snapshot rather than publish that to a
+    # partner — this is the 2026-09-14 bug, turned into a tripwire.
+    total_rows = hogql(f"""
+        SELECT toInt(sum(arraySum(arrayMap(x -> toFloatOrZero(JSONExtractRaw(x.2,'impressions')),
+                   JSONExtractKeysAndValuesRaw(assumeNotNull(toString(properties.brands))))))) AS imps
+        FROM events
+        WHERE event = 'brand_engagement'
+          AND timestamp >= now() - INTERVAL {WINDOW_DAYS} DAY
+    """)
+    grouped = sum(r[1] for r in eng_rows)
+    ungrouped = total_rows[0][0] if total_rows else 0
+    if ungrouped and grouped != ungrouped:
+        sys.exit(
+            f"REFUSING TO WRITE: per-brand impressions sum to {grouped:,} but the "
+            f"ungrouped total for the same window is {ungrouped:,} "
+            f"({len(eng_rows)} brand rows returned). The grouped query lost rows — "
+            f"check for a row limit before trusting any rate built on it."
+        )
+    print(f"  reconciled: {len(eng_rows)} brands, {grouped:,} impressions")
+
     return {
         "engagement": {r[0]: [r[1], r[2], r[3]] for r in eng_rows},
         "saves_by_product": {r[0]: r[1] for r in prod_rows},

@@ -296,7 +296,22 @@ function run(search, payload, shouldFetch) {
   const cats = els['#cats tbody']._html;
   ok('category table has every category',
      (cats.match(/<tr>/g) || []).length === data.categories.length);
-  ok('dresses flagged as the standout', /dresses/i.test(els.catread._html));
+  // The standout category is whatever the data says it is, so this must be
+  // recomputed rather than pinned. It was pinned to "dresses" (index 468 on the
+  // 2026-07-31 snapshot) and went red on 2026-09-14 when bottoms overtook them
+  // at 170 vs 145 — a correct page failing a stale test. What actually needs
+  // guarding is that the takeaway names the TOP-INDEX category and no other,
+  // which is the bug that would really embarrass us in front of a partner.
+  const ranked = data.categories.slice().sort((a, b) => b.index - a.index);
+  const standout = ranked[0];
+  ok('takeaway names the top-index category (' + standout.category +
+     ', index ' + standout.index + ')',
+     new RegExp('\\b' + standout.category + '\\b', 'i').test(els.catread._html));
+  ok('takeaway names no lower-index category instead',
+     !ranked.slice(1).some(c => c.index < standout.index &&
+        new RegExp('\\b' + c.category + '\\b', 'i').test(els.catread._html)));
+  ok('takeaway multiple recomputes from the index',
+     els.catread._html.includes((standout.index / 100).toFixed(1) + 'x'));
   console.log('\n  takeaway line:\n     ' +
     els.catread._html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim());
 
