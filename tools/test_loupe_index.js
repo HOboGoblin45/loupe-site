@@ -179,9 +179,12 @@ console.log('\nOUR OWN DECISIONS ARE NOT THE MARKET MOVING');
 ok('the roster is no larger than the closing snapshot\'s label count',
    d.coverage.brands_roster <= d.coverage.brands_all,
    d.coverage.brands_roster + ' vs ' + d.coverage.brands_all);
+// Match against `prose`, not the raw HTML: a label whose name contains "&" is
+// emitted correctly escaped ("Linen &amp; More"), and a raw substring check
+// reads that as a missing disclosure. The page is right; the check was naive.
 ok('labels that left the roster are named on the page',
-   d.coverage.left_roster.every((b) => html.includes(b)),
-   d.coverage.left_roster.filter((b) => !html.includes(b)).join(', '));
+   d.coverage.left_roster.every((b) => prose.includes(b)),
+   d.coverage.left_roster.filter((b) => !prose.includes(b)).join(', '));
 ok('turnover is stated for the two-endpoint window, not as a daily rate',
    /tracked on \d{4}-\d{2}-\d{2}/.test(prose) &&
    /no longer in their brand's recent listings/.test(prose));
