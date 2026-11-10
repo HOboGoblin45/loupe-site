@@ -229,6 +229,19 @@ ok('the page admits the exclusion biases markdowns downward',
 ok('the full-price card states how many days it looked at',
    new RegExp('<b>' + pd.window_days + ' days</b>').test(html),
    pd.window_days + ' days, ' + pd.window.join(' .. '));
+// window_days counts snapshots. With an archive gap inside the window the
+// calendar span is longer, and the card has to say both numbers.
+{
+  const span = Math.round((Date.parse(pd.window[1]) - Date.parse(pd.window[0])) / 864e5) + 1;
+  ok('the published calendar span matches the window dates',
+     pd.window_span_days === span, pd.window_span_days + ' vs ' + span);
+  ok('snapshots never exceed calendar days', pd.window_days <= pd.window_span_days,
+     pd.window_days + ' > ' + pd.window_span_days);
+  ok('a gap inside the price window is stated as snapshots across calendar days',
+     pd.window_days === span ||
+     new RegExp(pd.window_days + ' daily snapshots across ' + span + ' calendar days').test(prose),
+     pd.window_days + ' snapshots, ' + span + ' calendar days');
+}
 ok('a short price window is declared not comparable, not just dated',
    pd.window_days >= 21 || /not comparable with an earlier Index/.test(prose),
    pd.window_days + ' comparable days');

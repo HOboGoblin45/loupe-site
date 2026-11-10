@@ -1399,6 +1399,12 @@ def compute(days, feed_repo, verbose=True):
             # long it looked, and so the suite can refuse a bare headline over
             # a window this short.
             "window_days": len(clean),
+            # window_days counts SNAPSHOTS. When the archive has a hole inside
+            # the window the calendar span is longer, and prices at the two
+            # ends are still compared across the hole, so "33 days" on its own
+            # understates how long the figure looked. Publish the span too.
+            "window_span_days": (dt.date.fromisoformat(clean[-1])
+                                 - dt.date.fromisoformat(clean[0])).days + 1,
             "voided_steps": [{"brand": b, "day": d, **v}
                              for (b, d), v in sorted(voided.items(), key=lambda kv: kv[0][1])],
             "voided_in_window": [{"brand": b, "day": d, **v}
@@ -1628,6 +1634,18 @@ def render_public(d):
             f"six weeks before that change, the same measure read 96.5%."
         )
 
+    # Snapshots versus calendar days: say so when the two differ (an archive
+    # gap inside the window), rather than let the snapshot count read as elapsed time.
+    price_window_span = ""
+    _missing = pd_.get("window_span_days", pd_["window_days"]) - pd_["window_days"]
+    if _missing > 0:
+        price_window_span = (
+            f" That is {pd_['window_days']} daily snapshots across "
+            f"{pd_['window_span_days']} calendar days: {_missing} "
+            f"{'day has' if _missing == 1 else 'days have'} no snapshot, and prices "
+            f"are compared across that gap."
+        )
+
     # headline dials
     out.append(f"""
 <div class="wrap"><section style="border-top:none;padding-top:6px">
@@ -1641,7 +1659,7 @@ def render_public(d):
       <div class="sub">of {pd_['tracked']:,} tracked pieces held their price across
       <b>{pd_['window_days']} days</b>, {E(pd_['window'][0])}&ndash;{E(pd_['window'][1])}.
       <b>{pd_['brands_never']} of {pd_['brands_measured']}</b> labels did not mark down a
-      single piece.{short_price_window}</div></div>
+      single piece.{price_window_span}{short_price_window}</div></div>
     <div class="card"><div class="eyebrow">Sold out now</div>
       <div class="big serif">{sd['tier']['pct']}%</div>
       <div class="sub">of tracked pieces have no size left in any variant
