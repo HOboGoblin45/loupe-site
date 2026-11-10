@@ -215,6 +215,8 @@ ERA_START = "2026-07-01"
 PRICE_EPOCHS = [
     "2026-07-15",  # scrape pinned to country=US, 49 brands flipped to USD
     "2026-09-05",  # fx-refresh: fx_to_usd re-fetched (ECB 2026-09-04) — 13 brands step upward by one ratio
+    "2026-10-01",  # fx-refresh: fx_to_usd re-fetched. Was missing here until 2026-11-10 although loupe-feed had it.
+    "2026-11-10",  # fx-refresh: fx_to_usd re-fetched (EGP -3.89%, TRY -2.24%, others under 2%)
 ]
 EPOCH_SETTLE_DAYS = 3
 
