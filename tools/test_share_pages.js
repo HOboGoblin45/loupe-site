@@ -54,6 +54,11 @@ function prose(html) {
     .replace(/https?:\/\/\S+/g, ' ');
 }
 
+// "Flat colours only" is a rule about CSS, so it tests for a CSS gradient
+// FUNCTION. It used to test for the bare word, which failed the daily build
+// whenever the 40-page sample drew a piece NAMED "gradient" (Mounser's "Raw
+// Gradient Ring"): 2026-11-05 and 2026-11-08 both published nothing for that.
+const CSS_GRADIENT = /\b(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i;
 const BANNED = /\b(a\.?i\.?|algorithms?|recommend\w*|personali[sz]\w*)\b/i;
 
 // ── 1. the look decoder ──────────────────────────────────────────────────────
@@ -80,7 +85,7 @@ function testLookPage() {
   ok(html.includes('og:image'), 'look/: missing og:image');
   ok(html.includes(APPSTORE), 'look/: missing the App Store CTA');
   ok(!BANNED.test(prose(html)), 'look/: banned word in visible copy');
-  ok(!/gradient/i.test(html), 'look/: gradient (flat colours only)');
+  ok(!CSS_GRADIENT.test(html), 'look/: gradient (flat colours only)');
 
   // Lift the decoder out of the shipped file and run it.
   const start = html.indexOf('function fromBase64Url');
@@ -139,7 +144,7 @@ function test404() {
   ok(html.includes("'/u/?u='"), '404: the /u/ route does not hand off to the profile page');
   ok(/sold out or left the shelf/i.test(html), '404: the /product/ route has no sold-out copy');
   ok(!BANNED.test(prose(html)), '404: banned word in visible copy');
-  ok(!/gradient/i.test(html), '404: gradient (flat colours only)');
+  ok(!CSS_GRADIENT.test(html), '404: gradient (flat colours only)');
 }
 
 // ── 2b. the profile page the router hands off to ─────────────────────────────
@@ -171,7 +176,7 @@ function testProductPages() {
   ok(fs.existsSync(path.join(ROOT, 'product', 'p.css')), 'product/: the shared stylesheet is missing');
 
   const css = read('product/p.css');
-  ok(!/gradient/i.test(css), 'product/p.css: gradient (flat colours only)');
+  ok(!CSS_GRADIENT.test(css), 'product/p.css: gradient (flat colours only)');
 
   // A deterministic spread across the alphabet rather than the first N.
   const sorted = dirs.slice().sort();
@@ -200,7 +205,7 @@ function testProductPages() {
     ok(html.includes(APPSTORE), `${rel}: no App Store CTA`);
     ok(html.includes('/product/p.css'), `${rel}: not using the shared stylesheet`);
     ok(!BANNED.test(prose(html)), `${rel}: banned word in visible copy`);
-    ok(!/gradient/i.test(html.replace(/https?:\/\/\S+/g, ' ')), `${rel}: gradient (flat colours only)`);
+    ok(!CSS_GRADIENT.test(html.replace(/https?:\/\/\S+/g, ' ')), `${rel}: gradient (flat colours only)`);
     ok(Buffer.byteLength(html, 'utf8') < 4096, `${rel}: over 4 KB`);
   }
   const avg = Math.round(bytes / Math.max(sample.length, 1));
