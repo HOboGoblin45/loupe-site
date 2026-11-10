@@ -209,9 +209,15 @@ ok('most voided steps land on an exact currency-pair ratio',
 const sg = pd.voided_steps.find((v) => /stine goya/i.test(v.brand));
 ok('the Stine Goya krone correction is voided', !!sg && sg.ratio < 0.2,
    sg ? String(sg.ratio) : 'not found');
+// The page prints brand names HTML-escaped (C'est Nous -> C&#x27;est Nous), so
+// look for the escaped form too. Comparing only the raw name failed the first
+// build in which a label with an apostrophe had a voided day inside the window.
+const escVoidedName = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+const voidedNamed = (v) => html.includes(v.brand) || html.includes(escVoidedName(v.brand));
 ok('the page names the voided days rather than hiding them',
-   pd.voided_in_window.every((v) => html.includes(v.brand)),
-   pd.voided_in_window.filter((v) => !html.includes(v.brand)).map((v) => v.brand).join(', '));
+   pd.voided_in_window.every(voidedNamed),
+   pd.voided_in_window.filter((v) => !voidedNamed(v)).map((v) => v.brand).join(', '));
 ok('the page admits the exclusion biases markdowns downward',
    /floor: the tier discounts at least this little/.test(prose));
 // A price epoch truncates the full-price window and NOTHING else on the page,
