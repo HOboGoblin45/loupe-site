@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.crescicharles.loupe",
+      "sha256_cert_fingerprints": [
+        "4F:05:AF:E2:43:7C:60:C9:7A:79:9A:56:E8:06:06:80:08:E8:1E:F2:C6:1B:4C:38:C2:4F:32:99:1F:D2:8C:72"
+      ]
+    }
+  }
+]
