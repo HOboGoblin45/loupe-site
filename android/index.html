@@ -79,6 +79,10 @@
   .steps li{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:22px 22px 22px 70px;position:relative;counter-increment:s;}
   .steps li::before{content:counter(s);position:absolute;left:22px;top:20px;width:32px;height:32px;border-radius:50%;background:var(--pink);color:var(--ink);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px;}
   .steps b{display:block;font-size:17px;margin-bottom:4px;}
+  .samsung{background:var(--white);border:1px solid var(--line);border-left:4px solid var(--coral);border-radius:16px;padding:18px 22px;margin:0 0 22px;max-width:760px;}
+  .samsung b{display:block;font-size:17px;margin-bottom:6px;}
+  .samsung p{color:var(--muted);font-size:15px;}
+  .samsung p + p{margin-top:8px;}
   .steps p{color:var(--muted);font-size:15px;}
   .faq{max-width:760px;}
   .faq details{border-bottom:1px solid var(--line);padding:18px 0;}
@@ -152,6 +156,11 @@
   <div class="wrap">
     <span class="eyebrow">About two minutes</span>
     <h2 class="serif">How to install</h2>
+    <div class="samsung" id="samsung">
+      <b>Samsung phone? Turn off Auto Blocker first</b>
+      <p>If you see <strong>Unknown app blocked</strong>, Samsung's Auto Blocker is stopping any app that isn't from the Play Store or Galaxy Store. Open <strong>Settings</strong>, tap <strong>Security and privacy</strong>, tap <strong>Auto Blocker</strong>, and turn it off (your phone asks for your PIN or fingerprint). Then open the downloaded file again.</p>
+      <p>Once Loupe is installed you can turn Auto Blocker back on. Loupe keeps working, and in-app updates still arrive.</p>
+    </div>
     <ol class="steps">
       <li><b>Tap Download for Android</b><p>Do this on your Android phone. Chrome may ask where to save it (tap <strong>Download</strong>) and then warn that the file might be harmful. That warning appears for every app from outside Google Play: tap <strong>Download anyway</strong>.</p></li>
       <li><b>Open the downloaded file</b><p>Tap <strong>Open</strong> when the download finishes, or open your Files app and tap <strong>Loupe-android.apk</strong> in Downloads.</p></li>
@@ -166,6 +175,7 @@
     <span class="eyebrow">Questions</span>
     <h2 class="serif">Good to know</h2>
     <details><summary>Why isn't Loupe on Google Play?</summary><p>It's on the way. Until then, this download is the same app, signed by Loupe. Android shows extra warnings for any app installed from outside Google Play, which is why it asks you to confirm. Google Play Protect scans Loupe before it installs.</p></details>
+    <details><summary>It says "Unknown app blocked" on my Samsung</summary><p>That's Samsung's Auto Blocker, which is on by default on newer Galaxy phones. Go to Settings, Security and privacy, Auto Blocker, and turn it off. Install Loupe, then turn it back on if you like. If you ever install a new Loupe download from this page, turn it off again for that install.</p></details>
     <details><summary>How do I update?</summary><p>Most updates arrive inside the app automatically. If a bigger update needs a new download, come back to this page and install it the same way. It installs over the old version and keeps your Dresser and likes.</p></details>
     <details><summary>Is there an iPhone version?</summary><p>Yes. Loupe is free on the <a href="https://apps.apple.com/app/id6781137336">App Store</a>.</p></details>
     <details><summary>Which phones does it work on?</summary><p>Any Android phone running Android 7.0 or later with a 64-bit processor, which covers every Android phone sold in recent years.</p></details>
