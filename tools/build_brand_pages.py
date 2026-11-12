@@ -193,6 +193,10 @@ FOOTER_HTML = (
     '<p class="copyright">© 2026 Loupe. Independent fashion discovery.</p></div></footer>'
 )
 
+# On Android phones, /android/route.js sends "Get the app" links to the Android
+# download page instead of the App Store (no effect on iPhone or desktop).
+ANDROID_ROUTE_TAG = '<script src="/android/route.js" defer></script>'
+
 STUB_HTML = (
     '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
     '<meta name="robots" content="noindex">'
@@ -586,7 +590,7 @@ def render_brand_page(
         f'<a href="{APP_STORE_URL}" target="_blank" rel="noopener" class="btn">Get Loupe on the App Store</a>',
         "</div></section>",
         FOOTER_HTML,
-        "</body></html>",
+        ANDROID_ROUTE_TAG + "\n</body></html>",
     ]
     return "\n".join(lines)
 
@@ -675,7 +679,7 @@ def render_index_page(order: list[str], stats_by_slug: dict[str, dict], total_br
         "</div></section>",
         f'<section><div class="wrap"><div class="dgrid">{dgrid_html}</div></div></section>',
         FOOTER_HTML,
-        "</body></html>",
+        ANDROID_ROUTE_TAG + "\n</body></html>",
     ]
     return "\n".join(lines)
 

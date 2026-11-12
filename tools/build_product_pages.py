@@ -271,6 +271,8 @@ def render(p: dict) -> str:
         + '<p class=note>Loupe is a swipe app for independent women’s fashion.</p>'
         + "</div></main>"
         + FOOTER
+        # Android phones: route "Get the app" links to /android/ (see android/route.js).
+        + '<script src="/android/route.js" defer></script>\n'
         + "</body></html>\n"
     )
 
