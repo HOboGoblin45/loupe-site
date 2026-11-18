@@ -33,6 +33,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Test the catalog fallback (offline)
+        run: python tools/test_catalog_fallback.py
+
       - name: Build product pages
         run: python tools/build_product_pages.py
 
