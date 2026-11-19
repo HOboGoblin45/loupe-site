@@ -130,11 +130,38 @@ def clean_sizes(sizes) -> list:
     return out
 
 
-def load_catalog(src: str) -> dict:
+def mirror_urls(src: str) -> list:
+    """The catalog URL plus its raw.githubusercontent.com twin.
+
+    jsDelivr is a cache in front of GitHub and sometimes answers 503 ("first
+    byte timeout") for the 11 MB catalog; that failed the Nov 16 build. The app
+    already falls back to raw GitHub for the same file, so the builder does too.
+    Any other URL is returned alone.
+    """
+    m = re.match(r"^https://cdn\.jsdelivr\.net/gh/([^/]+)/([^@/]+)@([^/]+)/(.+)$", src)
+    if not m:
+        return [src]
+    owner, repo, ref, path = m.groups()
+    return [src, f"https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}"]
+
+
+def fetch_json(url: str, timeout: int = 180):
+    req = urllib.request.Request(url, headers={"User-Agent": "loupe-site-builder"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def load_catalog(src: str, fetch=fetch_json, attempts: int = 2) -> dict:
     if src.startswith("http://") or src.startswith("https://"):
-        req = urllib.request.Request(src, headers={"User-Agent": "loupe-site-builder"})
-        with urllib.request.urlopen(req, timeout=180) as r:
-            return json.loads(r.read().decode("utf-8"))
+        errors = []
+        for url in mirror_urls(src):
+            for attempt in range(1, attempts + 1):
+                try:
+                    return fetch(url)
+                except Exception as e:  # HTTPError, URLError, timeout, bad JSON
+                    errors.append(f"{url} (try {attempt}): {e}")
+                    print(f"catalog fetch failed: {errors[-1]}", file=sys.stderr)
+        raise RuntimeError("could not load the catalog from any mirror:\n  " + "\n  ".join(errors))
     with open(src, encoding="utf-8") as f:
         return json.load(f)
 
